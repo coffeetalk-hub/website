@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Our Work | Event Portfolio — The Sailors ART</title>
+  <meta name="description" content="Browse public mega events, corporate & business events, and expo & fabrication projects delivered by The Sailors ART across Saudi Arabia and Bahrain.">
+  <link rel="canonical" href="https://www.thesailorsart.com/work.html">
+  <meta name="theme-color" content="#0B1F3A">
+  <!-- Open Graph / social -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Sailors ART">
+  <meta property="og:title" content="Our Work | Event Portfolio — The Sailors ART">
+  <meta property="og:description" content="Browse public mega events, corporate & business events, and expo & fabrication projects delivered by The Sailors ART across Saudi Arabia and Bahrain.">
+  <meta property="og:url" content="https://www.thesailorsart.com/work.html">
+  <meta property="og:image" content="https://www.thesailorsart.com/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Our Work | Event Portfolio — The Sailors ART">
+  <meta name="twitter:description" content="Browse public mega events, corporate & business events, and expo & fabrication projects delivered by The Sailors ART across Saudi Arabia and Bahrain.">
+  <meta name="twitter:image" content="https://www.thesailorsart.com/images/og-image.png">
+  <!-- Icons -->
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <!-- Fonts (optional external dependency) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Manrope:wght@600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="index.html" aria-label="The Sailors ART — home">
+      <img src="images/logo.svg" alt="" width="42" height="42">
+      <span class="brand__name">The Sailors ART<small>Part of The Sailors Group</small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="work.html">Our Work</a></li>
+        <li><a href="partners.html">Partners</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a class="btn btn--gold btn--sm" href="contact.html">Plan Your Event</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<section class="hero hero--page">
+  <img class="hero__bg" src="images/hero.svg" alt="" width="1600" height="900" fetchpriority="high">
+  <div class="container hero__content">
+    <p class="breadcrumb"><a href="index.html">Home</a> / Our Work</p>
+    <span class="hero__tag">Our Work</span>
+    <h1>Events that moved 480,000+ people</h1>
+    <p>A selection of public mega events, corporate and business events, and expo and fabrication projects across 12 cities in Saudi Arabia and Bahrain.</p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="work-title">
+  <div class="container">
+    <h2 id="work-title" class="sr-only">Portfolio</h2>
+    <div class="filters" id="work-filters" role="group" aria-label="Filter projects by type">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="mega" aria-pressed="false">Public Mega Events</button>
+      <button type="button" data-filter="corporate" aria-pressed="false">Corporate &amp; Business</button>
+      <button type="button" data-filter="expo" aria-pressed="false">Expos &amp; Fabrication</button>
+    </div>
+    <div class="work-grid" id="work-grid" aria-live="polite"></div>
+    <noscript><p class="text-center muted">Enable JavaScript to browse the portfolio.</p></noscript>
+  </div>
+</section>
+
+<dialog class="lightbox" id="lightbox" aria-labelledby="lightbox-title">
+  <button class="lightbox__close" type="button" aria-label="Close">&times;</button>
+  <div class="lightbox__inner">
+    <div class="lightbox__media"><img src="" alt="" width="800" height="600"></div>
+    <div class="lightbox__body">
+      <h2 id="lightbox-title">Project</h2>
+      <ul class="lightbox__meta">
+        <li><small>City</small><strong data-lb="city"></strong></li>
+        <li><small>Year</small><strong data-lb="year"></strong></li>
+        <li><small>Type</small><strong data-lb="type"></strong></li>
+        <li><small>Guests</small><strong data-lb="guests"></strong></li>
+      </ul>
+      <p data-lb="description"></p>
+      <div class="lightbox__nav">
+        <button class="btn btn--outline-navy btn--sm" type="button" data-lb="prev">← Previous</button>
+        <button class="btn btn--outline-navy btn--sm" type="button" data-lb="next">Next →</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<section class="section section--off section--tight" aria-labelledby="work-stats-title">
+  <div class="container">
+    <h2 id="work-stats-title" class="sr-only">Key numbers</h2>
+    <div class="stats stats--light">
+  <div class="stat"><span class="stat__num" data-count="2019" data-plain>2019</span><span class="stat__label">Established</span></div>
+  <div class="stat"><span class="stat__num" data-count="480000" data-suffix="+">480,000+</span><span class="stat__label">Guests &amp; visitors entertained</span></div>
+  <div class="stat"><span class="stat__num" data-count="98">98</span><span class="stat__label">Private corporate &amp; business events</span></div>
+  <div class="stat"><span class="stat__num" data-count="14">14</span><span class="stat__label">Public mega events (multi-zone)</span></div>
+  <div class="stat"><span class="stat__num" data-count="12">12</span><span class="stat__label">Cities across KSA &amp; Bahrain</span></div>
+  <div class="stat"><span class="stat__num" data-count="6" data-suffix="+">6+</span><span class="stat__label">Countries with partners</span></div>
+  <div class="stat"><span class="stat__num" data-count="360">360</span><span class="stat__label">Taskforce members at a single event (record)</span></div>
+  <div class="stat"><span class="stat__num" data-count="8" data-suffix="+">8+</span><span class="stat__label">Business events &amp; venues designed, operated and managed</span></div>
+</div>
+
+  </div>
+</section>
+
+<section class="cta" aria-labelledby="cta-title">
+  <div class="container cta__inner">
+    <div>
+      <span class="eyebrow">Let's Sail Together</span>
+      <h2 id="cta-title">Want your event on this page?</h2>
+      <p>Let's plan something worth remembering — and worth counting.</p>
+    </div>
+    <a class="btn btn--gold" href="contact.html">Plan Your Event <svg class="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__grid">
+      <div>
+        <a class="brand" href="index.html" aria-label="The Sailors ART — home">
+          <img src="images/logo.svg" alt="" width="42" height="42" loading="lazy">
+          <span class="brand__name">The Sailors ART<small>Part of The Sailors Group</small></span>
+        </a>
+        <p class="site-footer__tagline">Let's Sail Together</p>
+        <p class="site-footer__about">The events, entertainment and talent-development arm of The Sailors Group. Recognized by the Eastern Province Governorate and the General Entertainment Authority. Committed to Inspire &amp; Deliver.</p>
+        <ul class="social" aria-label="Social media">
+            <li><a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></li>
+            <li><a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram"><svg class="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a></li>
+            <li><a href="https://x.com/" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg class="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 4l16 16"/><path d="M20 4L4 20"/></svg></a></li>
+            <li><a href="https://www.youtube.com/" target="_blank" rel="noopener" aria-label="YouTube"><svg class="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></a></li>
+          </ul>
+      </div>
+      <nav aria-label="Footer navigation">
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="work.html">Our Work</a></li>
+          <li><a href="partners.html">Partners</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h3>Services</h3>
+        <ul>
+          <li><a href="services.html#events">Business &amp; Entertainment Events</a></li>
+          <li><a href="services.html#talent">Talent Hub &amp; Art Gallery</a></li>
+          <li><a href="services.html#expos">Expos &amp; Fabrication</a></li>
+          <li><a href="services.html#licensed">Licensed &amp; Certified</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Contact</h3>
+        <ul>
+          <li>Al Khobar, Eastern Province<br>Kingdom of Saudi Arabia</li>
+          <li><a href="mailto:info@thesailorsart.com">info@thesailorsart.com</a></li>
+          <li><a href="tel:+966000000000">+966 00 000 0000</a></li>
+          <li>Sun–Thu, 9:00–18:00 (AST)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <span>© <span data-year>2026</span> The Sailors ART — Part of The Sailors Group</span>
+      <span>Sister companies: The Sailors LLC / ISTA (est. 2004) · The Sailors AI (est. 2021)</span>
+    </div>
+  </div>
+</footer>
+<script src="data/projects.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>

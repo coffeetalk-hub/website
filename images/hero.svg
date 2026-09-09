@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A sailboat on a calm sea at dusk with a lighthouse on the shore">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#07162B"/>
+      <stop offset="0.55" stop-color="#12315A"/>
+      <stop offset="1" stop-color="#2F6396"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1D4C7C"/>
+      <stop offset="1" stop-color="#07162B"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFE9A8"/>
+      <stop offset="0.6" stop-color="#C9A24A"/>
+      <stop offset="1" stop-color="#C9A24A" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFE9A8" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#FFE9A8" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <g fill="#FFFFFF" opacity="0.8">
+    <circle cx="120" cy="90" r="1.6"/><circle cx="310" cy="160" r="1.2"/><circle cx="540" cy="60" r="1.8"/>
+    <circle cx="760" cy="130" r="1.3"/><circle cx="980" cy="70" r="1.5"/><circle cx="1220" cy="150" r="1.2"/>
+    <circle cx="1400" cy="80" r="1.7"/><circle cx="1500" cy="220" r="1.1"/><circle cx="880" cy="230" r="1"/>
+    <circle cx="420" cy="260" r="1.1"/><circle cx="1100" cy="290" r="1.3"/><circle cx="240" cy="330" r="1"/>
+  </g>
+  <circle cx="1180" cy="520" r="150" fill="url(#sun)" opacity="0.9"/>
+  <circle cx="1180" cy="520" r="62" fill="#FFE9A8"/>
+  <rect x="0" y="560" width="1600" height="340" fill="url(#sea)"/>
+  <path d="M1000 560 H1360 L1330 600 H1030 Z" fill="#FFE9A8" opacity="0.18"/>
+  <path d="M1040 610 H1320 L1300 640 H1060 Z" fill="#FFE9A8" opacity="0.12"/>
+  <g fill="none" stroke="#FFFFFF" stroke-linecap="round" opacity="0.35">
+    <path d="M0 620 q40 -14 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0" stroke-width="2"/>
+    <path d="M-40 690 q40 -16 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0" stroke-width="2.5"/>
+    <path d="M0 770 q40 -18 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0" stroke-width="3"/>
+    <path d="M-40 850 q40 -20 80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0 t80 0" stroke-width="3.5"/>
+  </g>
+  <!-- shore + lighthouse -->
+  <path d="M0 560 C80 540 160 550 240 570 C300 585 330 600 360 620 L0 640 Z" fill="#07162B"/>
+  <path d="M150 340 L110 560 H210 L170 340 Z" fill="#F5F7FA"/>
+  <path d="M148 400 L142 440 H180 L174 400 Z" fill="#0B1F3A"/>
+  <path d="M141 480 L136 520 H186 L181 480 Z" fill="#0B1F3A"/>
+  <rect x="144" y="310" width="32" height="34" rx="3" fill="#0B1F3A"/>
+  <rect x="150" y="316" width="20" height="22" fill="#FFE9A8"/>
+  <path d="M160 300 l-14 12 h28 Z" fill="#C9A24A"/>
+  <path d="M170 318 L620 240 L620 400 Z" fill="url(#beam)"/>
+  <!-- distant boats -->
+  <g opacity="0.55">
+    <path d="M1400 600 l0 -50 l26 50 Z" fill="#FFFFFF"/>
+    <path d="M1390 602 h44 l-6 8 h-32 Z" fill="#07162B"/>
+    <path d="M520 590 l0 -34 l18 34 Z" fill="#FFFFFF"/>
+    <path d="M512 592 h32 l-5 6 h-22 Z" fill="#07162B"/>
+  </g>
+  <!-- main sailboat -->
+  <g transform="translate(760 380)">
+    <rect x="98" y="0" width="5" height="310" fill="#F5F7FA"/>
+    <path d="M100 20 L100 290 L-10 290 Q40 200 100 20 Z" fill="#FFFFFF"/>
+    <path d="M104 40 L104 290 L210 290 Q180 160 104 40 Z" fill="#C9A24A"/>
+    <path d="M100 290 L210 290" stroke="#F5F7FA" stroke-width="3"/>
+    <path d="M-40 300 H240 L200 350 H0 Z" fill="#0B1F3A"/>
+    <path d="M-40 300 H240" stroke="#C9A24A" stroke-width="5"/>
+    <path d="M0 330 H200" stroke="#C9A24A" stroke-width="2" opacity="0.6"/>
+    <path d="M-60 358 q30 -12 60 0 t60 0 t60 0 t60 0 t60 0" fill="none" stroke="#FFFFFF" stroke-width="3" opacity="0.5"/>
+  </g>
+</svg>

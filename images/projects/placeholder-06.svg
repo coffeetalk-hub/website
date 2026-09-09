@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Placeholder event image 6">
+  <defs>
+    <linearGradient id="bg6" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1B2A3B"/><stop offset="0.6" stop-color="#3D5A80"/><stop offset="1" stop-color="#98C1D9"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg6)"/>
+  <circle cx="180" cy="200" r="60" fill="#FFE9A8" opacity="0.8"/>
+  <g transform="translate(400 280)">
+      <rect x="-2" y="-150" width="4" height="200" fill="#F5F7FA"/>
+      <path d="M0 -140 L0 40 L-80 40 Q-40 -40 0 -140 Z" fill="#FFFFFF"/>
+      <path d="M4 -120 L4 40 L84 40 Q60 -50 4 -120 Z" fill="#E0B45A"/>
+      <path d="M-110 50 H110 L80 90 H-80 Z" fill="#1B2A3B"/>
+      <path d="M-110 50 H110" stroke="#E0B45A" stroke-width="4"/></g>
+  <g fill="none" stroke="#FFFFFF" stroke-linecap="round" opacity="0.3">
+    <path d="M0 440 q30 -12 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" stroke-width="3"/>
+    <path d="M-30 500 q30 -14 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" stroke-width="3"/>
+    <path d="M0 560 q30 -16 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" stroke-width="3"/>
+  </g>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="The Sailors ART mark">
+  <circle cx="32" cy="32" r="30" fill="#0B1F3A" stroke="#C9A24A" stroke-width="2"/>
+  <!-- mainsail -->
+  <path d="M33 12 L33 40 L15 40 Z" fill="#FFFFFF"/>
+  <!-- jib -->
+  <path d="M36 18 L36 40 L50 40 Z" fill="#C9A24A"/>
+  <!-- mast -->
+  <rect x="33" y="10" width="2" height="32" fill="#FFFFFF"/>
+  <!-- hull -->
+  <path d="M12 44 H52 L46 51 H18 Z" fill="#C9A24A"/>
+  <!-- waves -->
+  <path d="M10 55 q5 -3 10 0 t10 0 t10 0 t10 0 t6 0" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/>
+</svg>
