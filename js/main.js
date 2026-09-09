@@ -196,7 +196,7 @@
         '<span class="work-card__type">' + escapeHtml(TYPE_LABELS[p.type] || p.type) + '</span>' +
         '<span class="work-card__body">' +
           '<h3>' + escapeHtml(p.title) + '</h3>' +
-          '<span class="work-card__meta"><span>' + escapeHtml(p.city) + '</span><span>' + p.year + '</span><span>' + formatNumber(p.guests) + ' guests</span></span>' +
+          '<span class="work-card__meta"><span>' + escapeHtml(p.city) + '</span><span>' + p.year + '</span>' + (p.guests ? '<span>' + formatNumber(p.guests) + ' guests</span>' : '') + '</span>' +
         '</span>';
       card.addEventListener("click", function () { openLightbox(i); });
       grid.appendChild(card);
@@ -259,7 +259,7 @@
       lbCity.textContent = p.city;
       lbYear.textContent = p.year;
       lbType.textContent = TYPE_LABELS[p.type] || p.type;
-      lbGuests.textContent = formatNumber(p.guests) + "+";
+      lbGuests.textContent = p.guests ? formatNumber(p.guests) + "+" : "—";
       lbDesc.textContent = p.description;
       var pos = visible.indexOf(i);
       prevBtn.disabled = pos <= 0;
