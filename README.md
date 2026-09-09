@@ -20,7 +20,7 @@ Content, imagery, logos and brand colours follow the *December 2025 company prof
 /images/values/        The five value illustrations
 /images/team/          Leadership portraits
 /images/permits/       General Entertainment Authority permit scans
-/images/logos/         clients/ · institutional/ · alliances/
+/images/logos/         (empty) — drop client / partner logo files here
 /images/og-image.jpg   Link-preview image; favicon-*.png and apple-touch-icon.png
 /sitemap.xml /robots.txt /netlify.toml
 ```
@@ -70,8 +70,8 @@ Open `data/partners.js`. There are three arrays: `clients`, `institutional` and 
 
 - `logo` — PNG/JPG/SVG, roughly 400×200 max. Leave it as `""` to show an auto-generated monogram.
 - `url` and `note` are optional.
-- Logos were extracted from the profile. A few could not be identified with certainty and are named
-  **"(confirm)"** — search the file for `confirm` and correct them.
+- All entries are numbered placeholders until the real client and partner list is available. Replace the
+  `name`, add the logo file to `images/logos/` and set its path in `logo`.
 - The home page shows the first 12 `clients`; change `data-limit="12"` in `index.html` to show more or fewer.
 
 ## Edit text, stats, team and contact details
@@ -144,4 +144,4 @@ Drag-and-drop alternative: zip the folder and drop it on https://app.netlify.com
 - All images have `alt` text; decorative images use `alt=""`.
 - Colour contrast meets WCAG AA (coral text on white uses the darker `--coral-700`).
 - `prefers-reduced-motion` disables counters and reveal animations.
-- No JavaScript libraries; all images are compressed (whole site ≈ 8 MB including ~90 logos and photos).
+- No JavaScript libraries; all images are compressed (whole site ≈ 6 MB including photos).
