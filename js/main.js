@@ -121,8 +121,10 @@
      4. Partner logo grids   <ul class="logo-grid" data-partners="clients" data-limit="6"></ul>
      --------------------------------------------------------------------- */
   function initials(name) {
-    return name.replace(/[—–-].*$/, "").split(/\s+/).filter(Boolean).slice(0, 2)
-      .map(function (w) { return w[0].toUpperCase(); }).join("");
+    var words = name.replace(/[—–-].*$/, "").split(/\s+/).filter(Boolean);
+    var last = words[words.length - 1];
+    if (words.length > 1 && /^\d+$/.test(last)) return last;      // "Client 01" -> "01"
+    return words.slice(0, 2).map(function (w) { return w[0].toUpperCase(); }).join("");
   }
 
   function renderPartners() {
