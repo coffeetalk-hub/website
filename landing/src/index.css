@@ -1,0 +1,169 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------
+   CoffeeTalk design tokens
+   Change the palette / type here; utilities (bg-espresso-900, text-copper-600,
+   font-sans, …) are generated from these names by Tailwind v4.
+   ------------------------------------------------------------------ */
+@theme {
+  /* Deep espresso browns — dark surfaces and primary text */
+  --color-espresso-950: #140d09;
+  --color-espresso-900: #1c120d;
+  --color-espresso-800: #2b1a12;
+  --color-espresso-700: #3e2a1e;
+  --color-espresso-600: #5a3e2c;
+  --color-espresso-500: #6b5546; /* muted body text on cream (6.5:1) */
+
+  /* Warm cream — light surfaces */
+  --color-cream-50: #fbf6ee;
+  --color-cream-100: #f5ecdd;
+  --color-cream-200: #eadcc5;
+  --color-cream-300: #dcc9aa;
+
+  /* Burnt amber / copper — the single accent */
+  --color-copper-300: #e8a86b; /* on dark backgrounds only */
+  --color-copper-400: #d07a3c; /* decorative on dark */
+  --color-copper-500: #a8541e; /* buttons: 5.3:1 with white text */
+  --color-copper-600: #9c4f1e; /* accent text on cream: 5.5:1 */
+  --color-copper-700: #7f3f16;
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-arabic: 'Cairo', 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, system-ui, sans-serif;
+
+  --radius-2xl: 1.25rem;
+  --radius-3xl: 1.75rem;
+
+  --shadow-card: 0 1px 2px rgba(28, 18, 13, 0.06), 0 12px 32px -12px rgba(28, 18, 13, 0.18);
+  --shadow-phone: 0 40px 80px -30px rgba(28, 18, 13, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+
+  --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --animate-pulse-soft: pulse-soft 2.4s ease-in-out infinite;
+  --animate-wave: wave 1.2s ease-in-out infinite;
+
+  @keyframes pulse-soft {
+    0%,
+    100% {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.06);
+    }
+  }
+  @keyframes wave {
+    0%,
+    100% {
+      transform: scaleY(0.4);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+  }
+}
+
+/* Custom variant so utilities can target Arabic explicitly (e.g. ar:text-lg). */
+@custom-variant ar (&:where([lang='ar'], [lang='ar'] *));
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    @apply bg-cream-50 text-espresso-800 font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  /* Arabic: swap font, loosen line-height, drop Latin letter-spacing */
+  html[lang='ar'] body {
+    @apply font-arabic;
+    font-feature-settings: normal;
+  }
+  html[lang='ar'] .tracking-tight,
+  html[lang='ar'] .tracking-tighter {
+    letter-spacing: 0;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-4 outline-copper-500 rounded-sm;
+  }
+
+  ::selection {
+    background: var(--color-copper-300);
+    color: var(--color-espresso-900);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .btn-primary,
+  .btn-dark,
+  .btn-ghost,
+  .btn-light {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-[background-color,color,transform,box-shadow] duration-200 ease-out-soft
+      focus-visible:outline-2 focus-visible:outline-offset-4 motion-safe:active:scale-[0.98];
+  }
+  .btn-primary {
+    @apply bg-copper-500 text-white hover:bg-copper-600 focus-visible:outline-copper-500;
+  }
+  .btn-dark {
+    @apply bg-espresso-900 text-cream-50 hover:bg-espresso-800 focus-visible:outline-espresso-900;
+  }
+  .btn-ghost {
+    @apply border border-espresso-800/20 bg-transparent text-espresso-800 hover:border-espresso-800/50 hover:bg-cream-100;
+  }
+  .btn-light {
+    @apply bg-cream-50 text-espresso-900 hover:bg-cream-100 focus-visible:outline-cream-50;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-copper-600;
+  }
+  html[lang='ar'] .eyebrow {
+    @apply text-sm tracking-normal;
+  }
+
+  .card {
+    @apply rounded-2xl border border-espresso-900/8 bg-white/70 p-6 shadow-card;
+  }
+
+  /* Entrance animation, gated by prefers-reduced-motion and the .is-visible class set by <Reveal>. */
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition:
+        opacity 0.7s var(--ease-out-soft),
+        transform 0.7s var(--ease-out-soft);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

@@ -1,0 +1,27 @@
+import { Nav } from './components/Nav'
+import { Hero } from './components/Hero'
+import { Differentiators } from './components/Differentiators'
+import { HowItWorks } from './components/HowItWorks'
+import { ForCafes } from './components/ForCafes'
+import { ForDrivers } from './components/ForDrivers'
+import { StatsStrip } from './components/StatsStrip'
+import { Download } from './components/Download'
+import { Footer } from './components/Footer'
+
+export default function App() {
+  return (
+    <>
+      <Nav />
+      <main id="main">
+        <Hero />
+        <Differentiators />
+        <HowItWorks />
+        <ForCafes />
+        <ForDrivers />
+        <StatsStrip />
+        <Download />
+      </main>
+      <Footer />
+    </>
+  )
+}
