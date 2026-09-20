@@ -91,6 +91,11 @@
   :focus-visible {
     @apply outline-2 outline-offset-4 outline-copper-500 rounded-sm;
   }
+  /* Sections receive focus after an in-page link click; no ring on the section itself. */
+  section[tabindex='-1']:focus,
+  main[tabindex='-1']:focus {
+    outline: none;
+  }
 
   ::selection {
     background: var(--color-copper-300);

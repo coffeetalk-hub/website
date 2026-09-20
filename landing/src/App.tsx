@@ -8,8 +8,10 @@ import { ForDrivers } from './components/ForDrivers'
 import { StatsStrip } from './components/StatsStrip'
 import { Download } from './components/Download'
 import { Footer } from './components/Footer'
+import { useInPageLinks } from './useInPageLinks'
 
 export default function App() {
+  useInPageLinks()
   return (
     <>
       <Nav />

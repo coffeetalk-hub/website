@@ -61,6 +61,8 @@ export function Footer() {
             {t.footer.builtBy}{' '}
             <a
               href="https://thesailors.ai"
+              target="_blank"
+              rel="noopener"
               className="font-semibold text-espresso-800 hover:text-copper-600 focus-visible:outline-copper-500 rounded-sm"
               lang="en"
             >
