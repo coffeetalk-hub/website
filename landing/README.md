@@ -32,6 +32,7 @@ src/i18n.tsx               LanguageProvider / useLang(): detection, persistence,
 src/index.css              Design tokens (@theme), fonts, buttons, cards, reveal animation
 src/App.tsx                Section order
 src/components/            One file per section + shared pieces (Icons, StoreBadges, Reveal, PhoneMockup)
+                           AppTour.tsx = the five-tab customer-app feature map (data in content.ts → appTour)
 public/favicon.svg         Favicon (cup + steam mark)
 ```
 

@@ -18,6 +18,26 @@ export interface Stat {
   label: string
 }
 
+export interface AppFeatureGroup {
+  title: string
+  /** One-line context shown under the title (optional). */
+  body?: string
+  chips: string[]
+  /** 'signature' = a CoffeeTalk-only feature; 'soon' = phase 2. */
+  tag?: 'signature' | 'soon'
+  /** Example in-app message, rendered as a chat bubble (optional). */
+  quote?: string
+}
+
+export interface AppTab {
+  id: string
+  name: string
+  tagline: string
+  /** Whole tab ships in phase 2. */
+  soon?: boolean
+  groups: AppFeatureGroup[]
+}
+
 export interface Content {
   meta: { title: string; description: string }
   brand: { name: string; tagline: string }
@@ -64,6 +84,15 @@ export interface Content {
     heading: string
     subhead: string
     steps: [Feature, Feature, Feature]
+  }
+  appTour: {
+    eyebrow: string
+    heading: string
+    subhead: string
+    signatureBadge: string
+    soonBadge: string
+    tablistLabel: string
+    tabs: AppTab[]
   }
   cafes: {
     eyebrow: string
@@ -204,6 +233,157 @@ const en: Content = {
         body: 'The café gets your order instantly. A nearby driver is matched the moment it’s ready, or you pick it up.',
       },
       { title: 'Sip and earn', body: 'Enjoy it, then watch your loyalty challenge move forward.' },
+    ],
+  },
+  appTour: {
+    eyebrow: 'Customer app',
+    heading: 'Five tabs. Everything a coffee person needs.',
+    subhead: 'A quick tour of what’s inside the CoffeeTalk customer app.',
+    signatureBadge: 'Signature',
+    soonBadge: 'Coming soon',
+    tablistLabel: 'App sections',
+    tabs: [
+      {
+        id: 'home',
+        name: 'Home',
+        tagline: 'A landing screen that’s personal from day one.',
+        groups: [
+          {
+            title: 'For You',
+            body: 'Opens on what you’re most likely to want right now.',
+            chips: ['AI recommendations', 'Smart reordering', 'Trending drinks'],
+          },
+          {
+            title: 'Nearby & Now',
+            chips: ['Featured cafés', 'Nearby shops', 'Recently visited'],
+          },
+          {
+            title: 'Buzz',
+            chips: ['Promotions', 'Upcoming events'],
+            tag: 'soon',
+          },
+        ],
+      },
+      {
+        id: 'order',
+        name: 'Order',
+        tagline: 'Order · Delivery · Pickup',
+        groups: [
+          {
+            title: 'Browse & Build',
+            chips: ['Search by drink or café', 'Menu by café', 'Image-to-order', 'Voice-to-order'],
+          },
+          {
+            title: 'Recommend Me',
+            body: 'An in-app assistant that picks by mood and weather, and answers questions about the menu.',
+            chips: ['Mood & weather picks', 'Ask about the menu'],
+            tag: 'signature',
+            quote: '“Hot one today ☀️ Feel like a juice? Try the mango, it just landed and it’s refreshing.”',
+          },
+          {
+            title: 'My Usuals',
+            chips: ['Order history', 'Favorites', 'View / download invoice'],
+          },
+          {
+            title: 'Cart Review',
+            chips: ['Items & quantities', 'Edit before confirming', 'Total price'],
+          },
+          {
+            title: 'Group Orders',
+            body: 'An office of five opens one cart, everyone adds their own drink, one person confirms.',
+            chips: ['Shared cart + invite link', 'Everyone adds their own', 'Closing deadline', 'Host pays or split payment'],
+          },
+        ],
+      },
+      {
+        id: 'discover',
+        name: 'Discover',
+        tagline: 'Explore · Map · Booking',
+        groups: [
+          {
+            title: 'Coffeepedia',
+            chips: ['Origins & beans', 'Recipes & brewing'],
+          },
+          {
+            title: 'Recipe Hub',
+            body: 'Search by name, bean or brewer. Users publish their own recipes; verified baristas get a badge.',
+            chips: ['Search by bean or brewer (V60, Moka, French press)', 'User-submitted recipes', 'Verified-barista badge', 'Save recipe ♥'],
+          },
+          {
+            title: 'Local Picks',
+            body: 'The best drinks in your city, ranked by real likes and ratings.',
+            chips: ['Best coffees to try in your city', 'Ranked by likes & ratings'],
+            tag: 'signature',
+            quote: '“The 5 drinks you have to try in Khobar this week ☕”',
+          },
+          {
+            title: 'Around Me',
+            chips: ['Live map', 'Navigation', 'Check-in', 'Ratings on every pin'],
+            tag: 'soon',
+          },
+        ],
+      },
+      {
+        id: 'community',
+        name: 'Community',
+        tagline: 'Coffee social',
+        soon: true,
+        groups: [
+          {
+            title: 'The Table',
+            chips: ['Coffee feed', 'Follow friends & baristas', 'Clubs & discussions'],
+          },
+          {
+            title: 'Chats',
+            chips: ['Group / club chats', 'Direct messages'],
+          },
+          {
+            title: 'Gatherings',
+            chips: ['Tastings & meetups', 'Workshops'],
+          },
+          {
+            title: 'People Like You',
+            body: 'Matched on the drinks and cafés you actually like.',
+            chips: ['Suggested coffee friends'],
+          },
+          {
+            title: 'The Guild',
+            chips: ['Become a barista', 'Freelance trainers'],
+          },
+        ],
+      },
+      {
+        id: 'profile',
+        name: 'Profile',
+        tagline: 'My coffee journey',
+        groups: [
+          {
+            title: 'Account & Settings',
+            chips: ['Profile info', 'Saved addresses', 'Per-notification toggles', 'Language', 'Delete account'],
+          },
+          {
+            title: 'My Favorites',
+            body: 'Cafés, baristas and recipes, all in one place.',
+            chips: ['Favorite cafés', 'Favorite baristas', 'Saved recipes'],
+            tag: 'signature',
+          },
+          {
+            title: 'Verified Discounts',
+            body: 'Verify a student or company ID once; the discount applies itself.',
+            chips: ['Student ID → student discount', 'Company ID (e.g. Aramco)', 'Auto-applied after verification'],
+            tag: 'signature',
+          },
+          {
+            title: 'Perks',
+            chips: ['Personalized challenges', 'Autonomous AI loyalty'],
+          },
+          {
+            title: 'Premium Membership',
+            chips: ['Monthly / yearly plan', 'Free or reduced delivery', 'Exclusive discounts & perks'],
+            tag: 'signature',
+          },
+        ],
+      },
     ],
   },
   cafes: {
@@ -359,6 +539,157 @@ const ar: Content = {
         body: 'يصل طلبك إلى المقهى فورًا، ويُرسل أقرب سائق لحظة جاهزيته، أو تستلمه بنفسك.',
       },
       { title: 'استمتع واكسب', body: 'استمتع بقهوتك، وتابع تقدّمك في تحدي الولاء.' },
+    ],
+  },
+  appTour: {
+    eyebrow: 'تطبيق العميل',
+    heading: 'خمس صفحات، فيها كل ما يحتاجه عاشق القهوة.',
+    subhead: 'جولة سريعة داخل تطبيق كوفي توك للعملاء.',
+    signatureBadge: 'ميزة كوفي توك',
+    soonBadge: 'قريبًا',
+    tablistLabel: 'أقسام التطبيق',
+    tabs: [
+      {
+        id: 'home',
+        name: 'الرئيسية',
+        tagline: 'صفحة رئيسية شخصية من أول يوم.',
+        groups: [
+          {
+            title: 'توصيات ذكية',
+            body: 'تفتح على ما تشتهيه الآن على الأرجح.',
+            chips: ['توصيات بالذكاء الاصطناعي', 'إعادة طلب ذكية', 'المشروبات الرائجة'],
+          },
+          {
+            title: 'حولك الآن',
+            chips: ['كافيهات مميزة', 'المتاجر القريبة', 'زرتها مؤخرًا'],
+          },
+          {
+            title: 'عروض وفعاليات',
+            chips: ['العروض', 'الفعاليات القادمة'],
+            tag: 'soon',
+          },
+        ],
+      },
+      {
+        id: 'order',
+        name: 'الطلب',
+        tagline: 'طلب · توصيل · استلام',
+        groups: [
+          {
+            title: 'تصفّح واختيار',
+            chips: ['بحث بالمشروب أو الكافيه', 'القائمة حسب الكافيه', 'الطلب بالصورة', 'الطلب بالصوت'],
+          },
+          {
+            title: 'مساعد الطلب',
+            body: 'مساعد داخل التطبيق يرشّح لك حسب الجو والمزاج، ويجيب عن استفساراتك بالمنيو.',
+            chips: ['ترشيح حسب الجو والمزاج', 'استفسارات بالمنيو'],
+            tag: 'signature',
+            quote: '«الجو حار اليوم ☀️ مشتهي عصير؟ جرّب المانجو، توّه نازل ومنعش!»',
+          },
+          {
+            title: 'طلباتي',
+            chips: ['سجل الطلبات', 'المفضلة', 'عرض / تحميل الفاتورة'],
+          },
+          {
+            title: 'مراجعة السلة',
+            chips: ['مراجعة الأصناف والكمية', 'تعديل قبل التأكيد', 'السعر الإجمالي'],
+          },
+          {
+            title: 'طلب جماعي',
+            body: 'مكتب فيه خمسة موظفين: أحدهم يفتح سلة مشتركة، كل واحد يضيف مشروبه، وواحد يؤكد الطلب.',
+            chips: ['سلة مشتركة + رابط دعوة', 'كل شخص يضيف طلبه بنفسه', 'مهلة زمنية لإغلاق السلة', 'صاحب السلة يدفع أو تقسيم الدفع'],
+          },
+        ],
+      },
+      {
+        id: 'discover',
+        name: 'استكشف',
+        tagline: 'استكشاف · خريطة · حجز',
+        groups: [
+          {
+            title: 'مكتبة القهوة',
+            chips: ['أصول البن وأنواعه', 'الوصفات وطرق التحضير'],
+          },
+          {
+            title: 'وصفات القهوة',
+            body: 'ابحث بالاسم أو نوع البن أو الأداة. المستخدمون ينشرون وصفاتهم، والباريستا الموثّق يحصل على شارة.',
+            chips: ['بحث حسب البن أو الأداة (V60، موكا، فرنش برس)', 'وصفات من المستخدمين', 'شارة باريستا موثّق', 'حفظ الوصفة ♥'],
+          },
+          {
+            title: 'أفضل ما في مدينتك',
+            body: 'أفضل المشروبات في مدينتك، مرتّبة حسب الإعجابات والتقييمات الحقيقية.',
+            chips: ['أفضل القهوة في مدينتك', 'مبني على الإعجابات والتقييمات'],
+            tag: 'signature',
+            quote: '«أفضل 5 مشروبات لازم تجرّبها بالخبر هذا الأسبوع ☕»',
+          },
+          {
+            title: 'الخريطة التفاعلية',
+            chips: ['خريطة مباشرة', 'التنقّل', 'تسجيل الحضور', 'التقييم على كل دبوس'],
+            tag: 'soon',
+          },
+        ],
+      },
+      {
+        id: 'community',
+        name: 'المجتمع',
+        tagline: 'مجتمع القهوة',
+        soon: true,
+        groups: [
+          {
+            title: 'الطاولة',
+            chips: ['فيد القهوة', 'تابع أصدقاءك والباريستا', 'نوادٍ ونقاشات'],
+          },
+          {
+            title: 'المحادثات',
+            chips: ['محادثات المجموعات والنوادي', 'رسائل مباشرة'],
+          },
+          {
+            title: 'الفعاليات والورش',
+            chips: ['جلسات تذوّق ولقاءات', 'ورش عمل'],
+          },
+          {
+            title: 'أشخاص مثلك',
+            body: 'اقتراحات مبنية على المشروبات والكافيهات التي تحبها فعلًا.',
+            chips: ['أصدقاء قهوة مقترحون'],
+          },
+          {
+            title: 'فرص العمل',
+            chips: ['كن باريستا', 'مدرّبون مستقلون'],
+          },
+        ],
+      },
+      {
+        id: 'profile',
+        name: 'حسابي',
+        tagline: 'رحلتي مع القهوة',
+        groups: [
+          {
+            title: 'الحساب والإعدادات',
+            chips: ['معلومات الحساب', 'العناوين المحفوظة', 'تحكّم بكل تنبيه على حدة', 'اللغة', 'حذف الحساب'],
+          },
+          {
+            title: 'مفضلتي',
+            body: 'كافيهات وباريستا ووصفات، كلها في مكان واحد.',
+            chips: ['الكافيهات المفضلة', 'الباريستا المفضلون', 'الوصفات المحفوظة'],
+            tag: 'signature',
+          },
+          {
+            title: 'خصومات موثّقة',
+            body: 'وثّق هويتك الجامعية أو هوية الشركة مرة واحدة، والخصم يُفعَّل تلقائيًا.',
+            chips: ['الهوية الجامعية ← خصم الطلاب', 'هوية الشركة (أرامكو وغيرها)', 'تفعيل تلقائي بعد التحقق'],
+            tag: 'signature',
+          },
+          {
+            title: 'الولاء الذكي',
+            chips: ['تحديات شخصية', 'ولاء ذكي يتعلّم منك'],
+          },
+          {
+            title: 'العضوية المميزة',
+            chips: ['اشتراك شهري / سنوي', 'توصيل مجاني أو مخفّض', 'خصومات ومزايا حصرية'],
+            tag: 'signature',
+          },
+        ],
+      },
     ],
   },
   cafes: {

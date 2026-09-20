@@ -2,6 +2,7 @@ import { Nav } from './components/Nav'
 import { Hero } from './components/Hero'
 import { Differentiators } from './components/Differentiators'
 import { HowItWorks } from './components/HowItWorks'
+import { AppTour } from './components/AppTour'
 import { ForCafes } from './components/ForCafes'
 import { ForDrivers } from './components/ForDrivers'
 import { StatsStrip } from './components/StatsStrip'
@@ -16,6 +17,7 @@ export default function App() {
         <Hero />
         <Differentiators />
         <HowItWorks />
+        <AppTour />
         <ForCafes />
         <ForDrivers />
         <StatsStrip />
