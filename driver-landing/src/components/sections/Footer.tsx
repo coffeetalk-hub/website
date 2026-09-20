@@ -5,10 +5,10 @@ import { Wordmark } from '../ui/Wordmark'
 export function Footer() {
   const { t, toggle } = useT()
   const links = [
-    { href: '#features', label: t.nav.features },
+    { href: '#why', label: t.nav.why },
     { href: '#how', label: t.nav.how },
-    { href: '#earnings', label: t.nav.earnings },
-    { href: '#safety', label: t.nav.safety },
+    { href: '#shift', label: t.nav.shift },
+    { href: '#pay', label: t.nav.pay },
     { href: '#faq', label: t.nav.faq },
   ]
   const linkCls = 'text-sm text-sand-400 hover:text-cream-50 rounded-sm'

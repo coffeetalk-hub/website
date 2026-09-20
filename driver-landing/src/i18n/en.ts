@@ -2,19 +2,19 @@ import type { Dictionary } from './types'
 
 export const en: Dictionary = {
   meta: {
-    title: 'CoffeeTalk for Drivers — Deliver coffee, on your terms',
+    title: 'CoffeeTalk for Drivers — Your hours. Orders that come to you.',
     description:
-      'Apply to drive with CoffeeTalk: go online when it suits you, take the orders you want, and let the app pick the nearest order and the fastest route.',
+      'Drive with CoffeeTalk: go online when you want, take the orders nearest to you, and deliver coffee at its best. Apply from your phone, every trip on record, transparent pay.',
     ogLocale: 'en_US',
   },
   brand: { name: 'CoffeeTalk', product: 'Drivers' },
   nav: {
-    features: 'Features',
+    why: 'Why CoffeeTalk',
     how: 'How it works',
-    earnings: 'Getting paid',
-    safety: 'Safety',
+    shift: 'Inside a shift',
+    pay: 'Pay',
     faq: 'FAQ',
-    apply: 'Apply to drive',
+    apply: 'Apply now',
     menuOpen: 'Open menu',
     menuClose: 'Close menu',
     skip: 'Skip to content',
@@ -23,166 +23,125 @@ export const en: Dictionary = {
   },
   hero: {
     eyebrow: 'The CoffeeTalk Driver app',
-    headline: 'Deliver coffee, on your terms.',
-    subline:
-      'Go online when it suits you, take the orders you want, and let the app match you to the nearest order and the fastest route.',
+    headline: 'Your hours. Orders that come to you.',
+    subline: 'Drive with CoffeeTalk: go online when you want, take the orders nearest to you, and deliver coffee at its best.',
     primary: 'Apply to drive',
-    secondary: 'See how it works',
-    chips: ['Apply from your phone', 'Orders near you', 'Every trip on record'],
+    secondary: 'How it works',
+    chips: ['Apply from your phone', 'Every trip on record', 'Transparent pay'],
     screenAlt: 'Driver app home screen: the "Available now" switch is on and a nearby order is waiting to be accepted.',
+    toggleLabel: 'Your status',
+    toggleState: 'Available now',
+    toggleHint: 'One switch starts your shift. One switch ends it.',
   },
-  themes: {
-    eyebrow: 'Features',
-    heading: 'Built for the driver, not just the order.',
-    subhead: 'Every feature serves one goal: work the way you want, and deliver coffee in its best state.',
-    signature: 'Only on CoffeeTalk',
-    comingLater: 'Coming later',
-    items: [
+  why: {
+    eyebrow: 'Why CoffeeTalk',
+    heading: 'Not another delivery app.',
+    subhead: 'Four things the app is built around, and every one of them works in the driver’s favour.',
+    tiles: [
       {
-        id: 'start',
-        title: 'Start fast, start verified',
-        benefit: 'Apply from your phone. Once the CoffeeTalk team approves you, every shift starts with a check that takes seconds.',
-        screen: 'checkIn',
-        features: [
-          {
-            name: 'Application',
-            desc: 'Driving licence, vehicle or bike registration, and national ID or iqama.',
-          },
-          {
-            name: 'Approval & terms',
-            desc: 'The CoffeeTalk team reviews your documents and you accept the terms. No orders until you’re approved.',
-            signature: true,
-          },
-          {
-            name: 'Face verification',
-            desc: 'A quick face scan at sign-in, matched to your registered profile.',
-          },
-          {
-            name: 'Uniform & hygiene check',
-            desc: 'Gloves, mask, the CoffeeTalk uniform, and the outfit check for Premium handoffs.',
-          },
-        ],
-        note: {
-          label: 'AI',
-          text: 'An automatic visual check at sign-in flags anything missing before the shift starts, not after the first complaint.',
-        },
-      },
-      {
-        id: 'flex',
         title: 'Work when you want',
-        benefit: 'You decide when you’re available, when you take a break, and which orders you accept.',
-        features: [
-          {
-            name: 'Online / Offline',
-            desc: 'An “Available now” switch to receive orders, and a pause for breaks.',
-            signature: true,
-          },
-          {
-            name: 'Accept / Decline',
-            desc: 'A response window for each proposed order (about 15 seconds), with an optional decline reason.',
-            signature: true,
-          },
-          {
-            name: 'Settings',
-            desc: 'Update vehicle and bank details, the language, and each notification on its own.',
-          },
-        ],
-        note: {
-          label: 'Note',
-          text: 'Repeated declines without a clear reason affect your internal rating in the app.',
-        },
+        body: 'You decide when you’re available, when you take a break, and which orders you accept.',
+        points: ['“Available now” switch and pause', 'Accept or decline each order within a window', 'Decline reason is optional'],
       },
       {
-        id: 'smart',
-        title: 'Smarter trips, less wasted time',
-        benefit: 'The app matches you to the nearest order, picks the fastest route, and sequences drop-offs so the coffee arrives in its best state.',
-        screen: 'order',
-        features: [
-          { name: 'Best match', desc: 'The nearest available driver for each order, by distance and time.' },
-          { name: 'Traffic & route', desc: 'Live traffic analysis and the fastest route by time.' },
-          { name: 'Temperature-safe ETA', desc: 'Hot stays hot. Cold doesn’t melt.' },
-          {
-            name: 'Batched orders',
-            desc: 'Two nearby orders in one trip, delivered in a sequence that keeps each at the right temperature.',
-            signature: true,
-          },
-        ],
-        note: {
-          label: 'AI',
-          text: 'Matching isn’t just “nearest driver”: the app factors in the drink and its temperature, and only batches two orders when it’s sure neither will suffer.',
-        },
+        title: 'Closer orders, less wasted time',
+        body: 'The app matches you to the nearest order, picks the fastest route, and checks the drink’s temperature before it suggests anything.',
+        points: ['Nearest available driver by distance and time', 'Live traffic analysis', 'Two nearby orders batched into one trip'],
       },
       {
-        id: 'protected',
         title: 'Every trip protected',
-        benefit: 'Every move is on record and tied to the map from start to finish. It protects you, the customer, and the café.',
-        screen: 'route',
-        features: [
-          {
-            name: 'Bound to route',
-            desc: 'No side orders outside the app, and an instant alert if you leave the route.',
-          },
-          {
-            name: 'Live journey map',
-            desc: 'The customer and the café see your trip live. Tracking stops at delivery.',
-          },
-          { name: 'Trip history', desc: 'The full route is saved after the delivery is complete.' },
-          {
-            name: 'Incident report',
-            desc: 'An official record after any incident, with photos and a description, for insurance and admin follow-up.',
-            signature: true,
-          },
-        ],
-        note: {
-          label: 'Different from SOS',
-          text: 'SOS is immediate help in a dangerous moment. An incident report is documentation after the situation is over.',
-        },
+        body: 'A route on record from start to finish, an SOS button for dangerous moments, and an official report for any incident.',
+        points: ['Live tracking the customer and café can see', 'SOS for immediate help', 'Proof of delivery and trip history'],
       },
       {
-        id: 'tier',
-        title: 'Grow into Butler',
-        benefit: 'Every driver starts at Standard. Reach the required rating and trip count, and the Butler tier unlocks automatically.',
-        comingLater: true,
-        features: [
-          { name: 'Standard tier', desc: 'Single or standard batched deliveries.' },
-          { name: 'Butler tier', desc: 'An earned upgrade that qualifies you for multi-store trips.' },
-          { name: 'Your tier, visible', desc: 'Your current tier shows clearly on the home screen.' },
-          { name: 'Unlock conditions', desc: 'A minimum rating, a number of completed trips, and a clean record.' },
-        ],
+        title: 'Transparent pay',
+        body: 'You see what each delivery pays, and you control your bank account from Settings.',
+        points: ['Clear pay for every delivery', 'Update your bank account any time', 'An invoice for every trip'],
       },
+    ],
+  },
+  signature: {
+    eyebrow: 'Signature features',
+    heading: 'What you won’t find in another delivery app',
+    subhead: 'Five features built specifically for CoffeeTalk drivers.',
+    badge: 'Only here',
+    items: [
+      { name: 'Approved before your first order', desc: 'The CoffeeTalk team reviews your documents and approves you before you receive any order. Verified drivers only.' },
+      { name: 'Online / Offline', desc: 'An “Available now” switch to receive orders, and a pause for breaks.' },
+      { name: 'Accept or decline within a window', desc: 'About 15 seconds to respond to each proposed order, with an optional decline reason.' },
+      { name: 'Smart batching', desc: 'Two nearby orders in one trip, sequenced so each stays at the right temperature.' },
+      { name: 'Official incident report', desc: 'Photos and a description after any incident or breakdown, for insurance and admin follow-up.' },
     ],
   },
   how: {
     eyebrow: 'How it works',
-    heading: 'From applying to your first delivery',
-    subhead: 'Four steps, all from your phone.',
+    heading: 'From application to first delivery in four steps',
+    subhead: 'All of it from your phone.',
     steps: [
-      { title: 'Apply from your phone', desc: 'Upload your driving licence, vehicle or bike registration, and ID or iqama.' },
-      { title: 'Get approved', desc: 'The CoffeeTalk team reviews your documents and you accept the terms.' },
-      { title: 'Daily check-in', desc: 'Face verification and the uniform & hygiene check. Seconds, then you’re set.' },
-      { title: 'Go online and deliver', desc: 'Take the nearest order, follow the route, and hand over the coffee in its best state.' },
+      { title: 'Apply from your phone', desc: 'Upload your driving licence, vehicle or bike registration, and national ID or iqama.' },
+      { title: 'Get approved', desc: 'The CoffeeTalk team reviews your documents, then you accept the terms of use.' },
+      { title: 'Daily check-in', desc: 'Face verification and a uniform & safety check. Seconds, and you’re in.' },
+      { title: 'Go online and deliver', desc: 'Take the nearest order, follow the route, and hand over the coffee at its best.' },
     ],
   },
-  earnings: {
-    eyebrow: 'Getting paid',
-    heading: 'Your bank account, in Settings',
-    body: 'Your bank account is linked to your driver profile, and you can update it from Settings at any time.',
+  shift: {
+    eyebrow: 'Inside a shift',
+    heading: 'Three screens that sum up your day',
+    subhead: 'Check-in, the order, and the route. This is what the driver actually sees.',
+    screens: [
+      {
+        key: 'checkIn',
+        title: 'Daily check-in',
+        caption: 'One gate before any order.',
+        alt: 'Daily check-in screen: face verification and the uniform checklist.',
+        features: [
+          { name: 'Face verification', desc: 'A quick face scan matched to your registered profile.' },
+          { name: 'Uniform & safety check', desc: 'Gloves, mask, the CoffeeTalk uniform, and the outfit check for Premium handoffs.' },
+        ],
+        note: { label: 'AI', text: 'An automatic visual check at sign-in. If anything is missing, the app flags it before the shift starts.' },
+      },
+      {
+        key: 'order',
+        title: 'The order',
+        caption: 'The nearest order to you, with a clear window to respond.',
+        alt: 'New order screen with the acceptance countdown and accept / decline buttons.',
+        features: [
+          { name: 'Best match', desc: 'The nearest available driver for each order, by distance and time.' },
+          { name: 'Traffic & route', desc: 'Live traffic analysis and the fastest route by time.' },
+          { name: 'Temperature-safe ETA', desc: 'Hot stays hot. Cold doesn’t melt.' },
+        ],
+        note: { label: 'AI', text: 'Matching isn’t just “nearest driver”: the app factors in the drink and its temperature before it proposes the order to you.' },
+      },
+      {
+        key: 'route',
+        title: 'The route',
+        caption: 'On record from the first metre to the last.',
+        alt: 'Live map screen with the trip route from the café to the customer.',
+        features: [
+          { name: 'Bound to route', desc: 'No side orders outside the app, and an instant alert if you leave the route.' },
+          { name: 'Live tracking', desc: 'The customer and the café follow your trip live. Tracking stops at delivery.' },
+          { name: 'Proof of delivery & trip history', desc: 'Delivery confirmation at the customer, and the full route saved afterwards.' },
+        ],
+        note: { label: 'Different from SOS', text: 'SOS is immediate help in a dangerous moment. An incident report is documentation after the situation is over.' },
+      },
+    ],
+  },
+  tier: {
+    badge: 'Coming later',
+    title: 'The Butler tier',
+    body: 'Every driver starts at Standard. Reach the required rating and trip count with a clean record, and the Butler tier unlocks automatically, qualifying you for multi-store trips. Your current tier always shows on the home screen.',
+    points: ['Earned, not chosen', 'Multi-store trips', 'Minimum rating and completed trips'],
+  },
+  pay: {
+    eyebrow: 'Pay',
+    heading: 'Transparent pay, and a bank account you control',
+    body: 'You see what each delivery pays. Your bank account is linked to your driver profile, and you update it from Settings any time.',
     points: [
+      { name: 'Clear pay for every delivery', desc: 'Transparent payouts, no surprises.' },
       { name: 'Bank account', desc: 'Add or update your bank details from Settings.' },
-      { name: 'Vehicle details', desc: 'Change your registered car or bike from the same place.' },
+      { name: 'An invoice for every trip', desc: 'View or download your trip invoices in the app.' },
     ],
-    todo: '[TODO] Earnings structure and payout schedule: awaiting product input. Do not publish this page until this block is filled.',
-  },
-  safety: {
-    eyebrow: 'Safety',
-    heading: 'On record from the first metre to the last',
-    subhead: 'Safety on CoffeeTalk isn’t an extra button. It’s how the app works.',
-    points: [
-      { name: 'Verified identity, every shift', desc: 'Face verification and a uniform check before you receive any order.' },
-      { name: 'A route you keep, that others can see', desc: 'An alert if you leave the route, and the customer and café follow the trip live.' },
-      { name: 'Every incident on record', desc: 'Photos and a description, for insurance and admin follow-up.' },
-    ],
-    sosNote: 'SOS is for immediate help in a dangerous moment. The incident report documents what happened once it’s over.',
+    todo: '[TODO] Earnings structure and payout schedule: awaiting the product team.',
   },
   requirements: {
     eyebrow: 'Requirements',
@@ -199,7 +158,7 @@ export const en: Dictionary = {
   },
   faq: {
     eyebrow: 'FAQ',
-    heading: 'What drivers usually ask',
+    heading: 'Questions drivers ask',
     items: [
       {
         q: 'How do I apply?',
@@ -223,20 +182,20 @@ export const en: Dictionary = {
       },
       {
         q: 'Can I take orders outside the app during a trip?',
-        a: 'No. The trip is bound to its route, you get an alert if you leave it, and the customer and café see your trip live. The full route is saved in trip history after delivery.',
+        a: 'No. The trip is bound to its route, you get an alert if you leave it, and the customer and café follow your trip live. The full route is saved in trip history after delivery.',
       },
       {
         q: 'What do I do if there’s an accident or breakdown?',
-        a: 'Use the incident report to document what happened with photos and a description, for insurance and admin follow-up. SOS is for immediate help in a dangerous moment.',
+        a: 'In a dangerous moment, use SOS for immediate help. Once the situation is over, document what happened with the incident report: photos and a description, for insurance and admin follow-up.',
       },
       {
         q: 'How do I get paid?',
-        a: 'Your bank account is linked to your driver profile and you can update it from Settings. [TODO] Earnings structure and payout schedule awaiting product input.',
+        a: 'You see what each delivery pays, and your earnings go to the bank account registered in Settings. [TODO] Earnings structure and payout schedule awaiting the product team.',
       },
     ],
   },
   finalCta: {
-    heading: 'Ready to start?',
+    heading: 'Ready to roll?',
     subhead: 'Apply from your phone today. Your first shift is right after approval.',
     primary: 'Apply to drive',
   },
@@ -257,7 +216,7 @@ export const en: Dictionary = {
     ],
     submit: 'Send my application',
     submitting: 'Sending…',
-    successTitle: 'Got it!',
+    successTitle: 'Got it',
     successBody: 'We’ll contact you on your mobile number as soon as applications open in your city.',
     errorGeneric: 'We couldn’t send your application. Please try again in a moment.',
     errors: {
@@ -276,10 +235,5 @@ export const en: Dictionary = {
     privacy: 'Privacy policy',
     terms: 'Terms of use',
     copyright: '© 2026 CoffeeTalk. All rights reserved.',
-  },
-  screensAlt: {
-    checkIn: 'Daily check-in screen: face verification and the uniform checklist.',
-    order: 'New order screen with the acceptance countdown and accept / decline buttons.',
-    route: 'Live map screen with the trip route from the café to the customer.',
   },
 }

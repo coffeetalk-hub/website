@@ -48,7 +48,7 @@ src/i18n/ar.ts, en.ts            ALL copy (Arabic default). Same shape, enforced
 src/i18n/index.tsx               LangProvider / useT(): ?lang= → localStorage → ar; updates <html>, title, meta, hreflang
 src/config.ts                    Env vars + screenshot paths
 src/index.css                    Design tokens (@theme), buttons, cards, reveal animation
-src/components/sections/*        One section per file, in page order (see src/App.tsx)
+src/components/sections/*        One per section, in page order: Header, Hero, Why, Signature, HowItWorks, Shift, Pay, Requirements, Faq, FinalCta, Footer (+ WaitlistForm)
 src/components/ui/*              PhoneFrame, RouteLine (signature motif), Reveal, Badge, ApplyButton, Wordmark
 src/lib/                         useInPageLinks (scroll without changing the URL), phone normaliser
 public/screens/                  App screenshots shown in the phone frames — see README there
@@ -66,11 +66,12 @@ change both places together.
 
 | # | Item | Where |
 | - | ---- | ----- |
-| 1 | **Earnings structure and payout schedule.** The feature map only shows bank details in Settings, so the section and the FAQ answer carry a visible `[TODO]` block. | `earnings.todo` and last FAQ item in `src/i18n/*.ts` |
+| 1 | **Earnings structure and payout schedule.** The page says pay is transparent and per-delivery (from the brief) but not how much or when, so the Pay section and the last FAQ answer carry a visible `[TODO]`. | `pay.todo` and last FAQ item in `src/i18n/*.ts` |
 | 2 | **Primary CTA target.** Set `VITE_APPLY_URL`, or set `VITE_WAITLIST_ENDPOINT` for the built-in form. | `.env` |
 | 3 | **App screenshots.** Replace the placeholder SVGs, keep the filenames (or update `SCREENS` in `src/config.ts`). | `public/screens/` |
 | 4 | **Logo.** Text wordmark + cup mark. | `src/components/ui/Wordmark.tsx`, `public/favicon.svg` |
 | 5 | **Contact details** in the footer. | `footer.contactTodo` in `src/i18n/*.ts` |
 | 6 | **Privacy / Terms** pages. Footer links are `href="#"`. | `src/components/sections/Footer.tsx` |
 | 7 | **OG image** (1200×630) at `public/og-image.png`, and `VITE_SITE_URL`. | `index.html`, `.env` |
-| 8 | **Driver Tier** is shown as "Coming later" (P3 on the map). Remove `comingLater: true` when it ships. | `themes.items[4]` in `src/i18n/*.ts` |
+| 8 | **Butler tier** is shown as "Coming later" (P3 on the map). Drop the badge in `Pay.tsx` when it ships. | `tier` in `src/i18n/*.ts` |
+| 9 | **Placeholder screens are English-only.** Real Arabic screenshots should replace them. | `public/screens/` |

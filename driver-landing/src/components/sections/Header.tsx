@@ -28,10 +28,10 @@ export function Header() {
   }, [open])
 
   const links = [
-    { href: '#features', label: t.nav.features },
+    { href: '#why', label: t.nav.why },
     { href: '#how', label: t.nav.how },
-    { href: '#earnings', label: t.nav.earnings },
-    { href: '#safety', label: t.nav.safety },
+    { href: '#shift', label: t.nav.shift },
+    { href: '#pay', label: t.nav.pay },
     { href: '#faq', label: t.nav.faq },
   ]
 

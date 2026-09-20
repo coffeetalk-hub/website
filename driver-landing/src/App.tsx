@@ -1,9 +1,10 @@
 import { Header } from './components/sections/Header'
 import { Hero } from './components/sections/Hero'
-import { Themes } from './components/sections/Themes'
+import { Why } from './components/sections/Why'
+import { Signature } from './components/sections/Signature'
 import { HowItWorks } from './components/sections/HowItWorks'
-import { Earnings } from './components/sections/Earnings'
-import { Safety } from './components/sections/Safety'
+import { Shift } from './components/sections/Shift'
+import { Pay } from './components/sections/Pay'
 import { Requirements } from './components/sections/Requirements'
 import { Faq } from './components/sections/Faq'
 import { FinalCta } from './components/sections/FinalCta'
@@ -18,10 +19,11 @@ export default function App() {
       <Header />
       <main id="main">
         <Hero />
-        <Themes />
+        <Why />
+        <Signature />
         <HowItWorks />
-        <Earnings />
-        <Safety />
+        <Shift />
+        <Pay />
         <Requirements />
         <Faq />
         <FinalCta />

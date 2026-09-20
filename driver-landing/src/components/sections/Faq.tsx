@@ -10,11 +10,11 @@ export function Faq() {
   const base = useId()
 
   return (
-    <section id="faq" aria-labelledby="faq-heading" className="scroll-mt-20 border-t border-espresso-900/10 bg-cream-100 py-20 text-espresso-900 sm:py-28">
+    <section id="faq" aria-labelledby="faq-heading" className="scroll-mt-20 border-t border-espresso-900/10 bg-cream-50 py-20 text-espresso-900 sm:py-28">
       <div className="container-x grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <SectionHeading id="faq-heading" tone="cream" eyebrow={t.faq.eyebrow} title={t.faq.heading} />
         <Reveal delay={100}>
-          <div className="divide-y divide-espresso-900/10 rounded-3xl border border-espresso-900/10 bg-white/70 shadow-card">
+          <div className="divide-y divide-espresso-900/10 rounded-3xl border border-espresso-900/10 bg-white shadow-card">
             {t.faq.items.map((item, i) => {
               const isOpen = open === i
               const btnId = `${base}-q${i}`

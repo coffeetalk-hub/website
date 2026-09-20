@@ -3,21 +3,8 @@ export type Lang = 'ar' | 'en'
 export interface FeatureItem {
   name: string
   desc: string
-  /** A CoffeeTalk-only feature (P1-Signature on the product map). */
+  /** CoffeeTalk-only feature (P1-Signature on the product map). */
   signature?: boolean
-}
-
-export interface Theme {
-  id: string
-  title: string
-  benefit: string
-  features: FeatureItem[]
-  /** AI / policy note from the product map, shown as a callout. */
-  note?: { label: string; text: string }
-  /** Ships later (P3 on the product map). */
-  comingLater?: boolean
-  /** Screenshot key to show next to this theme (optional). */
-  screen?: 'checkIn' | 'order' | 'route'
 }
 
 export interface Step {
@@ -30,14 +17,29 @@ export interface Faq {
   a: string
 }
 
+export interface WhyTile {
+  title: string
+  body: string
+  points: string[]
+}
+
+export interface ShiftScreen {
+  key: 'checkIn' | 'order' | 'route'
+  title: string
+  caption: string
+  alt: string
+  features: FeatureItem[]
+  note?: { label: string; text: string }
+}
+
 export interface Dictionary {
   meta: { title: string; description: string; ogLocale: string }
   brand: { name: string; product: string }
   nav: {
-    features: string
+    why: string
     how: string
-    earnings: string
-    safety: string
+    shift: string
+    pay: string
     faq: string
     apply: string
     menuOpen: string
@@ -54,17 +56,17 @@ export interface Dictionary {
     secondary: string
     chips: string[]
     screenAlt: string
+    /** Text inside the big "Available now" card in the hero */
+    toggleLabel: string
+    toggleState: string
+    toggleHint: string
   }
-  themes: { eyebrow: string; heading: string; subhead: string; signature: string; comingLater: string; items: Theme[] }
+  why: { eyebrow: string; heading: string; subhead: string; tiles: [WhyTile, WhyTile, WhyTile, WhyTile] }
+  signature: { eyebrow: string; heading: string; subhead: string; badge: string; items: FeatureItem[] }
   how: { eyebrow: string; heading: string; subhead: string; steps: Step[] }
-  earnings: {
-    eyebrow: string
-    heading: string
-    body: string
-    points: FeatureItem[]
-    todo: string
-  }
-  safety: { eyebrow: string; heading: string; subhead: string; points: FeatureItem[]; sosNote: string }
+  shift: { eyebrow: string; heading: string; subhead: string; screens: [ShiftScreen, ShiftScreen, ShiftScreen] }
+  tier: { badge: string; title: string; body: string; points: string[] }
+  pay: { eyebrow: string; heading: string; body: string; points: FeatureItem[]; todo: string }
   requirements: { eyebrow: string; heading: string; subhead: string; items: string[]; cta: string }
   faq: { eyebrow: string; heading: string; items: Faq[] }
   finalCta: { heading: string; subhead: string; primary: string }
@@ -95,5 +97,4 @@ export interface Dictionary {
     terms: string
     copyright: string
   }
-  screensAlt: { checkIn: string; order: string; route: string }
 }
