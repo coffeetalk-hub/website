@@ -120,6 +120,25 @@ export interface Content {
     subhead: string
     items: Feature[]
     cta: string
+    form: {
+      title: string
+      intro: string
+      name: string
+      phone: string
+      phoneHint: string
+      city: string
+      cityPlaceholder: string
+      cities: { value: string; label: string }[]
+      vehicle: string
+      vehicles: { value: string; label: string }[]
+      submit: string
+      submitting: string
+      successTitle: string
+      successBody: string
+      errorGeneric: string
+      errors: { name: string; phone: string; city: string; vehicle: string }
+      close: string
+    }
   }
   stats: {
     heading: string
@@ -138,6 +157,7 @@ export interface Content {
     legal: string
     about: string
     contact: string
+    driveWithUs: string
     privacy: string
     terms: string
     builtBy: string
@@ -423,6 +443,39 @@ const en: Content = {
       { title: 'Proof of delivery', body: 'Photo and PIN confirmation protects you and the customer.' },
     ],
     cta: 'Drive with CoffeeTalk',
+    form: {
+      title: 'Apply to drive with CoffeeTalk',
+      intro: 'Leave your details and we’ll contact you when driver onboarding opens in your city.',
+      name: 'Name',
+      phone: 'Mobile number',
+      phoneHint: 'e.g. 05xxxxxxxx or +9665xxxxxxxx',
+      city: 'City',
+      cityPlaceholder: 'Choose your city',
+      cities: [
+        { value: 'riyadh', label: 'Riyadh' },
+        { value: 'jeddah', label: 'Jeddah' },
+        { value: 'makkah', label: 'Makkah' },
+        { value: 'eastern', label: 'Eastern Province (Dammam, Khobar, Dhahran)' },
+        { value: 'other', label: 'Another city' },
+      ],
+      vehicle: 'Vehicle',
+      vehicles: [
+        { value: 'car', label: 'Car' },
+        { value: 'bike', label: 'Motorbike' },
+      ],
+      submit: 'Send my application',
+      submitting: 'Sending…',
+      successTitle: 'Got it!',
+      successBody: 'We’ll contact you on your mobile number when onboarding opens in your city.',
+      errorGeneric: 'We couldn’t send your application. Please try again in a moment.',
+      errors: {
+        name: 'Enter your name.',
+        phone: 'Enter a valid Saudi mobile number (starts with 05 or +9665).',
+        city: 'Choose your city.',
+        vehicle: 'Choose your vehicle.',
+      },
+      close: 'Close',
+    },
   },
   stats: {
     heading: 'A market that’s ready',
@@ -445,6 +498,7 @@ const en: Content = {
     legal: 'Legal',
     about: 'About',
     contact: 'Contact',
+    driveWithUs: 'Apply as a driver',
     privacy: 'Privacy policy',
     terms: 'Terms of service',
     builtBy: 'Built by',
@@ -729,6 +783,39 @@ const ar: Content = {
       { title: 'إثبات التسليم', body: 'تأكيد بالصورة ورمز PIN يحميك ويحمي العميل.' },
     ],
     cta: 'انضم كسائق مع كوفي توك',
+    form: {
+      title: 'قدّم كسائق مع كوفي توك',
+      intro: 'اترك بياناتك، ونتواصل معك عند فتح التسجيل للسائقين في مدينتك.',
+      name: 'الاسم',
+      phone: 'رقم الجوال',
+      phoneHint: 'مثال: 05xxxxxxxx أو +9665xxxxxxxx',
+      city: 'المدينة',
+      cityPlaceholder: 'اختر مدينتك',
+      cities: [
+        { value: 'riyadh', label: 'الرياض' },
+        { value: 'jeddah', label: 'جدة' },
+        { value: 'makkah', label: 'مكة المكرمة' },
+        { value: 'eastern', label: 'المنطقة الشرقية (الدمام، الخبر، الظهران)' },
+        { value: 'other', label: 'مدينة أخرى' },
+      ],
+      vehicle: 'المركبة',
+      vehicles: [
+        { value: 'car', label: 'سيارة' },
+        { value: 'bike', label: 'دراجة نارية' },
+      ],
+      submit: 'إرسال الطلب',
+      submitting: 'جارٍ الإرسال…',
+      successTitle: 'وصلنا طلبك!',
+      successBody: 'سنتواصل معك على رقم جوالك عند فتح التسجيل في مدينتك.',
+      errorGeneric: 'تعذّر إرسال طلبك. حاول مرة أخرى بعد قليل.',
+      errors: {
+        name: 'اكتب اسمك.',
+        phone: 'اكتب رقم جوال سعودي صحيح (يبدأ بـ 05 أو +9665).',
+        city: 'اختر مدينتك.',
+        vehicle: 'اختر نوع المركبة.',
+      },
+      close: 'إغلاق',
+    },
   },
   stats: {
     heading: 'سوق جاهز',
@@ -751,6 +838,7 @@ const ar: Content = {
     legal: 'قانوني',
     about: 'من نحن',
     contact: 'تواصل معنا',
+    driveWithUs: 'قدّم كسائق',
     privacy: 'سياسة الخصوصية',
     terms: 'شروط الاستخدام',
     builtBy: 'من تطوير',

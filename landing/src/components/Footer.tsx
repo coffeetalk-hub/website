@@ -1,5 +1,6 @@
 import { useLang } from '../i18n'
 import { Wordmark } from './Icons'
+import { DriveCta } from './DriveCta'
 
 export function Footer() {
   const { t } = useLang()
@@ -50,6 +51,13 @@ export function Footer() {
                   </a>
                 </li>
               ))}
+              {c.title === t.footer.company && (
+                <li>
+                  <DriveCta className={`${linkCls} inline-flex items-center gap-1 font-semibold text-copper-600`} arrow={false}>
+                    {t.footer.driveWithUs}
+                  </DriveCta>
+                </li>
+              )}
             </ul>
           </nav>
         ))}

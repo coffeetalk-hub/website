@@ -76,7 +76,7 @@ The Google Fonts `<link>` is in `index.html`; swap the family names there and in
 | App Store / Google Play URLs | `src/components/StoreBadges.tsx` — both badges currently link to `#download` |
 | Logo | `Wordmark` in `src/components/Icons.tsx` (SVG cup mark + text) and `public/favicon.svg` |
 | Partner form handler | `handleSubmit` in `src/components/PartnerForm.tsx` — `TODO(launch)`, currently `console.info` |
-| Driver sign-up link | `src/components/ForDrivers.tsx` — CTA links to `#download` |
+| Driver application | "Drive with CoffeeTalk" (and the footer link) opens `src/components/DriverApplyForm.tsx`. Set `VITE_DRIVER_APPLY_ENDPOINT` to receive submissions, or `VITE_DRIVER_PAGE_URL` to link out to the driver page instead (see `.env.example`) |
 | Privacy / Terms / About / Contact pages | `src/components/Footer.tsx` — `href="#"` |
 | "Built by" link | `src/components/Footer.tsx` — points at `https://thesailors.ai` |
 | Market stats source line | `stats.source` in `src/content.ts` (not rendered yet; add a citation if you want it shown) |

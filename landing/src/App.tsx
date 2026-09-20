@@ -9,11 +9,12 @@ import { StatsStrip } from './components/StatsStrip'
 import { Download } from './components/Download'
 import { Footer } from './components/Footer'
 import { useInPageLinks } from './useInPageLinks'
+import { DriverApplyProvider } from './components/DriverApplyForm'
 
 export default function App() {
   useInPageLinks()
   return (
-    <>
+    <DriverApplyProvider>
       <Nav />
       <main id="main">
         <Hero />
@@ -26,6 +27,6 @@ export default function App() {
         <Download />
       </main>
       <Footer />
-    </>
+    </DriverApplyProvider>
   )
 }

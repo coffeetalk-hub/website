@@ -1,5 +1,6 @@
 import { useLang } from '../i18n'
 import { Icon } from './Icons'
+import { DriveCta } from './DriveCta'
 import { Reveal } from './Reveal'
 import { SectionHeading } from './SectionHeading'
 
@@ -44,11 +45,7 @@ export function ForDrivers() {
             subhead={t.drivers.subhead}
           />
           <Reveal delay={120}>
-            {/* TODO(launch): link to the driver sign-up flow */}
-            <a href="#download" className="btn-primary mt-8">
-              {t.drivers.cta}
-              <Icon.ArrowEnd className="h-4 w-4" />
-            </a>
+            <DriveCta className="btn-primary mt-8">{t.drivers.cta}</DriveCta>
           </Reveal>
         </div>
       </div>
