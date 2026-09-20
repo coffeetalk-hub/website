@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 845" width="390" height="845">
+<rect width="390" height="845" fill="#1c120d"/>
+<text x="24" y="92" font-family="IBM Plex Sans, Segoe UI, sans-serif" font-size="14" fill="#c9b8a3">9:41</text>
+<text x="24" y="150" font-family="IBM Plex Sans, Segoe UI, sans-serif" font-size="26" font-weight="700" fill="#f5ecdd">Live route</text>
+<rect x="24" y="180" width="342" height="440" rx="24" fill="#2b1a12"/>
+<line x1="24" y1="220" x2="366" y2="220" stroke="#3e2a1e"/><line x1="24" y1="290" x2="366" y2="290" stroke="#3e2a1e"/><line x1="24" y1="360" x2="366" y2="360" stroke="#3e2a1e"/><line x1="24" y1="430" x2="366" y2="430" stroke="#3e2a1e"/><line x1="24" y1="500" x2="366" y2="500" stroke="#3e2a1e"/><line x1="24" y1="570" x2="366" y2="570" stroke="#3e2a1e"/>
+<line x1="90" y1="180" x2="90" y2="620" stroke="#3e2a1e"/><line x1="160" y1="180" x2="160" y2="620" stroke="#3e2a1e"/><line x1="230" y1="180" x2="230" y2="620" stroke="#3e2a1e"/><line x1="300" y1="180" x2="300" y2="620" stroke="#3e2a1e"/>
+<path d="M70 560 C 120 560, 130 420, 190 424 S 290 540, 320 260" stroke="#d07a3c" stroke-width="4" stroke-dasharray="10 8" fill="none" stroke-linecap="round"/>
+<circle cx="70" cy="560" r="9" fill="#d07a3c"/><circle cx="320" cy="260" r="9" fill="#f5ecdd"/><circle cx="320" cy="260" r="18" fill="none" stroke="#f5ecdd" stroke-opacity=".4" stroke-width="2"/>
+<rect x="24" y="646" width="342" height="110" rx="20" fill="#2b1a12"/>
+<text x="44" y="684" font-family="IBM Plex Sans" font-size="13" fill="#d07a3c" font-weight="700">ON ROUTE · 6 min</text>
+<text x="44" y="716" font-family="IBM Plex Sans" font-size="18" font-weight="700" fill="#f5ecdd">Al Malqa · customer</text>
+<text x="44" y="742" font-family="IBM Plex Sans" font-size="13" fill="#c9b8a3">Visible to customer and café</text>
+<text x="195" y="812" text-anchor="middle" font-family="IBM Plex Sans, Segoe UI, sans-serif" font-size="11" fill="#3e2a1e">placeholder — replace in /public/screens</text></svg>

@@ -1,0 +1,164 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------
+   CoffeeTalk Driver — design tokens (dark-first)
+   Same brand family as the customer landing, weighted for a work tool:
+   espresso ground, cream text, copper for every action.
+   ------------------------------------------------------------------ */
+@theme {
+  --color-espresso-950: #140d09;
+  --color-espresso-900: #1c120d;
+  --color-espresso-800: #2b1a12;
+  --color-espresso-700: #3e2a1e;
+  --color-espresso-600: #5a3e2c;
+  --color-espresso-500: #6b5546; /* muted text on cream */
+
+  --color-cream-50: #fbf6ee;
+  --color-cream-100: #f5ecdd;
+  --color-cream-200: #eadcc5;
+  --color-sand-400: #c9b8a3; /* muted text on espresso (≈9:1) */
+
+  --color-copper-300: #e8a86b; /* accent text on dark (≈9:1) */
+  --color-copper-400: #d07a3c; /* buttons on dark, with espresso-950 text (≈5.9:1) */
+  --color-copper-500: #a8541e; /* buttons on cream, with white text (≈5.3:1) */
+  --color-copper-600: #9c4f1e; /* accent text on cream (≈5.5:1) */
+
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-arabic: 'IBM Plex Sans Arabic', 'Tajawal', 'Segoe UI', Tahoma, system-ui, sans-serif;
+
+  --shadow-card: 0 1px 2px rgba(20, 13, 9, 0.08), 0 16px 40px -16px rgba(20, 13, 9, 0.35);
+  --shadow-phone: 0 50px 90px -40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  --ease-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --animate-route: route-dash 6s linear infinite;
+  --animate-blink: blink 1.6s ease-in-out infinite;
+
+  @keyframes route-dash {
+    to {
+      stroke-dashoffset: -60;
+    }
+  }
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+}
+
+@custom-variant ar (&:where([lang='ar'], [lang='ar'] *));
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 4.5rem;
+  }
+  body {
+    @apply bg-espresso-950 text-cream-50 font-sans antialiased;
+  }
+  html[lang='ar'] body {
+    @apply font-arabic;
+  }
+  html[lang='ar'] .tracking-tight,
+  html[lang='ar'] .tracking-tighter,
+  html[lang='ar'] .tracking-wider,
+  html[lang='ar'] .tracking-\[0\.18em\] {
+    letter-spacing: 0;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-4 outline-copper-300 rounded-sm;
+  }
+  section[tabindex='-1']:focus,
+  main[tabindex='-1']:focus {
+    outline: none;
+  }
+  ::selection {
+    background: var(--color-copper-300);
+    color: var(--color-espresso-950);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  .btn-on-cream {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-[background-color,color,transform,box-shadow] duration-200 ease-soft motion-safe:active:scale-[0.98];
+  }
+  .btn-primary {
+    @apply bg-copper-400 text-espresso-950 hover:bg-copper-300 focus-visible:outline-copper-300;
+  }
+  .btn-secondary {
+    @apply border border-cream-50/20 bg-transparent text-cream-50 hover:border-cream-50/50 hover:bg-cream-50/5;
+  }
+  .btn-ghost {
+    @apply border border-cream-50/15 bg-transparent px-3 text-cream-50 hover:bg-cream-50/5;
+  }
+  .btn-on-cream {
+    @apply bg-copper-500 text-white hover:bg-copper-600 focus-visible:outline-copper-500;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-copper-300;
+  }
+  html[lang='ar'] .eyebrow {
+    @apply text-sm;
+  }
+  .eyebrow-on-cream {
+    @apply text-copper-600;
+  }
+
+  /* Dark card + cream card */
+  .card-dark {
+    @apply rounded-2xl border border-cream-50/10 bg-espresso-900 p-6;
+  }
+  .card-cream {
+    @apply rounded-2xl border border-espresso-900/10 bg-white/70 p-6 shadow-card;
+  }
+
+  /* Visible TODO placeholder — content the product team still needs to supply. */
+  .todo {
+    @apply rounded-2xl border-2 border-dashed border-copper-400/60 bg-copper-400/5 p-5 text-sm;
+  }
+
+  /* Entrance animation — visible at rest, only animates when motion is allowed. */
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition:
+        opacity 0.6s var(--ease-soft),
+        transform 0.6s var(--ease-soft);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

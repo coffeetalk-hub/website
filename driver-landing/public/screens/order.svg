@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 845" width="390" height="845">
+<rect width="390" height="845" fill="#1c120d"/>
+<text x="24" y="92" font-family="IBM Plex Sans, Segoe UI, sans-serif" font-size="14" fill="#c9b8a3">9:41</text>
+<text x="24" y="150" font-family="IBM Plex Sans, Segoe UI, sans-serif" font-size="26" font-weight="700" fill="#f5ecdd">New order</text>
+<circle cx="195" cy="290" r="70" fill="#2b1a12" stroke="#3e2a1e" stroke-width="10"/>
+<path d="M195 220 a70 70 0 1 1 -60 105" stroke="#d07a3c" stroke-width="10" fill="none" stroke-linecap="round"/>
+<text x="195" y="300" text-anchor="middle" font-family="IBM Plex Sans" font-size="34" font-weight="700" fill="#f5ecdd">12s</text>
+<rect x="24" y="390" width="342" height="150" rx="20" fill="#2b1a12"/>
+<text x="44" y="426" font-family="IBM Plex Sans" font-size="13" fill="#d07a3c" font-weight="700">PICKUP · 1.2 km</text>
+<text x="44" y="458" font-family="IBM Plex Sans" font-size="19" font-weight="700" fill="#f5ecdd">Brew Lab · Al Olaya</text>
+<text x="44" y="486" font-family="IBM Plex Sans" font-size="14" fill="#c9b8a3">Iced Spanish Latte · keep cold</text>
+<text x="44" y="514" font-family="IBM Plex Sans" font-size="14" fill="#c9b8a3">Drop-off 2.4 km · 9 min</text>
+<rect x="24" y="566" width="342" height="54" rx="16" fill="#d07a3c"/><text x="195" y="600" text-anchor="middle" font-family="IBM Plex Sans" font-size="16" font-weight="700" fill="#1c120d">Accept</text>
+<rect x="24" y="634" width="342" height="54" rx="16" fill="none" stroke="#c9b8a3" stroke-opacity=".5"/><text x="195" y="668" text-anchor="middle" font-family="IBM Plex Sans" font-size="16" font-weight="600" fill="#f5ecdd">Decline</text>
+<text x="195" y="812" text-anchor="middle" font-family="IBM Plex Sans, Segoe UI, sans-serif" font-size="11" fill="#3e2a1e">placeholder — replace in /public/screens</text></svg>
