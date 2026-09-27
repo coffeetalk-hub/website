@@ -80,11 +80,6 @@ export interface Content {
     heading: string
     items: Feature[]
   }
-  howItWorks: {
-    heading: string
-    subhead: string
-    steps: [Feature, Feature, Feature]
-  }
   appTour: {
     eyebrow: string
     heading: string
@@ -233,7 +228,7 @@ const en: Content = {
     ],
   },
   supporting: {
-    heading: 'And everything else you’d expect, done better',
+    heading: 'More',
     items: [
       { title: 'Subscriptions', body: 'Your daily cup on a plan. Pause any time.' },
       { title: 'Catering & business accounts', body: 'Office accounts with invoicing and meal allowances.' },
@@ -243,22 +238,10 @@ const en: Content = {
       { title: 'Entertainment while you wait', body: 'Spotify and Anghami, right inside the order screen.' },
     ],
   },
-  howItWorks: {
-    heading: 'How it works',
-    subhead: 'Three steps between you and your next cup.',
-    steps: [
-      { title: 'Order your way', body: 'Speak it, snap it, or tap it. Voice, photo, or the classic menu.' },
-      {
-        title: 'Café prepares, driver dispatched',
-        body: 'The café gets your order instantly. A nearby driver is matched the moment it’s ready, or you pick it up.',
-      },
-      { title: 'Sip and earn', body: 'Enjoy it, then watch your loyalty challenge move forward.' },
-    ],
-  },
   appTour: {
     eyebrow: 'Customer app',
-    heading: 'Five tabs. Everything a coffee person needs.',
-    subhead: 'A quick tour of what’s inside the CoffeeTalk customer app.',
+    heading: 'Everything in the app',
+    subhead: 'All the features, by area.',
     signatureBadge: 'Signature',
     soonBadge: 'Coming soon',
     tablistLabel: 'App sections',
@@ -573,7 +556,7 @@ const ar: Content = {
     ],
   },
   supporting: {
-    heading: 'وكل ما تتوقعه من تطبيق قهوة، بشكل أفضل',
+    heading: 'وأيضًا',
     items: [
       { title: 'الاشتراكات', body: 'فنجانك اليومي باشتراك. أوقفه متى شئت.' },
       { title: 'الضيافة وحسابات الشركات', body: 'حسابات للشركات مع فواتير وبدلات وجبات للموظفين.' },
@@ -583,22 +566,10 @@ const ar: Content = {
       { title: 'ترفيه أثناء الانتظار', body: 'Spotify وأنغامي داخل شاشة الطلب مباشرة.' },
     ],
   },
-  howItWorks: {
-    heading: 'كيف يعمل',
-    subhead: 'ثلاث خطوات بينك وبين فنجانك القادم.',
-    steps: [
-      { title: 'اطلب بطريقتك', body: 'بالصوت أو بالصورة أو باللمس. كما يناسبك.' },
-      {
-        title: 'المقهى يجهّز والسائق في الطريق',
-        body: 'يصل طلبك إلى المقهى فورًا، ويُرسل أقرب سائق لحظة جاهزيته، أو تستلمه بنفسك.',
-      },
-      { title: 'استمتع واكسب', body: 'استمتع بقهوتك، وتابع تقدّمك في تحدي الولاء.' },
-    ],
-  },
   appTour: {
     eyebrow: 'تطبيق العميل',
-    heading: 'خمس صفحات، فيها كل ما يحتاجه عاشق القهوة.',
-    subhead: 'جولة سريعة داخل تطبيق كوفي توك للعملاء.',
+    heading: 'كل ما في التطبيق',
+    subhead: 'جميع المزايا، حسب القسم.',
     signatureBadge: 'ميزة كوفي توك',
     soonBadge: 'قريبًا',
     tablistLabel: 'أقسام التطبيق',

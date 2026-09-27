@@ -17,7 +17,22 @@ function VoiceImageIcon(p: SVGProps<SVGSVGElement>) {
 }
 
 const mainIcons: IconCmp[] = [VoiceImageIcon, Icon.Sparkles, Icon.Table, Icon.Stores]
-const supportIcons: IconCmp[] = [Icon.Calendar, Icon.Receipt, Icon.Bag, Icon.Target, Icon.Leaf, Icon.Music]
+
+function SignatureTag() {
+  const { t } = useLang()
+  return (
+    <span className="rounded-full bg-copper-500 px-1.5 py-0.5 text-[0.6rem] font-bold text-white">{t.appTour.signatureBadge}</span>
+  )
+}
+
+function SoonTag() {
+  const { t } = useLang()
+  return (
+    <span className="rounded-full border border-espresso-900/15 px-1.5 py-0.5 text-[0.6rem] font-semibold text-espresso-500">
+      {t.appTour.soonBadge}
+    </span>
+  )
+}
 
 export function Differentiators() {
   const { t } = useLang()
@@ -41,27 +56,42 @@ export function Differentiators() {
           })}
         </ul>
 
-        {/* Supporting features */}
+        {/* All features, listed by app area (plus the extras from the brief) */}
         <div className="mt-20 lg:mt-24">
-          <Reveal>
-            <h3 className="text-center text-xl font-bold text-espresso-900 sm:text-2xl">{t.supporting.heading}</h3>
+          <Reveal className="max-w-2xl">
+            <p className="eyebrow">{t.appTour.eyebrow}</p>
+            <h3 className="mt-2 text-2xl font-extrabold tracking-tight text-espresso-900 sm:text-3xl">{t.appTour.heading}</h3>
+            <p className="mt-2 text-espresso-500">{t.appTour.subhead}</p>
           </Reveal>
-          <ul className="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-            {t.supporting.items.map((item, i) => {
-              const Ico = supportIcons[i]
-              return (
-                <Reveal as="li" key={item.title} delay={i * 60} className="flex gap-4">
-                  <span className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-cream-200/70 text-copper-600">
-                    <Ico className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <h4 className="font-semibold text-espresso-900">{item.title}</h4>
-                    <p className="mt-1 text-sm leading-relaxed text-espresso-500">{item.body}</p>
-                  </div>
-                </Reveal>
-              )
-            })}
-          </ul>
+          <div className="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {t.appTour.tabs.map((tab, i) => (
+              <Reveal key={tab.id} delay={i * 60}>
+                <h4 className="flex items-center gap-2 border-b border-espresso-900/10 pb-2 text-base font-bold text-espresso-900">
+                  {tab.name}
+                  {tab.soon && <SoonTag />}
+                </h4>
+                <ul className="mt-3 space-y-2">
+                  {tab.groups.map((g) => (
+                    <li key={g.title} className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                      <span className="text-espresso-800">{g.title}</span>
+                      {g.tag === 'signature' && <SignatureTag />}
+                      {g.tag === 'soon' && !tab.soon && <SoonTag />}
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
+            ))}
+            <Reveal delay={300}>
+              <h4 className="border-b border-espresso-900/10 pb-2 text-base font-bold text-espresso-900">{t.supporting.heading}</h4>
+              <ul className="mt-3 space-y-2">
+                {t.supporting.items.map((item) => (
+                  <li key={item.title} className="text-sm text-espresso-800">
+                    {item.title}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          </div>
         </div>
       </div>
     </section>
