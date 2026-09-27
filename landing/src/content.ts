@@ -206,8 +206,8 @@ const en: Content = {
     },
   },
   differentiators: {
-    heading: 'Features no other delivery app in Saudi has',
-    subhead: 'We don’t compete on discounts. We compete on what the app can do.',
+    heading: 'Coffee ordering, reimagined',
+    subhead: 'Order by voice or photo, book your table, and let the app learn your taste.',
     items: [
       {
         title: 'AI voice & image ordering',
@@ -534,8 +534,8 @@ const ar: Content = {
     },
   },
   differentiators: {
-    heading: 'مزايا لا تجدها في أي تطبيق توصيل آخر في السعودية',
-    subhead: 'لا ننافس بالخصومات، بل بما يقدر التطبيق يقدّمه لك.',
+    heading: 'تجربة قهوة مختلفة من أول طلب',
+    subhead: 'اطلب بالصوت أو بالصورة، احجز طاولتك، ودع التطبيق يتعلّم ذوقك.',
     items: [
       {
         title: 'الطلب بالصوت والصورة',
