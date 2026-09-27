@@ -7,7 +7,7 @@ Content, imagery, logos and brand colours follow the *December 2025 company prof
 ```
 /index.html            Home — photo-mosaic hero, intro, stats, "Why The Sailors .ART", services, client strip, CTA
 /about.html            Story, group journey + milestones, manifesto, values, why us, leadership team & advisors
-/services.html         One-stop process, three service groups, "Licensed & Certified" (CR, CoC, permits)
+/services.html         One-stop process, three service groups, "Licensed & Certified" (CR, CoC)
 /work.html             Portfolio grid with filter tabs and lightbox (from data/projects.js) + cities map
 /partners.html         Clients / institutional partners / global alliances (from data/partners.js)
 /contact.html          Netlify-ready contact form, address, social links
@@ -19,7 +19,6 @@ Content, imagery, logos and brand colours follow the *December 2025 company prof
 /images/photos/        Nautical photography from the profile (hero, covers, ropes, sails…)
 /images/values/        The five value illustrations
 /images/team/          Leadership portraits
-/images/permits/       General Entertainment Authority permit scans
 /images/logos/         (empty) — drop client / partner logo files here
 /images/og-image.jpg   Link-preview image; favicon-*.png and apple-touch-icon.png
 /sitemap.xml /robots.txt /netlify.toml
@@ -81,12 +80,11 @@ Open `data/partners.js`. There are three arrays: `clients`, `institutional` and 
 - **Stat counters** — in `index.html` and `work.html`, each stat is
   `<span class="stat__num" data-count="480000" data-suffix="+">480,000+</span>`.
   Change `data-count` (the number that animates) and the visible text. Use `data-plain` for years.
-- **Leadership** — `about.html`, section "At the helm": the founder card, four team cards and the
-  board/advisors list. Portraits live in `images/team/` (480×560, cropped from the top).
+- **Leadership** — `about.html`, section "At the helm": the founder card, four compact team rows (small rounded
+  photo left, text right) and the board/advisors list. Portraits live in `images/team/`.
 - **Values** — `about.html`, "The compass we steer by"; illustrations in `images/values/`.
-- **Licenses & permits** — `services.html`, section `#licensed`. Permit names are shown in English with the
-  official Arabic name underneath; permit scans are in `images/permits/` (remove the `<div class="permits">`
-  block if you don't want the scans public).
+- **Licensed & Certified** — `services.html`, section `#licensed`: CR number, Chamber of Commerce number and
+  the recognizing authorities.
 - **Contact details** — email, phone, address and office hours appear in `contact.html` and every footer.
   Search for `info@thesailorsart.com` and `+966 00 000 0000` and replace them.
 - **Social links** — the `<ul class="social">` lists point at network home pages; replace the `href` values.
