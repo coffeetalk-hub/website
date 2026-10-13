@@ -26,6 +26,12 @@ export function Hero() {
           <Reveal delay={160}>
             <p className="mt-5 max-w-lg text-lg text-pretty text-espresso-500 sm:text-xl">{t.hero.subhead}</p>
           </Reveal>
+          <Reveal delay={200}>
+            <p className="mt-5 flex max-w-lg gap-2 text-sm leading-relaxed text-espresso-600">
+              <Icon.Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-copper-600" />
+              <span>{t.hero.aiMessage}</span>
+            </p>
+          </Reveal>
           <Reveal delay={240}>
             <StoreBadges className="mt-8" />
           </Reveal>

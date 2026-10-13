@@ -58,6 +58,7 @@ export interface Content {
     eyebrow: string
     headline: string
     subhead: string
+    aiMessage: string
     trust: string[]
     mockupAlt: string
     screen: {
@@ -74,7 +75,14 @@ export interface Content {
   differentiators: {
     heading: string
     subhead: string
-    items: [Feature, Feature, Feature, Feature]
+    items: [Feature, Feature, Feature, Feature, Feature, Feature, Feature, Feature]
+  }
+  callouts: {
+    heading: string
+    subhead: string
+    placeholderNote: string
+    /** One concise sentence per feature, same order as differentiators.items */
+    items: [string, string, string, string, string, string, string, string]
   }
   supporting: {
     heading: string
@@ -93,6 +101,9 @@ export interface Content {
     eyebrow: string
     heading: string
     subhead: string
+    categories: { title: string; audience: string; body: string }[]
+    capabilitiesHeading: string
+    capabilitiesNote: string
     items: Feature[]
     cta: string
     form: {
@@ -170,7 +181,7 @@ const en: Content = {
   brand: { name: 'CoffeeTalk', tagline: "Saudi Arabia's AI-native coffee platform" },
   nav: {
     features: 'Features',
-    cafes: 'For Cafés',
+    cafes: 'For Industry',
     drivers: 'For Drivers',
     download: 'Download',
     cta: 'Get the app',
@@ -188,9 +199,11 @@ const en: Content = {
   },
   hero: {
     eyebrow: "Saudi Arabia's AI-native coffee platform",
-    headline: 'Coffee, the way you’d ask a barista.',
+    headline: 'Experience Coffee. Discover Connection.',
     subhead:
-      'Say your order or snap a photo of a drink. CoffeeTalk finds it, books your table, and learns what you love from cafés across the Kingdom.',
+      'Your coffee journey, reimagined. Discover exceptional cafés, find your perfect cup, connect with fellow coffee lovers, and explore a world of coffee experiences — all in one intelligent platform.',
+    aiMessage:
+      'Meet a smarter way to experience coffee. Powered by AI, CoffeeTalk brings discovery, community, and convenience together in one seamless experience.',
     trust: ['Arabic & English', 'Pickup & delivery', 'Table booking'],
     mockupAlt:
       'Illustration of the CoffeeTalk app: a voice order being transcribed and matched to a Spanish latte from a Riyadh café.',
@@ -206,25 +219,58 @@ const en: Content = {
     },
   },
   differentiators: {
-    heading: 'Coffee ordering, reimagined',
-    subhead: 'Order by voice or photo, book your table, and let the app learn your taste.',
+    heading: 'Your Coffee World, All in One Place.',
+    subhead:
+      'Discover a smarter way to experience coffee. From AI-powered ordering to finding your next favorite café and connecting with fellow coffee lovers, CoffeeTalk brings your coffee world together in one place.',
     items: [
       {
-        title: 'AI voice & image ordering',
-        body: 'Say “my usual, extra hot” or snap a photo of any drink. We match it to a product on the menu.',
+        title: 'AI Voice & Image Ordering',
+        body: 'Order coffee in a more natural and convenient way. Use AI-powered voice and image recognition to help discover and order what you\'re craving, making the ordering experience more intuitive and effortless.',
       },
       {
-        title: 'Recommendations that learn you',
-        body: 'Suggestions built from your own ordering history, not a static promo carousel.',
+        title: 'Recommendations That Learn You',
+        body: 'Discover coffee recommendations that become more relevant to your tastes and preferences. CoffeeTalk aims to help you find drinks, cafés, and experiences that match your interests and make every discovery feel more personal.',
       },
       {
-        title: 'Table reservations',
-        body: 'Book a seat at your favourite café before you leave the house. Delivery is one option, not the only one.',
+        title: 'Table Reservations',
+        body: 'Make planning your next café visit easier. Discover participating cafés, explore reservation options, and keep your coffee meetups organized in one place.',
       },
       {
-        title: 'Multi-store ordering',
-        body: 'A flat white from one café, a cinnamon roll from another. One order, one checkout, one delivery.',
+        title: 'Multi-Store Ordering',
+        body: 'Explore offerings from multiple participating stores through one convenient experience. Make it easier to discover what different stores offer and organize your orders, according to the application\'s actual capabilities.',
       },
+      {
+        title: 'Where to Go',
+        body: 'Find your next coffee destination. Discover cafés and coffee spots that suit your preferences, explore new places, and decide where your next coffee adventure will take you.',
+      },
+      {
+        title: 'Connect with People Who Share Your Interests',
+        body: 'Coffee is better when it\'s shared. Connect with people who love coffee as much as you do, discover shared interests, exchange recommendations, and become part of the CoffeeTalk community.',
+      },
+      {
+        title: 'Follow Your Passion: Coffee & Baristas',
+        body: 'Explore your passion for coffee and the people who bring it to life. Discover coffee culture, learn about the craft of being a barista, explore barista profiles, and connect with others who share your enthusiasm for coffee.',
+      },
+      {
+        title: 'Prime Delivery',
+        body: 'Enjoy a more convenient way to get your favorite coffee. Discover the delivery options and benefits available through CoffeeTalk Prime, making it easier to enjoy coffee from participating stores.',
+      },
+    ],
+  },
+  callouts: {
+    heading: 'Everything Coffee. One Intelligent Experience.',
+    subhead:
+      'Discover how CoffeeTalk connects your coffee experiences through intelligent ordering, personalized discovery, convenient reservations, and a community that shares your passion.',
+    placeholderNote: 'Illustrative app preview — not the final interface.',
+    items: [
+      'Order by voice, or with a photo of what you\'re craving.',
+      'Suggestions that become more relevant to your tastes.',
+      'Discover participating cafés and their reservation options.',
+      'Browse several participating stores in one experience.',
+      'Find cafés and coffee spots that suit your preferences.',
+      'Meet fellow coffee lovers and exchange recommendations.',
+      'Explore coffee culture and barista profiles.',
+      'Delivery options and benefits through CoffeeTalk Prime.',
     ],
   },
   supporting: {
@@ -390,9 +436,34 @@ const en: Content = {
     ],
   },
   cafes: {
-    eyebrow: 'Partner app · for cafés & roasters',
-    heading: 'Run the whole café from one screen',
-    subhead: 'Built for cafés and roasters that want more than another delivery channel.',
+    eyebrow: 'For industry',
+    heading: 'Your Business. Our Coffee Ecosystem.',
+    subhead:
+      'Join CoffeeTalk and connect your business to a growing world of coffee lovers, cafés, and beverage professionals. Whether you serve coffee, tea, or the wider beverage industry, discover new opportunities to grow, connect, and work together.',
+    categories: [
+      {
+        title: 'Coffee Partners',
+        audience: 'For cafés, coffee shops, specialty coffee businesses, and other coffee-focused establishments.',
+        body: 'Bring your coffee offerings to a connected community, showcase your business, and explore opportunities to reach more customers.',
+      },
+      {
+        title: 'Tea Partners',
+        audience: 'For tea shops, tea houses, tea brands, and businesses specializing in tea and related beverages.',
+        body: 'Introduce your tea offerings to a wider audience and become part of a platform celebrating beverage discovery and culture.',
+      },
+      {
+        title: 'Prime Partners',
+        audience: 'For businesses interested in participating in CoffeeTalk Prime and its associated membership offering.',
+        body: 'Explore partnership opportunities within CoffeeTalk\'s premium ecosystem and help deliver meaningful value to members.',
+      },
+      {
+        title: 'Product Partners',
+        audience: 'For coffee roasters, bean suppliers, tea brands, equipment providers, packaging companies, and other relevant product owners or suppliers.',
+        body: 'Showcase your products and explore opportunities to connect with cafés, beverage businesses, and customers across the CoffeeTalk network.',
+      },
+    ],
+    capabilitiesHeading: 'Partner platform capabilities',
+    capabilitiesNote: 'Availability depends on partner type.',
     items: [
       { title: 'Orders & menu', body: 'Live orders, menu edits and prep times in one place.' },
       { title: 'Reservations', body: 'Fill tables on quiet afternoons with bookable seating.' },
@@ -400,11 +471,11 @@ const en: Content = {
       { title: 'Wholesale marketplace', body: 'Buy beans, milk and cups from roasters and suppliers in-app.' },
       { title: 'Barista network', body: 'Hire vetted baristas for a shift or a season.' },
     ],
-    cta: 'Partner with us',
+    cta: 'Become a Partner',
     form: {
-      title: 'Partner with CoffeeTalk',
-      intro: 'Tell us about your café and we’ll get back to you within two working days.',
-      cafeName: 'Café name',
+      title: 'Become a CoffeeTalk partner',
+      intro: 'Tell us about your business and we’ll get back to you within two working days.',
+      cafeName: 'Business name',
       city: 'City',
       contact: 'Contact',
       contactHint: 'Email or mobile number',
@@ -499,7 +570,7 @@ const ar: Content = {
   brand: { name: 'كوفي توك', tagline: 'منصة القهوة السعودية المدعومة بالذكاء الاصطناعي' },
   nav: {
     features: 'المزايا',
-    cafes: 'للمقاهي',
+    cafes: 'لقطاع الأعمال',
     drivers: 'للسائقين',
     download: 'حمّل التطبيق',
     cta: 'احصل على التطبيق',
@@ -517,9 +588,11 @@ const ar: Content = {
   },
   hero: {
     eyebrow: 'منصة القهوة السعودية المدعومة بالذكاء الاصطناعي',
-    headline: 'قهوتك، كما تطلبها من الباريستا.',
+    headline: 'عِش القهوة. اكتشف التواصل.',
     subhead:
-      'قل طلبك أو صوّر مشروبك، وكوفي توك يجده لك، يحجز طاولتك، ويتعلّم ذوقك من المقاهي في أنحاء المملكة.',
+      'رحلتك مع القهوة، بصورة جديدة. اكتشف مقاهي استثنائية، واعثر على فنجانك المثالي، وتواصل مع عشّاق القهوة، واستكشف عالمًا من تجارب القهوة، كل ذلك في منصة ذكية واحدة.',
+    aiMessage:
+      'تعرّف على طريقة أذكى لتجربة القهوة. بقوة الذكاء الاصطناعي، يجمع كوفي توك بين الاكتشاف والمجتمع والراحة في تجربة واحدة سلسة.',
     trust: ['عربي وإنجليزي', 'استلام وتوصيل', 'حجز الطاولات'],
     mockupAlt: 'رسم توضيحي لتطبيق كوفي توك: طلب صوتي يُحوَّل إلى نص ويُطابَق مع سبانش لاتيه من مقهى في الرياض.',
     screen: {
@@ -534,25 +607,58 @@ const ar: Content = {
     },
   },
   differentiators: {
-    heading: 'تجربة قهوة مختلفة من أول طلب',
-    subhead: 'اطلب بالصوت أو بالصورة، احجز طاولتك، ودع التطبيق يتعلّم ذوقك.',
+    heading: 'عالم قهوتك، كله في مكان واحد.',
+    subhead:
+      'اكتشف طريقة أذكى لتجربة القهوة. من الطلب المدعوم بالذكاء الاصطناعي إلى العثور على مقهاك المفضل القادم والتواصل مع عشّاق القهوة، يجمع كوفي توك عالم قهوتك في مكان واحد.',
     items: [
       {
-        title: 'الطلب بالصوت والصورة',
-        body: 'قل «طلبي المعتاد، حار زيادة» أو صوّر أي مشروب، ونطابقه لك مع منتج في القائمة.',
+        title: 'الطلب بالصوت والصورة بالذكاء الاصطناعي',
+        body: 'اطلب قهوتك بطريقة أكثر طبيعية وسهولة. استخدم التعرّف على الصوت والصورة المدعوم بالذكاء الاصطناعي لاكتشاف ما تشتهيه وطلبه، في تجربة طلب أكثر بديهية وسلاسة.',
       },
       {
         title: 'توصيات تتعلّم ذوقك',
-        body: 'اقتراحات مبنية على طلباتك السابقة أنت، لا على عروض ثابتة تُعرض للجميع.',
+        body: 'اكتشف توصيات قهوة تزداد ملاءمة لذوقك وتفضيلاتك. يسعى كوفي توك لمساعدتك على العثور على المشروبات والمقاهي والتجارب التي تناسب اهتماماتك، ليصبح كل اكتشاف أكثر خصوصية.',
       },
       {
         title: 'حجز الطاولات',
-        body: 'احجز مقعدك في مقهاك المفضل قبل أن تخرج من البيت. التوصيل خيار، وليس الخيار الوحيد.',
+        body: 'خطّط لزيارتك القادمة للمقهى بسهولة. اكتشف المقاهي المشاركة، واستعرض خيارات الحجز، ونظّم لقاءاتك على القهوة في مكان واحد.',
       },
       {
-        title: 'طلب واحد من عدة مقاهٍ',
-        body: 'فلات وايت من مقهى، وسينامون رول من مقهى آخر. طلب واحد، دفعة واحدة، توصيلة واحدة.',
+        title: 'الطلب من عدة متاجر',
+        body: 'استعرض ما تقدّمه عدة متاجر مشاركة من خلال تجربة واحدة مريحة. اكتشف بسهولة ما يقدّمه كل متجر ونظّم طلباتك، وفق الإمكانات الفعلية للتطبيق.',
       },
+      {
+        title: 'إلى أين تذهب',
+        body: 'اعثر على وجهتك القادمة للقهوة. اكتشف المقاهي وأماكن القهوة التي تناسب تفضيلاتك، واستكشف أماكن جديدة، وقرّر إلى أين تأخذك مغامرتك القادمة مع القهوة.',
+      },
+      {
+        title: 'تواصل مع من يشاركونك اهتماماتك',
+        body: 'القهوة أجمل عندما تُشارَك. تواصل مع أشخاص يحبون القهوة مثلك، واكتشف الاهتمامات المشتركة، وتبادلوا التوصيات، وكن جزءًا من مجتمع كوفي توك.',
+      },
+      {
+        title: 'اتبع شغفك: القهوة والباريستا',
+        body: 'استكشف شغفك بالقهوة والأشخاص الذين يصنعونها. اكتشف ثقافة القهوة، وتعرّف على حرفة الباريستا، واستعرض ملفات الباريستا، وتواصل مع من يشاركونك حماسك للقهوة.',
+      },
+      {
+        title: 'توصيل Prime',
+        body: 'استمتع بطريقة أكثر راحة للحصول على قهوتك المفضلة. اكتشف خيارات التوصيل والمزايا المتاحة عبر كوفي توك Prime، لتستمتع بالقهوة من المتاجر المشاركة بسهولة أكبر.',
+      },
+    ],
+  },
+  callouts: {
+    heading: 'كل ما يخص القهوة. تجربة ذكية واحدة.',
+    subhead:
+      'اكتشف كيف يربط كوفي توك تجارب قهوتك عبر الطلب الذكي، والاكتشاف الشخصي، والحجز المريح، ومجتمع يشاركك شغفك.',
+    placeholderNote: 'معاينة توضيحية للتطبيق، وليست الواجهة النهائية.',
+    items: [
+      'اطلب بصوتك، أو بصورة لما تشتهيه.',
+      'اقتراحات تزداد ملاءمة لذوقك.',
+      'اكتشف المقاهي المشاركة وخيارات الحجز فيها.',
+      'استعرض عدة متاجر مشاركة في تجربة واحدة.',
+      'اعثر على المقاهي وأماكن القهوة التي تناسبك.',
+      'تعرّف على عشّاق القهوة وتبادلوا التوصيات.',
+      'استكشف ثقافة القهوة وملفات الباريستا.',
+      'خيارات التوصيل والمزايا عبر كوفي توك Prime.',
     ],
   },
   supporting: {
@@ -718,9 +824,34 @@ const ar: Content = {
     ],
   },
   cafes: {
-    eyebrow: 'تطبيق الشريك · للمقاهي والمحامص',
-    heading: 'أدر مقهاك بالكامل من شاشة واحدة',
-    subhead: 'صُمّم للمقاهي والمحامص التي تريد أكثر من مجرد قناة توصيل إضافية.',
+    eyebrow: 'لقطاع الأعمال',
+    heading: 'عملك. منظومتنا للقهوة.',
+    subhead:
+      'انضم إلى كوفي توك واربط عملك بعالم متنامٍ من عشّاق القهوة والمقاهي ومحترفي المشروبات. سواء كنت تقدّم القهوة أو الشاي أو تعمل في قطاع المشروبات الأوسع، اكتشف فرصًا جديدة للنمو والتواصل والعمل المشترك.',
+    categories: [
+      {
+        title: 'شركاء القهوة',
+        audience: 'للمقاهي ومحلات القهوة وأعمال القهوة المختصة وغيرها من المنشآت المتخصصة في القهوة.',
+        body: 'قدّم عروض قهوتك لمجتمع متصل، واعرض عملك، واستكشف فرصًا للوصول إلى مزيد من العملاء.',
+      },
+      {
+        title: 'شركاء الشاي',
+        audience: 'لمحلات الشاي وبيوت الشاي وعلامات الشاي والأعمال المتخصصة في الشاي والمشروبات المرتبطة به.',
+        body: 'قدّم عروض الشاي لديك لجمهور أوسع، وكن جزءًا من منصة تحتفي باكتشاف المشروبات وثقافتها.',
+      },
+      {
+        title: 'شركاء Prime',
+        audience: 'للأعمال المهتمة بالمشاركة في كوفي توك Prime وعرض العضوية المرتبط به.',
+        body: 'استكشف فرص الشراكة ضمن منظومة كوفي توك المميزة، وساهم في تقديم قيمة حقيقية للأعضاء.',
+      },
+      {
+        title: 'شركاء المنتجات',
+        audience: 'لمحامص القهوة وموردي البن وعلامات الشاي ومزودي المعدات وشركات التغليف وغيرهم من أصحاب المنتجات والموردين.',
+        body: 'اعرض منتجاتك واستكشف فرص التواصل مع المقاهي وأعمال المشروبات والعملاء عبر شبكة كوفي توك.',
+      },
+    ],
+    capabilitiesHeading: 'إمكانات المنصة للشركاء',
+    capabilitiesNote: 'تختلف الإمكانات المتاحة حسب نوع الشريك.',
     items: [
       { title: 'الطلبات والقائمة', body: 'الطلبات المباشرة وتعديل القائمة وأوقات التحضير في مكان واحد.' },
       { title: 'الحجوزات', body: 'املأ طاولاتك في فترات الهدوء بحجوزات مسبقة.' },
@@ -728,11 +859,11 @@ const ar: Content = {
       { title: 'سوق الجملة', body: 'اشترِ البن والحليب والأكواب من المحامص والموردين داخل التطبيق.' },
       { title: 'شبكة الباريستا', body: 'وظّف باريستا موثوقين لوردية واحدة أو لموسم كامل.' },
     ],
-    cta: 'كن شريكًا معنا',
+    cta: 'كن شريكًا',
     form: {
-      title: 'الشراكة مع كوفي توك',
-      intro: 'عرّفنا على مقهاك وسنتواصل معك خلال يومي عمل.',
-      cafeName: 'اسم المقهى',
+      title: 'كن شريكًا مع كوفي توك',
+      intro: 'عرّفنا على عملك وسنتواصل معك خلال يومي عمل.',
+      cafeName: 'اسم المنشأة',
       city: 'المدينة',
       contact: 'وسيلة التواصل',
       contactHint: 'بريد إلكتروني أو رقم جوال',

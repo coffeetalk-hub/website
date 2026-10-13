@@ -12,7 +12,7 @@ export function Footer() {
       title: t.footer.product,
       links: [
         { href: '#features', label: t.nav.features },
-        { href: '#cafes', label: t.nav.cafes },
+        { href: '#industry', label: t.nav.cafes },
         { href: '#drivers', label: t.nav.drivers },
         { href: '#download', label: t.nav.download },
       ],

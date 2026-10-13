@@ -3,6 +3,7 @@ import { useLang } from '../i18n'
 import { Icon } from './Icons'
 import { Reveal } from './Reveal'
 import { SectionHeading } from './SectionHeading'
+import { FeatureCallouts } from './FeatureCallouts'
 
 type IconCmp = ComponentType<SVGProps<SVGSVGElement>>
 
@@ -16,7 +17,7 @@ function VoiceImageIcon(p: SVGProps<SVGSVGElement>) {
   )
 }
 
-const mainIcons: IconCmp[] = [VoiceImageIcon, Icon.Sparkles, Icon.Table, Icon.Stores]
+const mainIcons: IconCmp[] = [VoiceImageIcon, Icon.Sparkles, Icon.Table, Icon.Stores, Icon.Route, Icon.Users, Icon.Heart, Icon.Bike]
 
 function SignatureTag() {
   const { t } = useLang()
@@ -55,6 +56,8 @@ export function Differentiators() {
             )
           })}
         </ul>
+
+        <FeatureCallouts />
 
         {/* All features, listed by app area (plus the extras from the brief) */}
         <div className="mt-20 lg:mt-24">
