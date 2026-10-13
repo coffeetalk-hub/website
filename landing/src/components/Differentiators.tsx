@@ -19,22 +19,6 @@ function VoiceImageIcon(p: SVGProps<SVGSVGElement>) {
 
 const mainIcons: IconCmp[] = [VoiceImageIcon, Icon.Sparkles, Icon.Table, Icon.Stores, Icon.Route, Icon.Users, Icon.Heart, Icon.Bike]
 
-function SignatureTag() {
-  const { t } = useLang()
-  return (
-    <span className="rounded-full bg-copper-500 px-1.5 py-0.5 text-[0.6rem] font-bold text-white">{t.appTour.signatureBadge}</span>
-  )
-}
-
-function SoonTag() {
-  const { t } = useLang()
-  return (
-    <span className="rounded-full border border-espresso-900/15 px-1.5 py-0.5 text-[0.6rem] font-semibold text-espresso-500">
-      {t.appTour.soonBadge}
-    </span>
-  )
-}
-
 export function Differentiators() {
   const { t } = useLang()
   return (
@@ -59,43 +43,6 @@ export function Differentiators() {
 
         <FeatureCallouts />
 
-        {/* All features, listed by app area (plus the extras from the brief) */}
-        <div className="mt-20 lg:mt-24">
-          <Reveal className="max-w-2xl">
-            <p className="eyebrow">{t.appTour.eyebrow}</p>
-            <h3 className="mt-2 text-2xl font-extrabold tracking-tight text-espresso-900 sm:text-3xl">{t.appTour.heading}</h3>
-            <p className="mt-2 text-espresso-500">{t.appTour.subhead}</p>
-          </Reveal>
-          <div className="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-            {t.appTour.tabs.map((tab, i) => (
-              <Reveal key={tab.id} delay={i * 60}>
-                <h4 className="flex items-center gap-2 border-b border-espresso-900/10 pb-2 text-base font-bold text-espresso-900">
-                  {tab.name}
-                  {tab.soon && <SoonTag />}
-                </h4>
-                <ul className="mt-3 space-y-2">
-                  {tab.groups.map((g) => (
-                    <li key={g.title} className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                      <span className="text-espresso-800">{g.title}</span>
-                      {g.tag === 'signature' && <SignatureTag />}
-                      {g.tag === 'soon' && !tab.soon && <SoonTag />}
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-            ))}
-            <Reveal delay={300}>
-              <h4 className="border-b border-espresso-900/10 pb-2 text-base font-bold text-espresso-900">{t.supporting.heading}</h4>
-              <ul className="mt-3 space-y-2">
-                {t.supporting.items.map((item) => (
-                  <li key={item.title} className="text-sm text-espresso-800">
-                    {item.title}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-          </div>
-        </div>
       </div>
     </section>
   )

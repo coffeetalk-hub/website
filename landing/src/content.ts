@@ -101,9 +101,9 @@ export interface Content {
     eyebrow: string
     heading: string
     subhead: string
-    categories: { title: string; audience: string; body: string }[]
-    capabilitiesHeading: string
-    capabilitiesNote: string
+    /** Root label of the partner-type branch diagram */
+    branchRoot: string
+    categories: { title: string; audience: string }[]
     items: Feature[]
     cta: string
     form: {
@@ -440,30 +440,13 @@ const en: Content = {
     heading: 'Your Business. Our Coffee Ecosystem.',
     subhead:
       'Join CoffeeTalk and connect your business to a growing world of coffee lovers, cafés, and beverage professionals. Whether you serve coffee, tea, or the wider beverage industry, discover new opportunities to grow, connect, and work together.',
+    branchRoot: 'Industry partners',
     categories: [
-      {
-        title: 'Coffee Partners',
-        audience: 'For cafés, coffee shops, specialty coffee businesses, and other coffee-focused establishments.',
-        body: 'Bring your coffee offerings to a connected community, showcase your business, and explore opportunities to reach more customers.',
-      },
-      {
-        title: 'Tea Partners',
-        audience: 'For tea shops, tea houses, tea brands, and businesses specializing in tea and related beverages.',
-        body: 'Introduce your tea offerings to a wider audience and become part of a platform celebrating beverage discovery and culture.',
-      },
-      {
-        title: 'Prime Partners',
-        audience: 'For businesses interested in participating in CoffeeTalk Prime and its associated membership offering.',
-        body: 'Explore partnership opportunities within CoffeeTalk\'s premium ecosystem and help deliver meaningful value to members.',
-      },
-      {
-        title: 'Product Partners',
-        audience: 'For coffee roasters, bean suppliers, tea brands, equipment providers, packaging companies, and other relevant product owners or suppliers.',
-        body: 'Showcase your products and explore opportunities to connect with cafés, beverage businesses, and customers across the CoffeeTalk network.',
-      },
+      { title: 'Coffee Shop Owners', audience: 'Cafés and coffee shop businesses.' },
+      { title: 'Tea Shop Owners', audience: 'Tea shops and tea businesses.' },
+      { title: 'Coffee Roasteries', audience: 'Businesses that roast coffee beans and supply them.' },
+      { title: 'Coffee & Tea Product Owners / Suppliers', audience: 'Brands and businesses selling coffee, tea, or related products.' },
     ],
-    capabilitiesHeading: 'Partner platform capabilities',
-    capabilitiesNote: 'Availability depends on partner type.',
     items: [
       { title: 'Orders & menu', body: 'Live orders, menu edits and prep times in one place.' },
       { title: 'Reservations', body: 'Fill tables on quiet afternoons with bookable seating.' },
@@ -828,30 +811,13 @@ const ar: Content = {
     heading: 'عملك. منظومتنا للقهوة.',
     subhead:
       'انضم إلى كوفي توك واربط عملك بعالم متنامٍ من عشّاق القهوة والمقاهي ومحترفي المشروبات. سواء كنت تقدّم القهوة أو الشاي أو تعمل في قطاع المشروبات الأوسع، اكتشف فرصًا جديدة للنمو والتواصل والعمل المشترك.',
+    branchRoot: 'شركاء القطاع',
     categories: [
-      {
-        title: 'شركاء القهوة',
-        audience: 'للمقاهي ومحلات القهوة وأعمال القهوة المختصة وغيرها من المنشآت المتخصصة في القهوة.',
-        body: 'قدّم عروض قهوتك لمجتمع متصل، واعرض عملك، واستكشف فرصًا للوصول إلى مزيد من العملاء.',
-      },
-      {
-        title: 'شركاء الشاي',
-        audience: 'لمحلات الشاي وبيوت الشاي وعلامات الشاي والأعمال المتخصصة في الشاي والمشروبات المرتبطة به.',
-        body: 'قدّم عروض الشاي لديك لجمهور أوسع، وكن جزءًا من منصة تحتفي باكتشاف المشروبات وثقافتها.',
-      },
-      {
-        title: 'شركاء Prime',
-        audience: 'للأعمال المهتمة بالمشاركة في كوفي توك Prime وعرض العضوية المرتبط به.',
-        body: 'استكشف فرص الشراكة ضمن منظومة كوفي توك المميزة، وساهم في تقديم قيمة حقيقية للأعضاء.',
-      },
-      {
-        title: 'شركاء المنتجات',
-        audience: 'لمحامص القهوة وموردي البن وعلامات الشاي ومزودي المعدات وشركات التغليف وغيرهم من أصحاب المنتجات والموردين.',
-        body: 'اعرض منتجاتك واستكشف فرص التواصل مع المقاهي وأعمال المشروبات والعملاء عبر شبكة كوفي توك.',
-      },
+      { title: 'أصحاب المقاهي', audience: 'المقاهي وأعمال القهوة.' },
+      { title: 'أصحاب محلات الشاي', audience: 'محلات الشاي وأعمال الشاي.' },
+      { title: 'محامص القهوة', audience: 'الأعمال التي تحمّص البن وتورّده.' },
+      { title: 'أصحاب وموردو منتجات القهوة والشاي', audience: 'العلامات والأعمال التي تبيع القهوة أو الشاي أو المنتجات المرتبطة بها.' },
     ],
-    capabilitiesHeading: 'إمكانات المنصة للشركاء',
-    capabilitiesNote: 'تختلف الإمكانات المتاحة حسب نوع الشريك.',
     items: [
       { title: 'الطلبات والقائمة', body: 'الطلبات المباشرة وتعديل القائمة وأوقات التحضير في مكان واحد.' },
       { title: 'الحجوزات', body: 'املأ طاولاتك في فترات الهدوء بحجوزات مسبقة.' },
