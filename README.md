@@ -9,7 +9,8 @@ Content, imagery, logos and brand colours follow the *December 2025 company prof
 /about.html            Story, group journey + milestones, manifesto, values, why us, leadership team & advisors
 /services.html         One-stop process, three service groups, "Licensed & Certified" (CR, CoC)
 /work.html             Portfolio grid with filter tabs and lightbox (from data/projects.js) + cities map
-/partners.html         Clients / institutional partners / global alliances (from data/partners.js)
+/partners.html         Partner logo carousel + "Our collaborations in action" portfolio (partner & category
+                       filters, project detail view), then client / institutional / alliance logo grids
 /contact.html          Netlify-ready contact form, address, social links
 /css/style.css         All styling (brand tokens at the top)
 /js/main.js            Nav toggle, stat counters, scroll reveal, partner grids, portfolio + lightbox, form
@@ -18,7 +19,6 @@ Content, imagery, logos and brand colours follow the *December 2025 company prof
 /images/brand/         Wordmark (colour, white, on-white), swoosh mark, group + ISTA logos
 /images/photos/        Nautical photography from the profile (hero, covers, ropes, sails…)
 /images/values/        The five value illustrations
-/images/team/          Leadership portraits
 /images/logos/         (empty) — drop client / partner logo files here
 /images/og-image.jpg   Link-preview image; favicon-*.png and apple-touch-icon.png
 /sitemap.xml /robots.txt /netlify.toml
@@ -48,7 +48,10 @@ Open `data/projects.js` and add an object to the `window.SAILORS_PROJECTS` array
   guests: 25000,                             // number (formatted as 25,000) or null to hide the count
   image: "images/photos/my-event.jpg",       // 4:3 works best (e.g. 1200×900 JPG, < 300 KB)
   alt: "Crowd in front of the main stage",   // short description for screen readers
-  description: "One or two sentences shown in the lightbox."
+  description: "One or two sentences shown in the lightbox.",
+  partner: "client-01",                      // id from data/partners.js — links the card to the partner carousel
+  role: "What The Sailors ART delivered.",   // shown in the detail view
+  gallery: ["images/photos/more-1.jpg"]      // extra detail-view photos (cover image is added automatically)
 }
 ```
 
@@ -67,7 +70,10 @@ Open `data/partners.js`. There are three arrays: `clients`, `institutional` and 
 { name: "Acme Corp", logo: "images/logos/clients/acme.png", url: "https://acme.example", note: "Energy" }
 ```
 
+- `id` — unique, URL-safe; projects reference it via `partner`. `partners.html?partner=<id>` pre-selects it.
 - `logo` — PNG/JPG/SVG, roughly 400×200 max. Leave it as `""` to show an auto-generated monogram.
+- The carousel on `partners.html` shows every partner from all three groups. Clicking a logo filters the
+  collaborations portfolio to that partner's projects (or shows a "no published projects yet" note).
 - `url` and `note` are optional.
 - All entries are numbered placeholders until the real client and partner list is available. Replace the
   `name`, add the logo file to `images/logos/` and set its path in `logo`.
@@ -80,8 +86,8 @@ Open `data/partners.js`. There are three arrays: `clients`, `institutional` and 
 - **Stat counters** — in `index.html` and `work.html`, each stat is
   `<span class="stat__num" data-count="480000" data-suffix="+">480,000+</span>`.
   Change `data-count` (the number that animates) and the visible text. Use `data-plain` for years.
-- **Leadership** — `about.html`, section "At the helm": the founder card, four compact team rows (small rounded
-  photo left, text right) and the board/advisors list. Portraits live in `images/team/`.
+- **Leadership** — `about.html`, section "At the helm": the founder card, four team cards and the
+  board/advisors list (text only, no portraits).
 - **Values** — `about.html`, "The compass we steer by"; illustrations in `images/values/`.
 - **Licensed & Certified** — `services.html`, section `#licensed`: CR number, Chamber of Commerce number and
   the recognizing authorities.

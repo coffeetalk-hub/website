@@ -66,7 +66,64 @@
   </div>
 </section>
 
-<section class="section section--off" id="clients" aria-labelledby="clients-title">
+<section class="section" id="partners-intro" aria-labelledby="partners-intro-title">
+  <div class="container">
+    <div class="partners-intro reveal">
+      <span class="eyebrow">Partners &amp; collaborations</span>
+      <h2 id="partners-intro-title">Great events. Meaningful partnerships.</h2>
+      <p class="lead">Behind every memorable experience is a great collaboration. Discover the brands, organizations and institutions that have partnered with The Sailors ART to bring ideas to life — and explore the events we created together.</p>
+      <p class="muted">Select a partner to see the projects we delivered with them.</p>
+    </div>
+  </div>
+  <div class="marquee" id="partner-marquee" aria-label="Partner logos — select one to filter the projects below">
+    <div class="marquee__track"></div>
+  </div>
+</section>
+
+<section class="section section--off" id="collaborations" aria-labelledby="collab-title">
+  <div class="container">
+    <div class="section-head section-head--center">
+      <span class="eyebrow">Portfolio</span>
+      <h2 id="collab-title">Our collaborations in action</h2>
+      <p class="lead">Explore the events, experiences and creative projects we've brought to life alongside our partners.</p>
+    </div>
+    <div class="filters" id="collab-filters" role="group" aria-label="Filter projects by category">
+      <button type="button" data-filter="all" aria-pressed="true">All projects</button>
+      <button type="button" data-filter="corporate" aria-pressed="false">Corporate &amp; Business</button>
+      <button type="button" data-filter="mega" aria-pressed="false">Public Mega Events</button>
+      <button type="button" data-filter="expo" aria-pressed="false">Expos &amp; Fabrication</button>
+    </div>
+    <div class="collab-status" id="collab-status" role="status" aria-live="polite" hidden></div>
+    <div class="collab-grid" id="collab-grid"></div>
+    <noscript><p class="text-center muted">Enable JavaScript to browse the partner projects.</p></noscript>
+  </div>
+</section>
+
+<dialog class="lightbox" id="lightbox" aria-labelledby="lightbox-title">
+  <button class="lightbox__close" type="button" aria-label="Close">&times;</button>
+  <div class="lightbox__inner">
+    <div class="lightbox__media"><img src="" alt="" width="800" height="600"></div>
+    <div class="lightbox__body">
+      <h2 id="lightbox-title">Project</h2>
+      <ul class="lightbox__meta">
+        <li><small>Partner</small><strong data-lb="partner"></strong></li>
+        <li><small>Type</small><strong data-lb="type"></strong></li>
+        <li><small>City</small><strong data-lb="city"></strong></li>
+        <li><small>Year</small><strong data-lb="year"></strong></li>
+        <li><small>Guests</small><strong data-lb="guests"></strong></li>
+      </ul>
+      <p data-lb="description"></p>
+      <div class="lightbox__role"><small>What The Sailors ART delivered</small><span data-lb="role"></span></div>
+      <div class="lightbox__gallery" data-lb="gallery" aria-label="Event photos"></div>
+      <div class="lightbox__nav">
+        <button class="btn btn--outline-navy btn--sm" type="button" data-lb="prev">← Previous</button>
+        <button class="btn btn--outline-navy btn--sm" type="button" data-lb="next">Next →</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<section class="section" id="clients" aria-labelledby="clients-title">
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">Clients &amp; customers</span>
@@ -77,7 +134,7 @@
   </div>
 </section>
 
-<section class="section" id="institutional" aria-labelledby="institutional-title">
+<section class="section section--off" id="institutional" aria-labelledby="institutional-title">
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">Domestic collaboration &amp; strategic partnership</span>
@@ -164,6 +221,7 @@
   </div>
 </footer>
 <script src="data/partners.js" defer></script>
+<script src="data/projects.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>
 </html>

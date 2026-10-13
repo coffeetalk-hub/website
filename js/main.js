@@ -12,6 +12,7 @@
   "use strict";
 
   var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function safeReplaceState() { try { history.replaceState.apply(history, arguments); } catch (e) {} }
 
   /* ---------------------------------------------------------------------
      1. Navigation
@@ -167,95 +168,36 @@
   }
 
   /* ---------------------------------------------------------------------
-     5. Portfolio grid + filters + lightbox
+     5. Portfolio grids, filters, partner showcase and the shared lightbox
      --------------------------------------------------------------------- */
   var TYPE_LABELS = { mega: "Public Mega Event", corporate: "Corporate & Business", expo: "Expos & Fabrication" };
 
-  function initWork() {
-    var grid = document.getElementById("work-grid");
-    var projects = window.SAILORS_PROJECTS;
-    if (!grid || !projects) return;
+  function allPartners() {
+    var data = window.SAILORS_PARTNERS || {};
+    return [].concat(data.clients || [], data.institutional || [], data.alliances || []);
+  }
+  function partnerById(id) {
+    return allPartners().filter(function (p) { return p.id === id; })[0] || null;
+  }
+  function sortedProjects() {
+    return (window.SAILORS_PROJECTS || []).slice().sort(function (a, b) { return b.year - a.year; });
+  }
 
-    var filters = document.getElementById("work-filters");
-    var lightbox = document.getElementById("lightbox");
-    var visible = projects.slice();
-    var current = -1;
-    var lastFocus = null;
-
-    // Sort newest first
-    projects = projects.slice().sort(function (a, b) { return b.year - a.year; });
-
-    // Build cards
-    projects.forEach(function (p, i) {
-      var card = document.createElement("button");
-      card.type = "button";
-      card.className = "work-card";
-      card.setAttribute("data-type", p.type);
-      card.setAttribute("data-index", i);
-      card.setAttribute("aria-haspopup", "dialog");
-      card.innerHTML =
-        '<img src="' + p.image + '" alt="' + escapeHtml(p.alt || p.title) + '" loading="lazy" decoding="async" width="800" height="600">' +
-        '<span class="work-card__type">' + escapeHtml(TYPE_LABELS[p.type] || p.type) + '</span>' +
-        '<span class="work-card__body">' +
-          '<h3>' + escapeHtml(p.title) + '</h3>' +
-          '<span class="work-card__meta"><span>' + escapeHtml(p.city) + '</span><span>' + p.year + '</span>' + (p.guests ? '<span>' + formatNumber(p.guests) + ' guests</span>' : '') + '</span>' +
-        '</span>';
-      card.addEventListener("click", function () { openLightbox(i); });
-      grid.appendChild(card);
-    });
-
-    var empty = document.createElement("p");
-    empty.className = "work-empty"; empty.hidden = true;
-    empty.textContent = "No projects in this category yet.";
-    grid.parentNode.appendChild(empty);
-
-    // Filters
-    function applyFilter(type) {
-      visible = [];
-      grid.querySelectorAll(".work-card").forEach(function (card) {
-        var show = type === "all" || card.getAttribute("data-type") === type;
-        card.classList.toggle("is-hidden", !show);
-        if (show) visible.push(parseInt(card.getAttribute("data-index"), 10));
-      });
-      empty.hidden = visible.length > 0;
-      if (filters) {
-        filters.querySelectorAll("button").forEach(function (b) {
-          b.setAttribute("aria-pressed", b.getAttribute("data-filter") === type ? "true" : "false");
-        });
-      }
-    }
-
-    if (filters) {
-      // counts in the tab labels
-      filters.querySelectorAll("button").forEach(function (b) {
-        var t = b.getAttribute("data-filter");
-        var n = t === "all" ? projects.length : projects.filter(function (p) { return p.type === t; }).length;
-        var count = document.createElement("span");
-        count.className = "count"; count.textContent = n;
-        b.appendChild(count);
-        b.addEventListener("click", function () { applyFilter(t); });
-      });
-      // support ?type=mega on load
-      var param = new URLSearchParams(location.search).get("type");
-      applyFilter(param && TYPE_LABELS[param] ? param : "all");
-    }
-
-    // Lightbox
-    if (!lightbox) return;
+  /* Shared lightbox (<dialog class="lightbox">) ------------------------- */
+  function createLightbox(lightbox) {
+    if (!lightbox) return null;
     var lbImg = lightbox.querySelector(".lightbox__media img");
     var lbTitle = lightbox.querySelector("#lightbox-title");
-    var lbCity = lightbox.querySelector("[data-lb='city']");
-    var lbYear = lightbox.querySelector("[data-lb='year']");
-    var lbType = lightbox.querySelector("[data-lb='type']");
-    var lbGuests = lightbox.querySelector("[data-lb='guests']");
-    var lbDesc = lightbox.querySelector("[data-lb='description']");
-    var prevBtn = lightbox.querySelector("[data-lb='prev']");
-    var nextBtn = lightbox.querySelector("[data-lb='next']");
-    var closeBtn = lightbox.querySelector(".lightbox__close");
+    var field = function (k) { return lightbox.querySelector("[data-lb='" + k + "']"); };
+    var lbCity = field("city"), lbYear = field("year"), lbType = field("type"), lbGuests = field("guests");
+    var lbDesc = field("description"), lbPartner = field("partner"), lbRole = field("role"), lbGallery = field("gallery");
+    var prevBtn = field("prev"), nextBtn = field("next"), closeBtn = lightbox.querySelector(".lightbox__close");
+    var list = [], current = -1, lastFocus = null;
 
     function fill(i) {
-      var p = projects[i];
+      var p = list[i];
       current = i;
+      var photos = [p.image].concat(p.gallery || []);
       lbImg.src = p.image; lbImg.alt = p.alt || p.title;
       lbTitle.textContent = p.title;
       lbCity.textContent = p.city;
@@ -263,51 +205,241 @@
       lbType.textContent = TYPE_LABELS[p.type] || p.type;
       lbGuests.textContent = p.guests ? formatNumber(p.guests) + "+" : "—";
       lbDesc.textContent = p.description;
-      var pos = visible.indexOf(i);
-      prevBtn.disabled = pos <= 0;
-      nextBtn.disabled = pos === -1 || pos >= visible.length - 1;
-      if (history.replaceState) history.replaceState(null, "", "#" + p.id);
+      if (lbPartner) {
+        var partner = partnerById(p.partner);
+        lbPartner.textContent = partner ? partner.name : "—";
+      }
+      if (lbRole) {
+        lbRole.textContent = p.role || "";
+        lbRole.parentNode.hidden = !p.role;
+      }
+      if (lbGallery) {
+        lbGallery.innerHTML = "";
+        lbGallery.hidden = photos.length < 2;
+        photos.forEach(function (src, idx) {
+          var b = document.createElement("button");
+          b.type = "button"; b.className = "lightbox__thumb" + (idx === 0 ? " is-active" : "");
+          b.setAttribute("aria-label", "Photo " + (idx + 1) + " of " + photos.length);
+          b.innerHTML = '<img src="' + src + '" alt="" loading="lazy" width="160" height="120">';
+          b.addEventListener("click", function () {
+            lbImg.src = src;
+            lbGallery.querySelectorAll(".lightbox__thumb").forEach(function (t) { t.classList.remove("is-active"); });
+            b.classList.add("is-active");
+          });
+          lbGallery.appendChild(b);
+        });
+      }
+      prevBtn.disabled = i <= 0;
+      nextBtn.disabled = i >= list.length - 1;
+      safeReplaceState(null, "", "#" + p.id);
     }
-
-    function openLightbox(i) {
+    function open(project, projectList) {
+      list = projectList && projectList.length ? projectList : [project];
+      var i = list.indexOf(project); if (i < 0) { list = [project]; i = 0; }
       lastFocus = document.activeElement;
       fill(i);
-      if (typeof lightbox.showModal === "function") lightbox.showModal();
-      else lightbox.setAttribute("open", "");
+      if (typeof lightbox.showModal === "function") lightbox.showModal(); else lightbox.setAttribute("open", "");
       closeBtn.focus();
     }
-
-    function closeLightbox() {
+    function close() {
       if (lightbox.open) lightbox.close();
-      if (history.replaceState) history.replaceState(null, "", location.pathname + location.search);
+      safeReplaceState(null, "", location.pathname + location.search);
       if (lastFocus && lastFocus.focus) lastFocus.focus();
     }
+    function move(dir) { var n = current + dir; if (n >= 0 && n < list.length) fill(n); }
 
-    function move(dir) {
-      var pos = visible.indexOf(current);
-      var next = visible[pos + dir];
-      if (next !== undefined) fill(next);
-    }
-
-    closeBtn.addEventListener("click", closeLightbox);
+    closeBtn.addEventListener("click", close);
     prevBtn.addEventListener("click", function () { move(-1); });
     nextBtn.addEventListener("click", function () { move(1); });
-    lightbox.addEventListener("cancel", function (e) { e.preventDefault(); closeLightbox(); });
-    lightbox.addEventListener("click", function (e) { if (e.target === lightbox) closeLightbox(); });
+    lightbox.addEventListener("cancel", function (e) { e.preventDefault(); close(); });
+    lightbox.addEventListener("click", function (e) { if (e.target === lightbox) close(); });
     lightbox.addEventListener("keydown", function (e) {
       if (e.key === "ArrowLeft") move(-1);
       if (e.key === "ArrowRight") move(1);
     });
+    return { open: open, close: close };
+  }
 
-    // Deep link: work.html#project-id
-    if (location.hash) {
+  /* Project card ------------------------------------------------------- */
+  function projectCard(p, showPartner) {
+    var partner = showPartner ? partnerById(p.partner) : null;
+    var card = document.createElement("button");
+    card.type = "button";
+    card.className = "work-card";
+    card.setAttribute("data-type", p.type);
+    card.setAttribute("data-partner", p.partner || "");
+    card.setAttribute("aria-haspopup", "dialog");
+    card.innerHTML =
+      '<img src="' + p.image + '" alt="' + escapeHtml(p.alt || p.title) + '" loading="lazy" decoding="async" width="800" height="600">' +
+      '<span class="work-card__type">' + escapeHtml(TYPE_LABELS[p.type] || p.type) + '</span>' +
+      '<span class="work-card__body">' +
+        (partner ? '<span class="work-card__partner">' + escapeHtml(partner.name) + '</span>' : '') +
+        '<h3>' + escapeHtml(p.title) + '</h3>' +
+        (showPartner && p.role ? '<span class="work-card__desc">' + escapeHtml(p.role) + '</span>' : '') +
+        '<span class="work-card__meta"><span>' + escapeHtml(p.city) + '</span><span>' + p.year + '</span>' + (p.guests ? '<span>' + formatNumber(p.guests) + ' guests</span>' : '') + '</span>' +
+        '<span class="work-card__more">View project ' + ARROW + '</span>' +
+      '</span>';
+    return card;
+  }
+  var ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+
+  /* work.html ---------------------------------------------------------- */
+  function initWork() {
+    var grid = document.getElementById("work-grid");
+    if (!grid || !window.SAILORS_PROJECTS) return;
+    var filters = document.getElementById("work-filters");
+    var lb = createLightbox(document.getElementById("lightbox"));
+    var projects = sortedProjects();
+    var visible = projects.slice();
+
+    projects.forEach(function (p) {
+      var card = projectCard(p, false);
+      card.addEventListener("click", function () { if (lb) lb.open(p, visible); });
+      grid.appendChild(card);
+    });
+    var empty = document.createElement("p");
+    empty.className = "work-empty"; empty.hidden = true;
+    empty.textContent = "No projects in this category yet.";
+    grid.parentNode.appendChild(empty);
+
+    function applyFilter(type) {
+      visible = [];
+      grid.querySelectorAll(".work-card").forEach(function (card, i) {
+        var show = type === "all" || card.getAttribute("data-type") === type;
+        card.classList.toggle("is-hidden", !show);
+        if (show) visible.push(projects[i]);
+      });
+      empty.hidden = visible.length > 0;
+      if (filters) filters.querySelectorAll("button").forEach(function (b) {
+        b.setAttribute("aria-pressed", b.getAttribute("data-filter") === type ? "true" : "false");
+      });
+    }
+    if (filters) {
+      filters.querySelectorAll("button").forEach(function (b) {
+        var t = b.getAttribute("data-filter");
+        var n = t === "all" ? projects.length : projects.filter(function (p) { return p.type === t; }).length;
+        var count = document.createElement("span"); count.className = "count"; count.textContent = n; b.appendChild(count);
+        b.addEventListener("click", function () { applyFilter(t); });
+      });
+      var param = new URLSearchParams(location.search).get("type");
+      applyFilter(param && TYPE_LABELS[param] ? param : "all");
+    }
+    if (lb && location.hash) {
       var id = location.hash.slice(1);
-      var idx = projects.findIndex(function (p) { return p.id === id; });
-      if (idx > -1) {
-        var type = projects[idx].type;
-        if (filters && visible.indexOf(idx) === -1) applyFilter(type);
-        openLightbox(idx);
+      var match = projects.filter(function (p) { return p.id === id; })[0];
+      if (match) { if (visible.indexOf(match) === -1) applyFilter(match.type); lb.open(match, visible); }
+    }
+  }
+
+  /* partners.html: logo marquee + collaborations portfolio ------------- */
+  function initPartnerShowcase() {
+    var marquee = document.getElementById("partner-marquee");
+    var grid = document.getElementById("collab-grid");
+    if (!marquee || !grid || !window.SAILORS_PARTNERS) return;
+
+    var partners = allPartners();
+    var projects = sortedProjects();
+    var lb = createLightbox(document.getElementById("lightbox"));
+    var filters = document.getElementById("collab-filters");
+    var status = document.getElementById("collab-status");
+    var state = { type: "all", partner: "" };
+    var visible = projects.slice();
+
+    function projectsFor(id) { return projects.filter(function (p) { return p.partner === id; }); }
+
+    /* marquee: one track rendered twice so the loop is seamless */
+    function logoButton(p, clone) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "marquee__logo";
+      b.setAttribute("data-partner", p.id);
+      if (clone) { b.tabIndex = -1; b.setAttribute("aria-hidden", "true"); }
+      var n = projectsFor(p.id).length;
+      b.setAttribute("aria-label", p.name + (n ? " — " + n + " project" + (n > 1 ? "s" : "") : " — no published projects yet"));
+      b.title = p.name;
+      if (p.logo) {
+        b.innerHTML = '<img src="' + p.logo + '" alt="" loading="lazy" decoding="async" width="160" height="64">';
+      } else {
+        b.innerHTML = '<span class="logo-card__mono" aria-hidden="true">' + escapeHtml(initials(p.name)) + '</span><span class="marquee__name">' + escapeHtml(p.name) + '</span>';
       }
+      b.addEventListener("click", function () { selectPartner(p.id, true); });
+      return b;
+    }
+    var track = marquee.querySelector(".marquee__track");
+    [false, true].forEach(function (clone) {
+      var group = document.createElement("div");
+      group.className = "marquee__group";
+      partners.forEach(function (p) { group.appendChild(logoButton(p, clone)); });
+      track.appendChild(group);
+    });
+    // Pause while hovered or focused
+    marquee.addEventListener("focusin", function () { marquee.classList.add("is-paused"); });
+    marquee.addEventListener("focusout", function () { marquee.classList.remove("is-paused"); });
+
+    /* portfolio */
+    projects.forEach(function (p) {
+      var card = projectCard(p, true);
+      card.addEventListener("click", function () { if (lb) lb.open(p, visible); });
+      grid.appendChild(card);
+    });
+    var empty = document.createElement("p");
+    empty.className = "work-empty"; empty.hidden = true;
+    grid.parentNode.insertBefore(empty, grid.nextSibling);
+
+    function render() {
+      visible = [];
+      grid.querySelectorAll(".work-card").forEach(function (card, i) {
+        var p = projects[i];
+        var show = (state.type === "all" || p.type === state.type) && (!state.partner || p.partner === state.partner);
+        card.classList.toggle("is-hidden", !show);
+        if (show) visible.push(p);
+      });
+      var partner = partnerById(state.partner);
+      if (!visible.length) {
+        empty.textContent = partner
+          ? "We haven't published any projects with " + partner.name + " yet. Projects will appear here as they are added."
+          : "No projects in this category yet.";
+      }
+      empty.hidden = visible.length > 0;
+      if (filters) filters.querySelectorAll("button").forEach(function (b) {
+        b.setAttribute("aria-pressed", b.getAttribute("data-filter") === state.type ? "true" : "false");
+      });
+      marquee.querySelectorAll(".marquee__logo").forEach(function (b) {
+        var on = b.getAttribute("data-partner") === state.partner;
+        b.classList.toggle("is-selected", on);
+        if (!b.hasAttribute("aria-hidden")) b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      if (status) {
+        if (partner) {
+          status.hidden = false;
+          status.innerHTML = '<span>Showing <strong>' + escapeHtml(partner.name) + '</strong> · ' + visible.length + ' project' + (visible.length === 1 ? '' : 's') + '</span>' +
+            '<button type="button" class="btn btn--outline-navy btn--sm" data-clear>Show all partners</button>';
+          status.querySelector("[data-clear]").addEventListener("click", function () { selectPartner("", false); });
+        } else { status.hidden = true; status.innerHTML = ""; }
+      }
+    }
+    function selectPartner(id, scroll) {
+      state.partner = state.partner === id ? "" : id;
+      render();
+      if (scroll && state.partner) {
+        var target = document.getElementById("collaborations");
+        if (target) target.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+      }
+    }
+    if (filters) {
+      filters.querySelectorAll("button").forEach(function (b) {
+        var t = b.getAttribute("data-filter");
+        var n = t === "all" ? projects.length : projects.filter(function (p) { return p.type === t; }).length;
+        if (t !== "all" && !n) { b.remove(); return; } // no empty categories
+        var count = document.createElement("span"); count.className = "count"; count.textContent = n; b.appendChild(count);
+        b.addEventListener("click", function () { state.type = t; render(); });
+      });
+    }
+    var param = new URLSearchParams(location.search).get("partner");
+    if (param && partnerById(param)) state.partner = param;
+    render();
+    if (lb && location.hash) {
+      var match = projects.filter(function (p) { return p.id === location.hash.slice(1); })[0];
+      if (match) lb.open(match, visible.indexOf(match) > -1 ? visible : [match]);
     }
   }
 
@@ -367,6 +499,7 @@
     initReveal();
     renderPartners();
     initWork();
+    initPartnerShowcase();
     initForm();
     document.querySelectorAll("[data-year]").forEach(function (el) { el.textContent = new Date().getFullYear(); });
   }

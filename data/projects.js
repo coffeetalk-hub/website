@@ -11,6 +11,9 @@
  *   image       path to a JPG/PNG (ideally 4:3, 1200×900)
  *   alt         short image description for screen readers
  *   description one or two sentences
+ *   partner     id of a partner in data/partners.js (or "" if none) — links the card to the partner carousel
+ *   role        what The Sailors ART delivered (shown in the detail view)
+ *   gallery     extra photos for the detail view (array of paths; the cover image is added automatically)
  *
  * The first entry is a real event pictured in the company profile. The rest are
  * SAMPLE placeholders that use the profile's nautical photography — replace them
@@ -26,7 +29,10 @@ window.SAILORS_PROJECTS = [
     guests: null,
     image: "images/photos/event-honoring.jpg",
     alt: "HRH Prince Ahmed bin Fahd bin Salman with The Sailors leadership on stage at the DAS Alumni+ Council event",
-    description: "Launch of the DAS Alumni+ Council platform, supported and honored by HRH Prince Ahmed bin Fahd bin Salman bin Abdulaziz, Deputy Governor of the Eastern Province. (Details to be confirmed — photo from the company profile.)"
+    description: "Launch of the DAS Alumni+ Council platform, supported and honored by HRH Prince Ahmed bin Fahd bin Salman bin Abdulaziz, Deputy Governor of the Eastern Province. (Details to be confirmed — photo from the company profile.)",
+    partner: "das-alumni-council",
+    role: "Event organization, stage and ceremony production (details to be confirmed).",
+    gallery: []
   },
   {
     id: "eastern-lights-festival",
@@ -37,7 +43,10 @@ window.SAILORS_PROJECTS = [
     guests: 120000,
     image: "images/photos/sailing-sunset.jpg",
     alt: "Sailing boat at sunset",
-    description: "Sample entry. A multi-zone public festival with live concerts, a family zone, food village and a nightly show — full crowd management, ticketing and media coverage."
+    description: "Sample entry. A multi-zone public festival with live concerts, a family zone, food village and a nightly show — full crowd management, ticketing and media coverage.",
+    partner: "client-01",
+    role: "Sample: concept, zoning, crowd management, ticketing and media coverage.",
+    gallery: ["images/photos/rope-teal.jpg", "images/photos/lighthouse.jpg"]
   },
   {
     id: "corniche-regatta-week",
@@ -48,7 +57,10 @@ window.SAILORS_PROJECTS = [
     guests: 85000,
     image: "images/photos/sailboat-sunset.jpg",
     alt: "Sailboat on the open sea at dusk",
-    description: "Sample entry. Waterfront celebration combining a sailing exhibition, floating stage performances and a coastal market across five themed zones."
+    description: "Sample entry. Waterfront celebration combining a sailing exhibition, floating stage performances and a coastal market across five themed zones.",
+    partner: "client-02",
+    role: "Sample: design, approvals and operation of five themed zones.",
+    gallery: ["images/photos/sail-splash.jpg", "images/photos/helm.jpg"]
   },
   {
     id: "gulf-innovation-expo",
@@ -59,7 +71,10 @@ window.SAILORS_PROJECTS = [
     guests: 18000,
     image: "images/photos/rope-rigging.jpg",
     alt: "Ship rigging and ropes",
-    description: "Sample entry. Three-day exhibition with custom-fabricated booths, a conference hall build and logistics for exhibitors from four countries."
+    description: "Sample entry. Three-day exhibition with custom-fabricated booths, a conference hall build and logistics for exhibitors from four countries.",
+    partner: "client-03",
+    role: "Sample: booth fabrication, conference hall build and logistics.",
+    gallery: ["images/photos/rope-pulley.jpg", "images/photos/rope-knot.jpg"]
   },
   {
     id: "lighthouse-leadership-summit",
@@ -70,7 +85,10 @@ window.SAILORS_PROJECTS = [
     guests: 1200,
     image: "images/photos/lighthouse.jpg",
     alt: "White lighthouse against a pale sky",
-    description: "Sample entry. Invitation-only executive summit: creative concept, stage design, speaker management, delegate registration and post-event reporting."
+    description: "Sample entry. Invitation-only executive summit: creative concept, stage design, speaker management, delegate registration and post-event reporting.",
+    partner: "client-04",
+    role: "Sample: creative concept, stage design, speaker and delegate management.",
+    gallery: ["images/photos/sextant-compass.jpg"]
   },
   {
     id: "national-day-carnival",
@@ -81,7 +99,10 @@ window.SAILORS_PROJECTS = [
     guests: 60000,
     image: "images/photos/sail-splash.jpg",
     alt: "Sail cutting through a wave",
-    description: "Sample entry. Four-day public carnival with parades, fireworks and a heritage village — coordinated by a 360-member taskforce, our single-event record."
+    description: "Sample entry. Four-day public carnival with parades, fireworks and a heritage village — coordinated by a 360-member taskforce, our single-event record.",
+    partner: "institution-01",
+    role: "Sample: parades, fireworks and heritage village operated by a 360-member taskforce.",
+    gallery: ["images/photos/sailing-sunset.jpg", "images/photos/rope-coil.jpg"]
   },
   {
     id: "harbour-gala-dinner",
@@ -92,7 +113,10 @@ window.SAILORS_PROJECTS = [
     guests: 650,
     image: "images/photos/helm.jpg",
     alt: "Ship's helm on a yacht",
-    description: "Sample entry. Cross-border awards gala: venue transformation, live entertainment, awards production and VIP protocol."
+    description: "Sample entry. Cross-border awards gala: venue transformation, live entertainment, awards production and VIP protocol.",
+    partner: "alliance-01",
+    role: "Sample: venue transformation, entertainment, awards production and VIP protocol.",
+    gallery: ["images/photos/sailboat-sunset.jpg"]
   },
   {
     id: "coastal-living-expo",
@@ -103,7 +127,10 @@ window.SAILORS_PROJECTS = [
     guests: 25000,
     image: "images/photos/rope-knot.jpg",
     alt: "Thick rope tied in a knot",
-    description: "Sample entry. Home and outdoor-living exhibition with in-house wood and steel fabrication of the show pavilions, furniture and lighting."
+    description: "Sample entry. Home and outdoor-living exhibition with in-house wood and steel fabrication of the show pavilions, furniture and lighting.",
+    partner: "client-05",
+    role: "Sample: in-house wood and steel fabrication of pavilions, furniture and lighting.",
+    gallery: ["images/photos/rope-rigging.jpg"]
   },
   {
     id: "young-sailors-showcase",
@@ -114,7 +141,10 @@ window.SAILORS_PROJECTS = [
     guests: 900,
     image: "images/photos/sextant-compass.jpg",
     alt: "Sextant and compass on a wooden table",
-    description: "Sample entry. Talent Hub showcase where young artists, performers and entrepreneurs presented to industry partners and incubator mentors."
+    description: "Sample entry. Talent Hub showcase where young artists, performers and entrepreneurs presented to industry partners and incubator mentors.",
+    partner: "institution-02",
+    role: "Sample: Talent Hub showcase production and partner matchmaking.",
+    gallery: ["images/photos/map-telescope.jpg"]
   },
   {
     id: "desert-to-sea-music-nights",
@@ -125,7 +155,10 @@ window.SAILORS_PROJECTS = [
     guests: 45000,
     image: "images/photos/rope-teal.jpg",
     alt: "Teal rope coiled on a bollard at sunset",
-    description: "Sample entry. Three-weekend concert series with regional and international artists, ticketing platform integration and live-streamed coverage."
+    description: "Sample entry. Three-weekend concert series with regional and international artists, ticketing platform integration and live-streamed coverage.",
+    partner: "client-06",
+    role: "Sample: artist booking, ticketing platform integration and live-streamed coverage.",
+    gallery: ["images/photos/sailboat-wide.jpg"]
   },
   {
     id: "smart-city-conference",
@@ -136,7 +169,10 @@ window.SAILORS_PROJECTS = [
     guests: 9500,
     image: "images/photos/rope-pulley.jpg",
     alt: "Rope threaded through a wooden pulley",
-    description: "Sample entry. Conference and exhibition for municipal and private-sector partners: booth fabrication, lighting fixtures, wayfinding and logistics."
+    description: "Sample entry. Conference and exhibition for municipal and private-sector partners: booth fabrication, lighting fixtures, wayfinding and logistics.",
+    partner: "institution-03",
+    role: "Sample: booth fabrication, lighting fixtures, wayfinding and logistics.",
+    gallery: ["images/photos/rope-cleat.jpg"]
   },
   {
     id: "winter-wonder-park",
@@ -147,6 +183,9 @@ window.SAILORS_PROJECTS = [
     guests: 38000,
     image: "images/photos/map-telescope.jpg",
     alt: "Antique telescope on a nautical map",
-    description: "Sample entry. Seasonal family park with rides, themed installations and daily shows, operated across three weeks with full crowd and safety management."
+    description: "Sample entry. Seasonal family park with rides, themed installations and daily shows, operated across three weeks with full crowd and safety management.",
+    partner: "client-07",
+    role: "Sample: themed installations, daily shows, crowd and safety management.",
+    gallery: ["images/photos/winch.jpg"]
   }
 ];
