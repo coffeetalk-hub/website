@@ -8,7 +8,7 @@ Content, imagery, logos and brand colours follow the *December 2025 company prof
 /index.html            Home — photo-mosaic hero, intro, stats, "Why The Sailors .ART", services, client strip, CTA
 /about.html            Story, group journey + milestones, manifesto, values, why us, leadership team & advisors
 /services.html         One-stop process, three service groups, "Licensed & Certified" (CR, CoC)
-/work.html             Portfolio grid with filter tabs and lightbox (from data/projects.js) + cities map
+/work.html             Key numbers + link to the collaborations portfolio on partners.html
 /partners.html         Partner logo carousel + "Our collaborations in action" portfolio (partner & category
                        filters, project detail view), then client / institutional / alliance logo grids
 /contact.html          Netlify-ready contact form, address, social links
@@ -34,7 +34,7 @@ python3 -m http.server 8000
 Any static file server works. Opening the `.html` files directly from disk also works for everything except the
 contact form (Netlify Forms only work on a deployed Netlify site).
 
-## Add or edit portfolio projects (`work.html`)
+## Add or edit portfolio projects (`partners.html`)
 
 Open `data/projects.js` and add an object to the `window.SAILORS_PROJECTS` array:
 
