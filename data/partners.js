@@ -1,38 +1,100 @@
 /*
  * Partners rendered on partners.html (carousel + logo grids) and the strip on index.html.
- * ---------------------------------------------------------------
- *   id       unique, URL-safe — projects in data/projects.js point at it via "partner"
- *   name     displayed under the logo and used as alt text
- *   logo     path to an image (SVG/PNG/JPG, about 400x200). Leave "" to show a monogram placeholder.
- *   url      optional website link (shown in the project detail view)
- *   note     optional short caption (sector, country, role)
+ *   id    unique, URL-safe — projects in data/projects.js point at it via "partner"
+ *   name  displayed under the logo and used as alt text
+ *   logo  image path ("" shows a monogram placeholder)   url  optional link   note  short caption
  *
- * PLACEHOLDERS: logo files and the final partner list have not been supplied yet.
- * Replace name/logo once available (drop logos into images/logos/). Only partners
- * with a matching project in data/projects.js show projects when clicked.
+ * Names and logos come from the December 2025 company profile (slides "Partners of Success",
+ * "Domestic Collaboration & Strategic Partnership", "Technology Partners", "The Partnership").
+ * Three logos that could not be identified were left out. Only partners with a matching
+ * project in data/projects.js show projects when clicked.
  */
 window.SAILORS_PARTNERS = {
   clients: [
-    { id: "client-01", name: "Client 01", logo: "", url: "", note: "Placeholder" },
-    { id: "client-02", name: "Client 02", logo: "", url: "", note: "Placeholder" },
-    { id: "client-03", name: "Client 03", logo: "", url: "", note: "Placeholder" },
-    { id: "client-04", name: "Client 04", logo: "", url: "", note: "Placeholder" },
-    { id: "client-05", name: "Client 05", logo: "", url: "", note: "Placeholder" },
-    { id: "client-06", name: "Client 06", logo: "", url: "", note: "Placeholder" },
-    { id: "client-07", name: "Client 07", logo: "", url: "", note: "Placeholder" },
-    { id: "client-08", name: "Client 08", logo: "", url: "", note: "Placeholder" }
+    { id: "client-saudi-aramco", name: "Saudi Aramco", logo: "images/logos/institutional/saudi-aramco.jpg", url: "", note: "Energy" },
+    { id: "client-sabic", name: "SABIC", logo: "images/logos/institutional/sabic.jpg", url: "", note: "Petrochemicals" },
+    { id: "client-stc", name: "stc", logo: "images/logos/clients/stc.png", url: "", note: "Telecom" },
+    { id: "client-mobily", name: "Mobily", logo: "images/logos/clients/mobily.png", url: "", note: "Telecom" },
+    { id: "client-ma-aden", name: "Ma'aden", logo: "images/logos/clients/maaden.png", url: "", note: "Mining" },
+    { id: "client-saudi-electricity-company", name: "Saudi Electricity Company", logo: "images/logos/clients/saudi-electricity-company.png", url: "", note: "Utilities" },
+    { id: "client-marafiq", name: "Marafiq", logo: "images/logos/clients/marafiq.png", url: "", note: "Utilities" },
+    { id: "client-national-water-company", name: "National Water Company", logo: "images/logos/clients/national-water-company.png", url: "", note: "Utilities" },
+    { id: "client-saline-water-conversion-corporation", name: "Saline Water Conversion Corporation", logo: "images/logos/clients/swcc.png", url: "", note: "Utilities" },
+    { id: "client-sipchem", name: "Sipchem", logo: "images/logos/clients/sipchem.png", url: "", note: "Petrochemicals" },
+    { id: "client-tasnee", name: "Tasnee", logo: "images/logos/clients/tasnee.png", url: "", note: "Petrochemicals" },
+    { id: "client-rawabi-holding", name: "Rawabi Holding", logo: "images/logos/clients/rawabi-holding.jpg", url: "", note: "Industrial group" },
+    { id: "client-tamimi-power-industrial-group", name: "Tamimi Power & Industrial Group", logo: "images/logos/clients/tamimi.jpg", url: "", note: "Industrial group" },
+    { id: "client-general-entertainment-authority", name: "General Entertainment Authority", logo: "images/logos/clients/general-entertainment-authority.jpg", url: "", note: "Government" },
+    { id: "client-saudi-data-ai-authority-sdaia", name: "Saudi Data & AI Authority (SDAIA)", logo: "images/logos/clients/sdaia.png", url: "", note: "Government" },
+    { id: "client-saudi-electricity-regulatory-authority", name: "Saudi Electricity Regulatory Authority", logo: "images/logos/clients/sera.png", url: "", note: "Government" },
+    { id: "client-economic-cities-authority", name: "Economic Cities Authority", logo: "images/logos/clients/economic-cities-authority.png", url: "", note: "Government" },
+    { id: "client-saudi-green-initiative", name: "Saudi Green Initiative", logo: "images/logos/clients/saudi-green-initiative.png", url: "", note: "Sustainability" },
+    { id: "client-saudi-energy-efficiency-center-kafaah", name: "Saudi Energy Efficiency Center (Kafaah)", logo: "images/logos/clients/kafaah.png", url: "", note: "Energy" },
+    { id: "client-king-salman-energy-park-spark", name: "King Salman Energy Park (SPARK)", logo: "images/logos/clients/spark.png", url: "", note: "Energy" },
+    { id: "client-saudi-aramco-employees-association", name: "Saudi Aramco Employees Association", logo: "images/logos/clients/aramco-employees-association.jpg", url: "", note: "Community" },
+    { id: "client-microsoft", name: "Microsoft", logo: "images/logos/clients/microsoft.png", url: "", note: "Technology" },
+    { id: "client-google", name: "Google", logo: "images/logos/clients/google.png", url: "", note: "Technology" },
+    { id: "client-amazon-web-services", name: "Amazon Web Services", logo: "images/logos/clients/aws.png", url: "", note: "Technology" },
+    { id: "client-hexagon", name: "Hexagon", logo: "images/logos/clients/hexagon.png", url: "", note: "Technology" },
+    { id: "client-abb", name: "ABB", logo: "images/logos/clients/abb.png", url: "", note: "Automation" },
+    { id: "client-emerson", name: "Emerson", logo: "images/logos/clients/emerson.png", url: "", note: "Automation" },
+    { id: "client-honeywell", name: "Honeywell", logo: "images/logos/clients/honeywell.png", url: "", note: "Automation" },
+    { id: "client-schneider-electric", name: "Schneider Electric", logo: "images/logos/clients/schneider-electric.png", url: "", note: "Energy management" }
   ],
   institutional: [
-    { id: "das-alumni-council", name: "DAS Alumni+ Council", logo: "", url: "https://www.das-alumni.com", note: "Alumni platform" },
-    { id: "institution-01", name: "Institutional Partner 01", logo: "", url: "", note: "Placeholder" },
-    { id: "institution-02", name: "Institutional Partner 02", logo: "", url: "", note: "Placeholder" },
-    { id: "institution-03", name: "Institutional Partner 03", logo: "", url: "", note: "Placeholder" },
-    { id: "institution-04", name: "Institutional Partner 04", logo: "", url: "", note: "Placeholder" }
+    { id: "inst-das-alumni-council", name: "DAS Alumni+ Council", logo: "", url: "https://www.das-alumni.com", note: "Alumni platform" },
+    { id: "inst-eastern-province-governorate", name: "Eastern Province Governorate", logo: "images/logos/institutional/eastern-province-emirate.jpg", url: "", note: "Recognition" },
+    { id: "inst-general-entertainment-authority", name: "General Entertainment Authority", logo: "images/logos/clients/general-entertainment-authority.jpg", url: "", note: "Recognition & permits" },
+    { id: "inst-eastern-province-municipality", name: "Eastern Province Municipality", logo: "images/logos/institutional/eastern-province-amana.jpg", url: "", note: "Municipal" },
+    { id: "inst-sharqia-development-authority", name: "Sharqia Development Authority", logo: "images/logos/institutional/sharqia-development-authority.png", url: "", note: "Regional development" },
+    { id: "inst-ministry-of-culture", name: "Ministry of Culture", logo: "images/logos/institutional/ministry-of-culture.jpg", url: "", note: "Government" },
+    { id: "inst-ministry-of-energy", name: "Ministry of Energy", logo: "images/logos/institutional/ministry-of-energy.jpg", url: "", note: "Government" },
+    { id: "inst-ministry-of-communications-information-technology", name: "Ministry of Communications & Information Technology", logo: "images/logos/institutional/ministry-mcit.jpg", url: "", note: "Government" },
+    { id: "inst-ministry-of-commerce-investment", name: "Ministry of Commerce & Investment", logo: "images/logos/institutional/ministry-of-commerce.jpg", url: "", note: "Government" },
+    { id: "inst-ministry-of-education", name: "Ministry of Education", logo: "images/logos/institutional/ministry-of-education.jpg", url: "", note: "Government" },
+    { id: "inst-ministry-of-health", name: "Ministry of Health", logo: "images/logos/institutional/ministry-of-health.jpg", url: "", note: "Government" },
+    { id: "inst-ministry-of-finance", name: "Ministry of Finance", logo: "images/logos/institutional/ministry-of-finance.png", url: "", note: "Government" },
+    { id: "inst-ministry-of-human-resources-social-development", name: "Ministry of Human Resources & Social Development", logo: "images/logos/institutional/ministry-hrsd.jpg", url: "", note: "Government" },
+    { id: "inst-kingdom-of-saudi-arabia", name: "Kingdom of Saudi Arabia", logo: "images/logos/institutional/kingdom-of-saudi-arabia.jpg", url: "", note: "National" },
+    { id: "inst-communications-space-technology-commission", name: "Communications, Space & Technology Commission", logo: "images/logos/institutional/cst.png", url: "", note: "Regulator" },
+    { id: "inst-saudi-data-ai-authority-sdaia", name: "Saudi Data & AI Authority (SDAIA)", logo: "images/logos/institutional/sdaia.png", url: "", note: "Government" },
+    { id: "inst-king-fahd-university-of-petroleum-minerals", name: "King Fahd University of Petroleum & Minerals", logo: "images/logos/institutional/kfupm.jpg", url: "", note: "Academia" },
+    { id: "inst-imam-abdulrahman-bin-faisal-university", name: "Imam Abdulrahman Bin Faisal University", logo: "images/logos/institutional/iau.jpg", url: "", note: "Academia" },
+    { id: "inst-dhahran-techno-valley-company", name: "Dhahran Techno Valley Company", logo: "images/logos/institutional/dtvc.png", url: "", note: "Innovation" },
+    { id: "inst-dammam-valley-arcensus", name: "Dammam Valley / arcensus", logo: "images/logos/institutional/dammam-valley.png", url: "", note: "Innovation" }
   ],
   alliances: [
-    { id: "alliance-01", name: "Global Alliance 01", logo: "", url: "", note: "Placeholder" },
-    { id: "alliance-02", name: "Global Alliance 02", logo: "", url: "", note: "Placeholder" },
-    { id: "alliance-03", name: "Global Alliance 03", logo: "", url: "", note: "Placeholder" },
-    { id: "alliance-04", name: "Global Alliance 04", logo: "", url: "", note: "Placeholder" }
+    { id: "alliance-microsoft", name: "Microsoft", logo: "images/logos/alliances/microsoft.png", url: "", note: "Technology" },
+    { id: "alliance-amazon-web-services", name: "Amazon Web Services", logo: "images/logos/alliances/aws.png", url: "", note: "Technology" },
+    { id: "alliance-nvidia", name: "NVIDIA", logo: "images/logos/alliances/nvidia.jpg", url: "", note: "Technology" },
+    { id: "alliance-intel", name: "Intel", logo: "images/logos/alliances/intel.jpg", url: "", note: "Technology" },
+    { id: "alliance-oracle", name: "Oracle", logo: "images/logos/alliances/oracle.jpg", url: "", note: "Technology" },
+    { id: "alliance-sap", name: "SAP", logo: "images/logos/alliances/sap.jpg", url: "", note: "Technology" },
+    { id: "alliance-cisco", name: "Cisco", logo: "images/logos/alliances/cisco.png", url: "", note: "Technology" },
+    { id: "alliance-nokia", name: "Nokia", logo: "images/logos/alliances/nokia.jpg", url: "", note: "Technology" },
+    { id: "alliance-hewlett-packard-enterprise", name: "Hewlett Packard Enterprise", logo: "images/logos/alliances/hpe.png", url: "", note: "Technology" },
+    { id: "alliance-citrix", name: "Citrix", logo: "images/logos/alliances/citrix.png", url: "", note: "Technology" },
+    { id: "alliance-uipath", name: "UiPath", logo: "images/logos/alliances/uipath.jpg", url: "", note: "Automation" },
+    { id: "alliance-aspentech", name: "AspenTech", logo: "images/logos/alliances/aspentech.jpg", url: "", note: "Industrial software" },
+    { id: "alliance-hexagon", name: "Hexagon", logo: "images/logos/alliances/hexagon.png", url: "", note: "Industrial software" },
+    { id: "alliance-bentley-systems", name: "Bentley Systems", logo: "images/logos/alliances/bentley.png", url: "", note: "Industrial software" },
+    { id: "alliance-seeq", name: "Seeq", logo: "images/logos/alliances/seeq.jpg", url: "", note: "Industrial software" },
+    { id: "alliance-sphera", name: "Sphera", logo: "images/logos/alliances/sphera.jpg", url: "", note: "Sustainability software" },
+    { id: "alliance-esri", name: "Esri", logo: "images/logos/alliances/esri.png", url: "", note: "GIS" },
+    { id: "alliance-blue-yonder", name: "Blue Yonder", logo: "images/logos/alliances/blue-yonder.png", url: "", note: "Supply chain" },
+    { id: "alliance-symphony-azimaai", name: "Symphony AzimaAI", logo: "images/logos/alliances/symphony-azima-ai.png", url: "", note: "Industrial AI" },
+    { id: "alliance-emerson", name: "Emerson", logo: "images/logos/alliances/emerson.png", url: "", note: "Automation" },
+    { id: "alliance-abb", name: "ABB", logo: "images/logos/alliances/abb.png", url: "", note: "Automation" },
+    { id: "alliance-siemens-healthineers", name: "Siemens Healthineers", logo: "images/logos/alliances/siemens-healthineers.png", url: "", note: "Healthcare" },
+    { id: "alliance-ge-healthcare", name: "GE Healthcare", logo: "images/logos/alliances/ge-healthcare.png", url: "", note: "Healthcare" },
+    { id: "alliance-dnv", name: "DNV", logo: "images/logos/alliances/dnv.jpg", url: "", note: "Assurance" },
+    { id: "alliance-synergy", name: "Synergy", logo: "images/logos/alliances/synergy.png", url: "", note: "Technology" },
+    { id: "alliance-equity-i", name: "equity-i", logo: "images/logos/alliances/equity-i.png", url: "", note: "Technology" },
+    { id: "alliance-neom", name: "NEOM", logo: "images/logos/alliances/neom.jpg", url: "", note: "Development" },
+    { id: "alliance-womble-bond-dickinson", name: "Womble Bond Dickinson", logo: "images/logos/alliances/womble-bond-dickinson.png", url: "", note: "Legal partner" },
+    { id: "alliance-tavis-capital", name: "Tavis Capital", logo: "images/logos/alliances/tavis-capital.png", url: "", note: "Investment partner — Geneva" },
+    { id: "alliance-quadrian", name: "Quadrian", logo: "images/logos/alliances/quadrian.png", url: "", note: "AI partnership — KSA & Bahrain" },
+    { id: "alliance-emeritus-alumni-platform", name: "Emeritus Alumni Platform", logo: "images/logos/alliances/emeritus-alumni-platform.png", url: "", note: "Group IP" },
+    { id: "alliance-raden", name: "Raden", logo: "images/logos/alliances/raden.jpg", url: "", note: "Partner" }
   ]
 };

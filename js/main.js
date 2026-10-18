@@ -365,6 +365,7 @@
       return b;
     }
     var track = marquee.querySelector(".marquee__track");
+    marquee.style.setProperty("--marquee-duration", Math.max(40, partners.length * 1.6) + "s"); // speed scales with the number of logos
     [false, true].forEach(function (clone) {
       var group = document.createElement("div");
       group.className = "marquee__group";

@@ -19,7 +19,7 @@ Content, imagery, logos and brand colours follow the *December 2025 company prof
 /images/brand/         Wordmark (colour, white, on-white), swoosh mark, group + ISTA logos
 /images/photos/        Nautical photography from the profile (hero, covers, ropes, sails…)
 /images/values/        The five value illustrations
-/images/logos/         (empty) — drop client / partner logo files here
+/images/logos/         clients/ · institutional/ · alliances/ (from the company profile)
 /images/og-image.jpg   Link-preview image; favicon-*.png and apple-touch-icon.png
 /sitemap.xml /robots.txt /netlify.toml
 ```
@@ -75,8 +75,9 @@ Open `data/partners.js`. There are three arrays: `clients`, `institutional` and 
 - The carousel on `partners.html` shows every partner from all three groups. Clicking a logo filters the
   collaborations portfolio to that partner's projects (or shows a "no published projects yet" note).
 - `url` and `note` are optional.
-- All entries are numbered placeholders until the real client and partner list is available. Replace the
-  `name`, add the logo file to `images/logos/` and set its path in `logo`.
+- Names and logos were taken from the company profile. Three logos that could not be identified were left out.
+  Only DAS Alumni+ Council has a published project; other partners show a "no published projects yet" note until
+  projects referencing their `id` are added.
 - The home page shows the first 12 `clients`; change `data-limit="12"` in `index.html` to show more or fewer.
 
 ## Edit text, stats, team and contact details
