@@ -79,7 +79,7 @@ function Column({ column, deals }: { column: BoardColumn; deals: BoardDeal[] }) 
         <div>
           <h2 className="flex items-center gap-2 text-sm font-semibold">
             <span
-              className={cn("h-2 w-2 rounded-full", column.kind === "WON" ? "bg-green-500" : column.kind === "LOST" ? "bg-red-500" : "bg-primary")}
+              className={cn("h-2 w-2 rounded-full", column.kind === "WON" ? "bg-chart-1" : column.kind === "LOST" ? "bg-coral" : "bg-muted-foreground")}
             />
             {column.name}
             <span className="rounded-full bg-background px-1.5 text-xs font-normal text-muted-foreground">{deals.length}</span>

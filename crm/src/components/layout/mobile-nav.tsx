@@ -15,7 +15,7 @@ export function MobileNav({ keys }: { keys: string[] }) {
           <Menu className="h-5 w-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent title={t.app.name} className="top-0 mt-0 translate-y-0 sm:top-1/2">
+      <DialogContent title={t.app.name} className="border-0 bg-sidebar text-sidebar-foreground">
         <Nav keys={keys} onNavigate={() => setOpen(false)} />
       </DialogContent>
     </Dialog>

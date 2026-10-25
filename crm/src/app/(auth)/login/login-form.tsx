@@ -19,7 +19,7 @@ export function LoginForm() {
         <Input id="password" name="password" type="password" autoComplete="current-password" required />
       </div>
       {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
-      <Button type="submit" className="w-full" disabled={pending}>
+      <Button type="submit" className="w-full bg-coral text-white hover:bg-coral/90" disabled={pending}>
         {t.auth.signIn}
       </Button>
     </form>

@@ -2,7 +2,7 @@
 // To add Arabic: create ar.ts with the same shape, register it in ./index.ts,
 // and set the locale cookie — layout.tsx already derives `lang` and `dir` from it.
 export const en = {
-  app: { name: "CRM" },
+  app: { name: "CRM", tagline: "Customer management" },
   nav: {
     dashboard: "Dashboard",
     contacts: "Contacts",

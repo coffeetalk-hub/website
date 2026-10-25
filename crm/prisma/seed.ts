@@ -135,7 +135,9 @@ async function main() {
         currency: "SAR",
         stageId: stage.id,
         position: i,
-        expectedCloseDate: daysFromNow(Math.floor(rand() * 90) - 10),
+        expectedCloseDate: daysFromNow(
+          stage.kind === "WON" ? -Math.floor(10 + rand() * 150) : stage.kind === "LOST" ? -Math.floor(5 + rand() * 100) : Math.floor(3 + rand() * 170),
+        ),
         companyId: co.id,
         contactId: same.length ? pick(same).id : null,
         ownerId: co.ownerId,
