@@ -1,7 +1,7 @@
 import { db } from "@/core/db";
 import type { SessionUser } from "@/core/permissions";
 
-export type AuditAction = "CREATE" | "UPDATE" | "DELETE" | "IMPORT" | "MOVE";
+export type AuditAction = "CREATE" | "UPDATE" | "DELETE" | "IMPORT" | "EXPORT" | "MOVE";
 
 type Json = Record<string, unknown>;
 

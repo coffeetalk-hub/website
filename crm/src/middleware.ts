@@ -6,7 +6,6 @@ import { jwtVerify } from "jose";
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get("crm_session")?.value;
   const login = new URL("/login", req.url);
-  const isLogin = req.nextUrl.pathname === "/login";
   let valid = false;
   if (token && process.env.SESSION_SECRET) {
     try {
@@ -14,8 +13,9 @@ export async function middleware(req: NextRequest) {
       valid = true;
     } catch {}
   }
-  if (!valid && !isLogin) return NextResponse.redirect(login);
-  if (valid && isLogin) return NextResponse.redirect(new URL("/dashboard", req.url));
+  // Signed-in users visiting /login are handled by the page itself (it checks the user is still active),
+  // otherwise a deactivated user with a still-valid cookie would loop between /login and /dashboard.
+  if (!valid && req.nextUrl.pathname !== "/login") return NextResponse.redirect(login);
   return NextResponse.next();
 }
 

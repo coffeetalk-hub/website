@@ -1,7 +1,10 @@
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/core/auth/session";
 import { LoginForm } from "./login-form";
 import { t } from "@/core/i18n";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  if (await getCurrentUser()) redirect("/dashboard");
   return (
     <main className="flex min-h-screen items-center justify-center bg-sidebar p-4">
       <div className="w-full max-w-sm">

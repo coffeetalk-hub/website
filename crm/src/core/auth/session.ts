@@ -1,9 +1,9 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import { db } from "@/core/db";
-import type { Role, SessionUser } from "@/core/permissions";
+import { can, type Action, type Resource, type Role, type SessionUser } from "@/core/permissions";
 
 const COOKIE = "crm_session";
 const MAX_AGE = 60 * 60 * 24 * 7;
@@ -51,5 +51,12 @@ export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
 export async function requireUser(): Promise<SessionUser> {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+  return user;
+}
+
+/** For pages restricted by role: signed-in users without access get a 404 (not a 500). */
+export async function requireAccess(resource: Resource, action: Action = "read"): Promise<SessionUser> {
+  const user = await requireUser();
+  if (!can(user, resource, action)) notFound();
   return user;
 }
