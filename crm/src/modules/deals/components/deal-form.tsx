@@ -4,12 +4,10 @@ import { CustomFieldInputs } from "@/components/custom-fields";
 import type { CustomValues, FieldDef } from "@/core/custom-fields";
 import type { ActionState } from "@/core/forms";
 import { t } from "@/core/i18n";
-import { CURRENCIES } from "../schema";
 
 type Initial = {
   title?: string;
   value?: number;
-  currency?: string;
   stageId?: string;
   expectedCloseDate?: Date | null;
   companyId?: string | null;
@@ -46,15 +44,8 @@ export function DealForm({
             <Input id="title" name="title" defaultValue={initial.title ?? ""} />
           </Field>
         </div>
-        <Field name="value" label={t.deals.value} required>
+        <Field name="value" label={`${t.deals.value} (SAR)`} required>
           <Input id="value" name="value" type="number" min="0" step="any" defaultValue={initial.value ?? ""} />
-        </Field>
-        <Field name="currency" label="Currency">
-          <Select id="currency" name="currency" defaultValue={initial.currency ?? "SAR"}>
-            {CURRENCIES.map((c) => (
-              <option key={c}>{c}</option>
-            ))}
-          </Select>
         </Field>
         <Field name="stageId" label={t.deals.stage} required>
           <Select id="stageId" name="stageId" defaultValue={initial.stageId ?? stages[0]?.id}>

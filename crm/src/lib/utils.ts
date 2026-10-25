@@ -15,9 +15,9 @@ export function formatDateTime(d: Date | string | null | undefined) {
   return new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short" }).format(new Date(d));
 }
 
-/** Money is always formatted through here so the currency/locale is changed in one place. */
-export const DEFAULT_CURRENCY = "SAR";
-export function formatMoney(value: number, currency = DEFAULT_CURRENCY) {
+/** The CRM is SAR-only. Money is always formatted through here so currency/locale lives in one place. */
+export const CURRENCY = "SAR";
+export function formatMoney(value: number, currency: string = CURRENCY) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,

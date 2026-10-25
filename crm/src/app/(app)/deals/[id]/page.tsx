@@ -8,6 +8,7 @@ import { getFieldDefs, getFieldValues } from "@/core/custom-fields";
 import { getDeal } from "@/modules/deals/queries";
 import { deleteDeal } from "@/modules/deals/actions";
 import { Timeline } from "@/modules/activities/components/timeline";
+import { QuickAddActivity } from "@/modules/activities/components/quick-add";
 import { AuditHistory } from "@/core/audit/history";
 import { PageHeader } from "@/components/page-header";
 import { CustomFieldsView, DetailItem } from "@/components/custom-fields";
@@ -71,6 +72,7 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
               <CardTitle>{t.contacts.timeline}</CardTitle>
             </CardHeader>
             <CardContent>
+              <QuickAddActivity user={user} returnTo={`/deals/${id}`} links={{ dealId: id, companyId: deal.company?.id, contactId: deal.contact?.id }} />
               <Timeline items={activities} />
             </CardContent>
           </Card>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Phone, Users, StickyNote, CalendarClock, CheckCircle2 } from "lucide-react";
 import { formatDateTime } from "@/lib/utils";
 import { t } from "@/core/i18n";
@@ -28,7 +29,7 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-x-2 text-sm">
-                <span className="font-medium">{a.subject}</span>
+                <Link href={`/tasks/${a.id}/edit`} className="font-medium hover:underline">{a.subject}</Link>
                 {a.completedAt && <CheckCircle2 className="h-4 w-4 text-green-600" />}
               </div>
               {a.body && <p className="mt-0.5 whitespace-pre-wrap text-sm text-muted-foreground">{a.body}</p>}

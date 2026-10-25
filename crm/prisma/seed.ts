@@ -154,25 +154,35 @@ async function main() {
   const types = Object.keys(subjects);
   for (let i = 0; i < 40; i++) {
     const deal = pick(deals);
-    const type = pick(types);
+    const type = i < 8 ? "FOLLOW_UP" : pick(types);
     const past = rand() < 0.5;
     const isTask = type === "FOLLOW_UP" || type === "MEETING" || type === "CALL";
     const dueOffset = past ? -Math.floor(rand() * 20) : Math.floor(rand() * 10);
-    const dueAt = isTask ? daysFromNow(i < 6 ? 0 : dueOffset, 9 + (i % 8)) : null;
+    const today = i < 8; // guarantee tasks due today for each rep
+    const dueAt = isTask || today ? daysFromNow(today ? 0 : dueOffset, 9 + (i % 8)) : null;
+    const assignee = today ? [rep1, rep2][i % 2].id : deal.ownerId;
     await db.activity.create({
       data: {
         type,
         subject: pick(subjects[type]),
         body: type === "NOTE" ? "Discussed on the last visit; agreed to revisit next week." : null,
         dueAt,
-        completedAt: dueAt && dueAt < new Date() && rand() < 0.7 ? dueAt : null,
-        assigneeId: deal.ownerId,
-        creatorId: deal.ownerId,
+        completedAt: !today && dueAt && dueAt < new Date() && rand() < 0.45 ? dueAt : null,
+        assigneeId: assignee,
+        creatorId: assignee,
         dealId: deal.id,
         companyId: deal.companyId,
         contactId: deal.contactId,
       },
     });
+  }
+
+  // Demo audit trail so "recent activity" is not empty.
+  for (const [i, c] of companies.entries()) {
+    await db.auditLog.create({ data: { userId: c.ownerId, entity: "Company", recordId: c.id, action: "CREATE", changes: { name: c.name }, createdAt: daysFromNow(-20 + i, 9) } });
+  }
+  for (const [i, d] of deals.entries()) {
+    await db.auditLog.create({ data: { userId: d.ownerId, entity: "Deal", recordId: d.id, action: "CREATE", changes: { title: d.title, value: d.value }, createdAt: daysFromNow(-14 + (i % 14), 11) } });
   }
 
   await db.auditLog.create({ data: { userId: admin.id, entity: "System", recordId: "seed", action: "CREATE", changes: { note: "Demo data seeded" } } });

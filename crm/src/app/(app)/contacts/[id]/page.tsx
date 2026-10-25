@@ -8,6 +8,7 @@ import { getFieldDefs, getFieldValues } from "@/core/custom-fields";
 import { getContact } from "@/modules/contacts/queries";
 import { deleteContact } from "@/modules/contacts/actions";
 import { Timeline } from "@/modules/activities/components/timeline";
+import { QuickAddActivity } from "@/modules/activities/components/quick-add";
 import { AuditHistory } from "@/core/audit/history";
 import { PageHeader } from "@/components/page-header";
 import { CustomFieldsView, DetailItem } from "@/components/custom-fields";
@@ -69,6 +70,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
               <CardTitle>{t.contacts.timeline}</CardTitle>
             </CardHeader>
             <CardContent>
+              <QuickAddActivity user={user} returnTo={`/contacts/${id}`} links={{ contactId: id, companyId: contact.company?.id }} />
               <Timeline items={activities} />
             </CardContent>
           </Card>

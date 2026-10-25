@@ -8,6 +8,7 @@ import { getFieldDefs, getFieldValues } from "@/core/custom-fields";
 import { getCompany } from "@/modules/companies/queries";
 import { deleteCompany } from "@/modules/companies/actions";
 import { Timeline } from "@/modules/activities/components/timeline";
+import { QuickAddActivity } from "@/modules/activities/components/quick-add";
 import { AuditHistory } from "@/core/audit/history";
 import { PageHeader } from "@/components/page-header";
 import { CustomFieldsView, DetailItem } from "@/components/custom-fields";
@@ -113,6 +114,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
               <CardTitle>{t.contacts.timeline}</CardTitle>
             </CardHeader>
             <CardContent>
+              <QuickAddActivity user={user} returnTo={`/companies/${id}`} links={{ companyId: id }} />
               <Timeline items={activities} />
             </CardContent>
           </Card>

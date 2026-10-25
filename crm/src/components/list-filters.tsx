@@ -7,10 +7,13 @@ import { t } from "@/core/i18n";
 export type FilterSelect = { name: string; label: string; value?: string; options: { value: string; label: string }[] };
 
 /** Plain GET form — filters live in the URL, no client JS needed. */
-export function ListFilters({ basePath, q, selects = [] }: { basePath: string; q?: string; selects?: FilterSelect[] }) {
+export function ListFilters({ basePath, q, selects = [], hidden = {} }: { basePath: string; q?: string; selects?: FilterSelect[]; hidden?: Record<string, string> }) {
   const active = q || selects.some((s) => s.value);
   return (
     <form method="get" action={basePath} className="mb-4 flex flex-wrap items-center gap-2">
+      {Object.entries(hidden).map(([k, v]) => (
+        <input key={k} type="hidden" name={k} value={v} />
+      ))}
       <div className="relative min-w-[200px] flex-1 sm:max-w-xs">
         <Search className="pointer-events-none absolute start-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input name="q" defaultValue={q} placeholder={t.common.search} className="ps-8" />
@@ -30,7 +33,7 @@ export function ListFilters({ basePath, q, selects = [] }: { basePath: string; q
       </Button>
       {active && (
         <Button variant="ghost" asChild>
-          <Link href={basePath}>Clear</Link>
+          <Link href={hidden && Object.keys(hidden).length ? `${basePath}?${new URLSearchParams(hidden)}` : basePath}>Clear</Link>
         </Button>
       )}
     </form>
