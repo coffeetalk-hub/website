@@ -69,4 +69,14 @@ export function assertOwns(user: SessionUser, resource: Resource, record: { owne
   if (owner !== user.id) throw new ForbiddenError();
 }
 
+/** Boolean form of assertOwns for read paths that should 404 instead of throwing. */
+export function canAccess(user: SessionUser, resource: Resource, record: { ownerId?: string; assigneeId?: string }) {
+  try {
+    assertOwns(user, resource, record);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export type { Prisma };
