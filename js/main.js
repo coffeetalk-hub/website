@@ -17,6 +17,13 @@
   /* ---------------------------------------------------------------------
      1. Navigation
      --------------------------------------------------------------------- */
+  function initHeader() {
+    var h = document.querySelector('.site-header');
+    if (!h) return;
+    var update = function () { h.classList.toggle('is-solid', window.scrollY > 40 || !h.classList.contains('site-header--overlay')); };
+    update(); window.addEventListener('scroll', update, { passive: true });
+  }
+
   function initNav() {
     var toggle = document.querySelector(".nav-toggle");
     var nav = document.getElementById("site-nav");
@@ -200,6 +207,7 @@
       var photos = [p.image].concat(p.gallery || []);
       lbImg.src = p.image; lbImg.alt = p.alt || p.title;
       lbTitle.textContent = p.title;
+      var flag = lightbox.querySelector("[data-lb='sample']"); if (flag) flag.hidden = !p.sample;
       lbCity.textContent = p.city;
       lbYear.textContent = p.year;
       lbType.textContent = TYPE_LABELS[p.type] || p.type;
@@ -272,6 +280,7 @@
     card.innerHTML =
       '<img src="' + p.image + '" alt="' + escapeHtml(p.alt || p.title) + '" loading="lazy" decoding="async" width="800" height="600">' +
       '<span class="work-card__type">' + escapeHtml(TYPE_LABELS[p.type] || p.type) + '</span>' +
+      (p.sample ? '<span class="work-card__sample">Sample · placeholder imagery</span>' : '') +
       '<span class="work-card__body">' +
         (partner ? '<span class="work-card__partner">' + escapeHtml(partner.name) + '</span>' : '') +
         '<h3>' + escapeHtml(p.title) + '</h3>' +
@@ -321,8 +330,18 @@
         var count = document.createElement("span"); count.className = "count"; count.textContent = n; b.appendChild(count);
         b.addEventListener("click", function () { applyFilter(t); });
       });
-      var param = new URLSearchParams(location.search).get("type");
+      var qs = new URLSearchParams(location.search);
+      var param = qs.get("type");
       applyFilter(param && TYPE_LABELS[param] ? param : "all");
+      var pid = qs.get("partner"), partner = pid && partnerById(pid);
+      var note = document.getElementById("work-partner-note");
+      if (partner && note) {
+        var mine = projects.filter(function (p) { return p.partner === pid; });
+        grid.querySelectorAll(".work-card").forEach(function (card, i) { if (projects[i].partner !== pid) card.classList.add("is-hidden"); });
+        visible = mine; empty.hidden = mine.length > 0; if (!mine.length) empty.textContent = "No published projects with " + partner.name + " yet.";
+        note.hidden = false;
+        note.innerHTML = '<span>Showing projects with <strong>' + escapeHtml(partner.name) + '</strong></span><a class="btn btn--ghost btn--sm" href="work.html">Show all projects</a>';
+      }
     }
     if (lb && location.hash) {
       var id = location.hash.slice(1);
@@ -331,117 +350,87 @@
     }
   }
 
-  /* partners.html: logo marquee + collaborations portfolio ------------- */
+  /* index.html: featured work (verified projects first) ------------------- */
+  function initFeatured() {
+    var box = document.getElementById("featured-work");
+    if (!box || !window.SAILORS_PROJECTS) return;
+    var lb = createLightbox(document.getElementById("lightbox"));
+    var projects = sortedProjects();
+    var real = projects.filter(function (p) { return !p.sample; });
+    var picks = real.concat(projects.filter(function (p) { return p.sample; })).slice(0, 3);
+    picks.forEach(function (p) {
+      var card = projectCard(p, true);
+      card.addEventListener("click", function () { if (lb) lb.open(p, picks); else location.href = "work.html#" + p.id; });
+      box.appendChild(card);
+    });
+  }
+
+  /* partners.html: logo marquee + partner panel ------------------------- */
   function initPartnerShowcase() {
     var marquee = document.getElementById("partner-marquee");
-    var grid = document.getElementById("collab-grid");
-    if (!marquee || !grid || !window.SAILORS_PARTNERS) return;
-
+    var panel = document.getElementById("partner-panel");
+    if (!marquee || !window.SAILORS_PARTNERS) return;
     var partners = allPartners();
     var projects = sortedProjects();
-    var lb = createLightbox(document.getElementById("lightbox"));
-    var filters = document.getElementById("collab-filters");
-    var status = document.getElementById("collab-status");
-    var state = { type: "all", partner: "" };
-    var visible = projects.slice();
+    var track = marquee.querySelector(".marquee__track");
+    var selected = "";
+    marquee.style.setProperty("--marquee-duration", Math.max(40, partners.length * 1.6) + "s");
 
-    function projectsFor(id) { return projects.filter(function (p) { return p.partner === id; }); }
-
-    /* marquee: one track rendered twice so the loop is seamless */
+    function projectsFor(id) { return projects.filter(function (p) { return p.partner === id && !p.sample; }); }
     function logoButton(p, clone) {
-      var b = document.createElement("button");
-      b.type = "button"; b.className = "marquee__logo";
+      var b = document.createElement(panel ? "button" : "a");
+      b.className = "marquee__logo";
+      if (panel) { b.type = "button"; } else { b.href = "partners.html?partner=" + encodeURIComponent(p.id); }
       b.setAttribute("data-partner", p.id);
       if (clone) { b.tabIndex = -1; b.setAttribute("aria-hidden", "true"); }
       var n = projectsFor(p.id).length;
-      b.setAttribute("aria-label", p.name + (n ? " — " + n + " project" + (n > 1 ? "s" : "") : " — no published projects yet"));
+      b.setAttribute("aria-label", p.name + (n ? " — " + n + " project" + (n > 1 ? "s" : "") : ""));
       b.title = p.name;
-      if (p.logo) {
-        b.innerHTML = '<img src="' + p.logo + '" alt="" loading="lazy" decoding="async" width="160" height="64">';
-      } else {
-        b.innerHTML = '<span class="logo-card__mono" aria-hidden="true">' + escapeHtml(initials(p.name)) + '</span><span class="marquee__name">' + escapeHtml(p.name) + '</span>';
-      }
-      b.addEventListener("click", function () { selectPartner(p.id, true); });
+      b.innerHTML = p.logo
+        ? '<img src="' + p.logo + '" alt="" loading="lazy" decoding="async" width="120" height="48">'
+        : '<span class="logo-card__mono" aria-hidden="true">' + escapeHtml(initials(p.name)) + '</span><span class="marquee__name">' + escapeHtml(p.name) + '</span>';
+      if (panel) b.addEventListener("click", function () { select(p.id, true); });
       return b;
     }
-    var track = marquee.querySelector(".marquee__track");
-    marquee.style.setProperty("--marquee-duration", Math.max(40, partners.length * 1.6) + "s"); // speed scales with the number of logos
     [false, true].forEach(function (clone) {
-      var group = document.createElement("div");
-      group.className = "marquee__group";
+      var group = document.createElement("div"); group.className = "marquee__group";
       partners.forEach(function (p) { group.appendChild(logoButton(p, clone)); });
       track.appendChild(group);
     });
-    // Pause while hovered or focused
     marquee.addEventListener("focusin", function () { marquee.classList.add("is-paused"); });
     marquee.addEventListener("focusout", function () { marquee.classList.remove("is-paused"); });
+    if (!panel) return;
 
-    /* portfolio */
-    projects.forEach(function (p) {
-      var card = projectCard(p, true);
-      card.addEventListener("click", function () { if (lb) lb.open(p, visible); });
-      grid.appendChild(card);
-    });
-    var empty = document.createElement("p");
-    empty.className = "work-empty"; empty.hidden = true;
-    grid.parentNode.insertBefore(empty, grid.nextSibling);
-
-    function render() {
-      visible = [];
-      grid.querySelectorAll(".work-card").forEach(function (card, i) {
-        var p = projects[i];
-        var show = (state.type === "all" || p.type === state.type) && (!state.partner || p.partner === state.partner);
-        card.classList.toggle("is-hidden", !show);
-        if (show) visible.push(p);
-      });
-      var partner = partnerById(state.partner);
-      if (!visible.length) {
-        empty.textContent = partner
-          ? "We haven't published any projects with " + partner.name + " yet. Projects will appear here as they are added."
-          : "No projects in this category yet.";
-      }
-      empty.hidden = visible.length > 0;
-      if (filters) filters.querySelectorAll("button").forEach(function (b) {
-        b.setAttribute("aria-pressed", b.getAttribute("data-filter") === state.type ? "true" : "false");
-      });
+    function select(id, scroll) {
+      selected = selected === id ? "" : id;
+      var p = partnerById(selected);
       marquee.querySelectorAll(".marquee__logo").forEach(function (b) {
-        var on = b.getAttribute("data-partner") === state.partner;
+        var on = b.getAttribute("data-partner") === selected;
         b.classList.toggle("is-selected", on);
         if (!b.hasAttribute("aria-hidden")) b.setAttribute("aria-pressed", on ? "true" : "false");
       });
-      if (status) {
-        if (partner) {
-          status.hidden = false;
-          status.innerHTML = '<span>Showing <strong>' + escapeHtml(partner.name) + '</strong> · ' + visible.length + ' project' + (visible.length === 1 ? '' : 's') + '</span>' +
-            '<button type="button" class="btn btn--outline-navy btn--sm" data-clear>Show all partners</button>';
-          status.querySelector("[data-clear]").addEventListener("click", function () { selectPartner("", false); });
-        } else { status.hidden = true; status.innerHTML = ""; }
+      if (!p) { panel.hidden = true; panel.innerHTML = ""; safeReplaceState(null, "", location.pathname); return; }
+      var list = projectsFor(p.id);
+      var html = '<div class="partner-panel__head">' +
+        (p.logo ? '<img class="partner-panel__logo" src="' + p.logo + '" alt="" width="120" height="48">' : '<span class="logo-card__mono" aria-hidden="true">' + escapeHtml(initials(p.name)) + '</span>') +
+        '<div><h3>' + escapeHtml(p.name) + '</h3>' + (p.note ? '<p class="partner-panel__note">' + escapeHtml(p.note) + '</p>' : '') + '</div>' +
+        '<button type="button" class="partner-panel__close" aria-label="Close partner details">&times;</button></div>';
+      if (list.length) {
+        html += '<p class="partner-panel__intro">Work delivered together:</p><ul class="partner-panel__list">' + list.map(function (pr) {
+          return '<li><a href="work.html#' + encodeURIComponent(pr.id) + '"><img src="' + pr.image + '" alt="" loading="lazy" width="160" height="120"><span><strong>' + escapeHtml(pr.title) + '</strong><small>' + escapeHtml(pr.city) + ' · ' + pr.year + '</small></span></a></li>';
+        }).join("") + '</ul>';
+      } else {
+        html += '<p class="partner-panel__intro">We haven\'t published a case study with ' + escapeHtml(p.name) + ' yet. Verified projects will appear here as they are added.</p>';
       }
-    }
-    function selectPartner(id, scroll) {
-      state.partner = state.partner === id ? "" : id;
-      render();
-      if (scroll && state.partner) {
-        var target = document.getElementById("collaborations");
-        if (target) target.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
-      }
-    }
-    if (filters) {
-      filters.querySelectorAll("button").forEach(function (b) {
-        var t = b.getAttribute("data-filter");
-        var n = t === "all" ? projects.length : projects.filter(function (p) { return p.type === t; }).length;
-        if (t !== "all" && !n) { b.remove(); return; } // no empty categories
-        var count = document.createElement("span"); count.className = "count"; count.textContent = n; b.appendChild(count);
-        b.addEventListener("click", function () { state.type = t; render(); });
-      });
+      if (p.url) html += '<p class="partner-panel__link"><a href="' + p.url + '" target="_blank" rel="noopener">Visit ' + escapeHtml(p.name) + ' ↗</a></p>';
+      panel.innerHTML = html; panel.hidden = false;
+      panel.querySelector(".partner-panel__close").addEventListener("click", function () { select(selected, false); });
+      safeReplaceState(null, "", "?partner=" + encodeURIComponent(p.id));
+      if (scroll) panel.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "nearest" });
+      panel.querySelector(".partner-panel__close").focus({ preventScroll: true });
     }
     var param = new URLSearchParams(location.search).get("partner");
-    if (param && partnerById(param)) state.partner = param;
-    render();
-    if (lb && location.hash) {
-      var match = projects.filter(function (p) { return p.id === location.hash.slice(1); })[0];
-      if (match) lb.open(match, visible.indexOf(match) > -1 ? visible : [match]);
-    }
+    if (param && partnerById(param)) select(param, true);
   }
 
   function escapeHtml(s) {
@@ -461,8 +450,13 @@
     if (dateInput) dateInput.min = new Date().toISOString().slice(0, 10);
 
     form.addEventListener("submit", function (e) {
-      if (!form.checkValidity()) return; // let the browser show native validation
       e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        setStatus("Please complete the required fields marked * before sending.", "error");
+        var first = form.querySelector(":invalid"); if (first && first.focus) first.focus();
+        return;
+      }
       var btn = form.querySelector('button[type="submit"]');
       var original = btn.textContent;
       btn.disabled = true; btn.textContent = "Sending…";
@@ -495,11 +489,13 @@
      Boot
      --------------------------------------------------------------------- */
   function init() {
+    initHeader();
     initNav();
     initCounters();
     initReveal();
     renderPartners();
     initWork();
+    initFeatured();
     initPartnerShowcase();
     initForm();
     document.querySelectorAll("[data-year]").forEach(function (el) { el.textContent = new Date().getFullYear(); });

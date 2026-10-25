@@ -14,6 +14,7 @@
  *   partner     id of a partner in data/partners.js (or "" if none) — links the card to the partner carousel
  *   role        what The Sailors ART delivered (shown in the detail view)
  *   gallery     extra photos for the detail view (array of paths; the cover image is added automatically)
+ *   sample      true = placeholder entry (shown with a "Sample" badge; remove the flag once real data is in)
  *
  * The first entry is a real event pictured in the company profile. The rest are
  * SAMPLE placeholders that use the profile's nautical photography — replace them
@@ -36,7 +37,8 @@ window.SAILORS_PROJECTS = [
   },
   {
     id: "eastern-lights-festival",
-    title: "Eastern Lights Festival (sample)",
+    title: "Eastern Lights Festival",
+    sample: true,
     city: "Dammam, KSA",
     year: 2023,
     type: "mega",
@@ -50,7 +52,8 @@ window.SAILORS_PROJECTS = [
   },
   {
     id: "corniche-regatta-week",
-    title: "Corniche Regatta Week (sample)",
+    title: "Corniche Regatta Week",
+    sample: true,
     city: "Al Khobar, KSA",
     year: 2022,
     type: "mega",
@@ -64,7 +67,8 @@ window.SAILORS_PROJECTS = [
   },
   {
     id: "gulf-innovation-expo",
-    title: "Gulf Innovation Expo (sample)",
+    title: "Gulf Innovation Expo",
+    sample: true,
     city: "Dhahran, KSA",
     year: 2023,
     type: "expo",
@@ -78,7 +82,8 @@ window.SAILORS_PROJECTS = [
   },
   {
     id: "lighthouse-leadership-summit",
-    title: "Lighthouse Leadership Summit (sample)",
+    title: "Lighthouse Leadership Summit",
+    sample: true,
     city: "Riyadh, KSA",
     year: 2024,
     type: "corporate",
@@ -92,7 +97,8 @@ window.SAILORS_PROJECTS = [
   },
   {
     id: "national-day-carnival",
-    title: "National Day Carnival (sample)",
+    title: "National Day Carnival",
+    sample: true,
     city: "Al Jubail, KSA",
     year: 2022,
     type: "mega",
@@ -106,7 +112,8 @@ window.SAILORS_PROJECTS = [
   },
   {
     id: "harbour-gala-dinner",
-    title: "Harbour Gala Dinner (sample)",
+    title: "Harbour Gala Dinner",
+    sample: true,
     city: "Manama, Bahrain",
     year: 2023,
     type: "corporate",
@@ -120,7 +127,8 @@ window.SAILORS_PROJECTS = [
   },
   {
     id: "coastal-living-expo",
-    title: "Coastal Living Expo (sample)",
+    title: "Coastal Living Expo",
+    sample: true,
     city: "Al Khobar, KSA",
     year: 2024,
     type: "expo",
@@ -134,7 +142,8 @@ window.SAILORS_PROJECTS = [
   },
   {
     id: "young-sailors-showcase",
-    title: "The Young Sailors Showcase (sample)",
+    title: "The Young Sailors Showcase",
+    sample: true,
     city: "Al Ahsa, KSA",
     year: 2023,
     type: "corporate",
@@ -148,7 +157,8 @@ window.SAILORS_PROJECTS = [
   },
   {
     id: "desert-to-sea-music-nights",
-    title: "Desert to Sea Music Nights (sample)",
+    title: "Desert to Sea Music Nights",
+    sample: true,
     city: "Jeddah, KSA",
     year: 2024,
     type: "mega",
@@ -162,7 +172,8 @@ window.SAILORS_PROJECTS = [
   },
   {
     id: "smart-city-conference",
-    title: "Smart City Conference & Exhibition (sample)",
+    title: "Smart City Conference & Exhibition",
+    sample: true,
     city: "Al Qatif, KSA",
     year: 2024,
     type: "expo",
@@ -176,7 +187,8 @@ window.SAILORS_PROJECTS = [
   },
   {
     id: "winter-wonder-park",
-    title: "Winter Wonder Park (sample)",
+    title: "Winter Wonder Park",
+    sample: true,
     city: "Hail, KSA",
     year: 2023,
     type: "mega",
