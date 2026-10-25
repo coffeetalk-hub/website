@@ -1,0 +1,181 @@
+// CRM data model. Sections are grouped by module.
+// SQLite for local dev; to switch to PostgreSQL change `provider` and DATABASE_URL.
+// Enumerated values (role, activity type, ...) are plain strings validated by Zod
+// (see src/modules/*/schema.ts) so they can grow without migrations.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ───────────── users module ─────────────
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("REP") // ADMIN | MANAGER | REP
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  contacts   Contact[]  @relation("ContactOwner")
+  companies  Company[]  @relation("CompanyOwner")
+  deals      Deal[]     @relation("DealOwner")
+  activities Activity[] @relation("ActivityAssignee")
+  created    Activity[] @relation("ActivityCreator")
+  auditLogs  AuditLog[]
+}
+
+// ───────────── companies module ─────────────
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  industry  String?
+  website   String?
+  phone     String?
+  address   String?
+  ownerId   String
+  owner     User     @relation("CompanyOwner", fields: [ownerId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contacts   Contact[]
+  deals      Deal[]
+  activities Activity[]
+
+  @@index([ownerId])
+  @@index([name])
+}
+
+// ───────────── contacts module ─────────────
+model Contact {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String?
+  phone     String?
+  jobTitle  String?
+  source    String?
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  ownerId   String
+  owner     User     @relation("ContactOwner", fields: [ownerId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deals      Deal[]
+  activities Activity[]
+
+  @@index([ownerId])
+  @@index([companyId])
+  @@index([lastName, firstName])
+}
+
+// ───────────── deals module ─────────────
+model Stage {
+  id          String  @id @default(cuid())
+  name        String
+  position    Int
+  probability Int     @default(0) // 0-100
+  kind        String  @default("OPEN") // OPEN | WON | LOST
+  deals       Deal[]
+}
+
+model Deal {
+  id                String    @id @default(cuid())
+  title             String
+  value             Float     @default(0)
+  currency          String    @default("SAR")
+  stageId           String
+  stage             Stage     @relation(fields: [stageId], references: [id])
+  position          Int       @default(0) // order inside a pipeline column
+  expectedCloseDate DateTime?
+  companyId         String?
+  company           Company?  @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  contactId         String?
+  contact           Contact?  @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  ownerId           String
+  owner             User      @relation("DealOwner", fields: [ownerId], references: [id])
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  activities Activity[]
+
+  @@index([ownerId])
+  @@index([stageId])
+}
+
+// ───────────── activities module ─────────────
+model Activity {
+  id          String    @id @default(cuid())
+  type        String // CALL | MEETING | NOTE | FOLLOW_UP
+  subject     String
+  body        String?
+  dueAt       DateTime?
+  completedAt DateTime?
+  assigneeId  String
+  assignee    User      @relation("ActivityAssignee", fields: [assigneeId], references: [id])
+  creatorId   String
+  creator     User      @relation("ActivityCreator", fields: [creatorId], references: [id])
+  contactId   String?
+  contact     Contact?  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  companyId   String?
+  company     Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  dealId      String?
+  deal        Deal?     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([assigneeId, dueAt])
+  @@index([contactId])
+  @@index([companyId])
+  @@index([dealId])
+}
+
+// ───────────── custom fields (data-driven, shared by contacts/companies/deals) ─────────────
+model CustomFieldDef {
+  id       String  @id @default(cuid())
+  entity   String // CONTACT | COMPANY | DEAL
+  key      String
+  label    String
+  type     String // TEXT | NUMBER | DATE | DROPDOWN
+  options  Json? // string[] for DROPDOWN
+  required Boolean @default(false)
+  position Int     @default(0)
+
+  values CustomFieldValue[]
+
+  @@unique([entity, key])
+}
+
+model CustomFieldValue {
+  id       String         @id @default(cuid())
+  fieldId  String
+  field    CustomFieldDef @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  entity   String
+  recordId String
+  value    Json
+
+  @@unique([fieldId, recordId])
+  @@index([entity, recordId])
+}
+
+// ───────────── audit log ─────────────
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  entity    String
+  recordId  String
+  action    String // CREATE | UPDATE | DELETE | IMPORT | MOVE
+  changes   Json?
+  createdAt DateTime @default(now())
+
+  @@index([entity, recordId])
+  @@index([createdAt])
+}
