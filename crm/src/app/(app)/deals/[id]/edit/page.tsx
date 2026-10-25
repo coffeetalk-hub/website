@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/core/auth/session";
 import { getFieldDefs, getFieldValues } from "@/core/custom-fields";
@@ -9,9 +10,9 @@ import { listContactOptions } from "@/modules/contacts/queries";
 import { listAssignableUsers } from "@/modules/users/queries";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
-import { t } from "@/core/i18n";
 
 export default async function EditDealPage({ params }: { params: Promise<{ id: string }> }) {
+  const t = await getT();
   const { id } = await params;
   const user = await requireUser();
   const deal = await getDeal(user, id);

@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { db } from "@/core/db";
@@ -7,10 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
-import { formatDate } from "@/lib/utils";
-import { t } from "@/core/i18n";
 
 export default async function UsersPage() {
+  const t = await getT();
   await requireAccess("user", "manage");
   const users = await db.user.findMany({ orderBy: [{ active: "desc" }, { name: "asc" }] });
   return (
@@ -30,7 +30,7 @@ export default async function UsersPage() {
               <TH>{t.common.name}</TH>
               <TH>{t.common.email}</TH>
               <TH>{t.users.role}</TH>
-              <TH>Status</TH>
+              <TH>{t.common.status}</TH>
               <TH className="hidden md:table-cell">{t.common.created}</TH>
             </TR>
           </THead>
@@ -46,8 +46,8 @@ export default async function UsersPage() {
                 <TD>
                   <Badge>{t.roles[u.role as keyof typeof t.roles]}</Badge>
                 </TD>
-                <TD>{u.active ? "Active" : <span className="text-muted-foreground">Disabled</span>}</TD>
-                <TD className="hidden md:table-cell">{formatDate(u.createdAt)}</TD>
+                <TD>{u.active ? t.common.active : <span className="text-muted-foreground">{t.common.disabled}</span>}</TD>
+                <TD className="hidden md:table-cell">{t.date(u.createdAt)}</TD>
               </TR>
             ))}
           </TBody>

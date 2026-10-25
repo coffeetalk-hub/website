@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import { requireUser } from "@/core/auth/session";
 import { assertCan } from "@/core/permissions";
 import { getFieldDefs } from "@/core/custom-fields";
@@ -6,9 +7,9 @@ import { CompanyForm } from "@/modules/companies/components/company-form";
 import { listAssignableUsers } from "@/modules/users/queries";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
-import { t } from "@/core/i18n";
 
 export default async function NewCompanyPage() {
+  const t = await getT();
   const user = await requireUser();
   assertCan(user, "company", "create");
   const [owners, defs] = await Promise.all([listAssignableUsers(user), getFieldDefs("COMPANY")]);

@@ -1,4 +1,5 @@
 "use client";
+import { useT } from "@/core/i18n/client";
 import { startTransition, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
@@ -18,7 +19,7 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { cn, formatDate, formatMoney } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { moveDeal } from "../actions";
 
 export type BoardDeal = {
@@ -41,6 +42,7 @@ const group = (deals: BoardDeal[], columns: BoardColumn[]) => {
 };
 
 function DealCard({ deal, overlay }: { deal: BoardDeal; overlay?: boolean }) {
+  const t = useT();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: deal.id });
   const overdue = deal.expectedCloseDate && new Date(deal.expectedCloseDate) < new Date();
   return (
@@ -55,22 +57,23 @@ function DealCard({ deal, overlay }: { deal: BoardDeal; overlay?: boolean }) {
         overlay && "rotate-2 shadow-lg",
       )}
     >
-      <Link href={`/deals/${deal.id}`} className="font-medium hover:underline">
+      <Link href={`/deals/${deal.id}`} dir="auto" className="block font-medium hover:underline">
         {deal.title}
       </Link>
-      {deal.companyName && <div className="mt-0.5 text-xs text-muted-foreground">{deal.companyName}</div>}
+      {deal.companyName && <div dir="auto" className="mt-0.5 text-xs text-muted-foreground">{deal.companyName}</div>}
       <div className="mt-2 flex items-center justify-between">
-        <span className="font-semibold">{formatMoney(deal.value, deal.currency)}</span>
+        <span className="font-semibold">{t.money(deal.value, deal.currency)}</span>
         <span className="text-xs text-muted-foreground">{deal.ownerName.split(" ")[0]}</span>
       </div>
       {deal.expectedCloseDate && (
-        <div className={cn("mt-1 text-xs", overdue ? "text-destructive" : "text-muted-foreground")}>Close: {formatDate(deal.expectedCloseDate)}</div>
+        <div className={cn("mt-1 text-xs", overdue ? "text-destructive" : "text-muted-foreground")}>{t.tpl(t.deals.closeOn, { date: t.date(deal.expectedCloseDate) })}</div>
       )}
     </div>
   );
 }
 
 function Column({ column, deals }: { column: BoardColumn; deals: BoardDeal[] }) {
+  const t = useT();
   const { setNodeRef, isOver } = useDroppable({ id: column.id });
   const total = deals.reduce((s, d) => s + d.value, 0);
   return (
@@ -84,9 +87,9 @@ function Column({ column, deals }: { column: BoardColumn; deals: BoardDeal[] }) 
             {column.name}
             <span className="rounded-full bg-background px-1.5 text-xs font-normal text-muted-foreground">{deals.length}</span>
           </h2>
-          <p className="text-xs text-muted-foreground">{formatMoney(total)}</p>
+          <p className="text-xs text-muted-foreground">{t.money(total)}</p>
         </div>
-        <Link href={`/deals/new?stageId=${column.id}`} aria-label={`New deal in ${column.name}`} className="rounded p-1 text-muted-foreground hover:bg-background">
+        <Link href={`/deals/new?stageId=${column.id}`} aria-label={t.tpl(t.deals.newInStage, { stage: column.name })} className="rounded p-1 text-muted-foreground hover:bg-background">
           <Plus className="h-4 w-4" />
         </Link>
       </header>

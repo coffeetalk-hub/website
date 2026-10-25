@@ -1,13 +1,13 @@
+import { getT } from "@/core/i18n/server";
 import { ActionForm, Field } from "@/components/forms/action-form";
 import { Input, Select, Textarea } from "@/components/ui/input";
 import type { ActionState } from "@/core/forms";
-import { t } from "@/core/i18n";
 import { ACTIVITY_TYPES, toLocalInput } from "../schema";
 
 type Initial = { type?: string; subject?: string; body?: string | null; dueAt?: Date | null; assigneeId?: string };
 type Links = { contactId?: string; companyId?: string; dealId?: string };
 
-export function ActivityForm({
+export async function ActivityForm({
   action,
   initial = {},
   assignees,
@@ -25,8 +25,9 @@ export function ActivityForm({
   /** Compact variant for embedding in detail pages. */
   compact?: boolean;
 }) {
+  const t = await getT();
   return (
-    <ActionForm action={action} cancelHref={cancelHref} submitLabel={compact ? "Add" : t.common.save}>
+    <ActionForm action={action} cancelHref={cancelHref} submitLabel={compact ? t.common.add : t.common.save}>
       {returnTo && <input type="hidden" name="returnTo" value={returnTo} />}
       {Object.entries(links).map(([k, v]) => v && <input key={k} type="hidden" name={k} value={v} />)}
       <div className={compact ? "grid gap-3 sm:grid-cols-2" : "grid gap-4 sm:grid-cols-2"}>

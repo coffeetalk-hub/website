@@ -1,7 +1,7 @@
 # TODO / open questions
 
 ## Open questions
-- **Languages**: English only for now. Confirm the Arabic wording owner and whether numbers should use Arabic-Indic digits.
+- **Digits**: Arabic UI currently uses Latin digits (0-9) and Gregorian dates. Confirm that, or switch `INTL_TAG.ar` in `core/i18n/index.ts` to `ar-SA` for Arabic-Indic digits / Hijri.
 - **Hosting**: local SQLite for now. Where will it run (VPS, Docker, Vercel + Supabase)? Decides the DB switch and file storage.
 - **Fiscal calendar / week start**: calendar widget starts weeks on Sunday; dates are formatted `en-GB`.
 - **Time zone**: due dates are interpreted in the *server's* time zone. Store a per-user or company time zone before multi-region use.
@@ -10,7 +10,9 @@
 - **Lost-reason / won-reason** on deals: not captured yet.
 
 ## Planned features (not started)
-- [ ] Arabic translation + RTL layout (`src/core/i18n/ar.ts`, locale cookie → `lang`/`dir` already wired in `app/layout.tsx`; swap physical `ml/pl` classes for logical ones where any remain)
+- [x] Arabic translation + RTL layout (done; see README → Design for change)
+- [ ] Native-speaker review of the Arabic wording (terminology such as pipeline/deal/stage) and of RTL polish on every screen
+- [ ] Translate the demo seed data / default stage names, or ship an Arabic seed variant
 - [ ] Email integration (send/log email from contact page, IMAP/Gmail sync)
 - [ ] WhatsApp integration (Business API: message log on timeline, templates)
 - [ ] Reports (saved reports, date ranges, export), forecasting by owner
@@ -28,6 +30,8 @@
 - [ ] Automated tests (Playwright smoke tests exist only as ad-hoc scripts)
 
 ## Known limitations
+- Browser-native pieces (date picker format, file chooser, required-field tooltips on Settings forms) follow the *browser* language, not the CRM language.
+- Custom-field labels and dropdown options are entered once (one language). Per-language labels would need a translations column.
 - Money is SAR-only; the `Deal.currency` column exists but the UI does not expose it.
 - Pipeline column totals / dashboard sum raw values (fine while everything is SAR).
 - Kanban ordering for users who only see part of a column is per-visible-set.

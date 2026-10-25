@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import { requireUser } from "@/core/auth/session";
 import { assertCan } from "@/core/permissions";
 import { getFieldDefs } from "@/core/custom-fields";
@@ -10,9 +11,9 @@ import { listContactOptions } from "@/modules/contacts/queries";
 import { listAssignableUsers } from "@/modules/users/queries";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
-import { t } from "@/core/i18n";
 
 export default async function NewDealPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const t = await getT();
   const user = await requireUser();
   assertCan(user, "deal", "create");
   const sp = await searchParams;

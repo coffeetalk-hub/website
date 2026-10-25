@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Pencil } from "lucide-react";
@@ -16,10 +17,9 @@ import { DeleteButton } from "@/components/forms/delete-button";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDate, formatMoney } from "@/lib/utils";
-import { t } from "@/core/i18n";
 
 export default async function DealDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const t = await getT();
   const { id } = await params;
   const user = await requireUser();
   const deal = await getDeal(user, id);
@@ -50,12 +50,12 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
           <Card>
             <CardContent className="pt-4">
               <dl className="grid gap-4 sm:grid-cols-2">
-                <DetailItem label={t.deals.value}>{formatMoney(deal.value, deal.currency)}</DetailItem>
+                <DetailItem label={t.deals.value}>{t.money(deal.value, deal.currency)}</DetailItem>
                 <DetailItem label={t.deals.stage}>
                   <Badge>{deal.stage.name}</Badge> <span className="text-xs text-muted-foreground">{deal.stage.probability}%</span>
                 </DetailItem>
-                <DetailItem label="Weighted value">{formatMoney((deal.value * deal.stage.probability) / 100, deal.currency)}</DetailItem>
-                <DetailItem label={t.deals.expectedClose}>{formatDate(deal.expectedCloseDate)}</DetailItem>
+                <DetailItem label={t.deals.weighted}>{t.money((deal.value * deal.stage.probability) / 100, deal.currency)}</DetailItem>
+                <DetailItem label={t.deals.expectedClose}>{t.date(deal.expectedCloseDate)}</DetailItem>
                 <DetailItem label={t.deals.company}>
                   {deal.company ? <Link href={`/companies/${deal.company.id}`} className="hover:underline">{deal.company.name}</Link> : "—"}
                 </DetailItem>

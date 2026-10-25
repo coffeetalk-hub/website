@@ -4,13 +4,18 @@ import { cn } from "@/lib/utils";
 const field =
   "flex w-full rounded-xl border border-input bg-background px-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50";
 
+/** Emails, phones, URLs, numbers and dates are always left-to-right; free text follows what the user types. */
+const LTR_TYPES = ["email", "tel", "url", "number", "date", "datetime-local", "password"];
+
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
-  ({ className, ...props }, ref) => <input ref={ref} className={cn(field, "h-9", className)} {...props} />,
+  ({ className, type, dir, ...props }, ref) => (
+    <input ref={ref} type={type} dir={dir ?? (type && LTR_TYPES.includes(type) ? "ltr" : "auto")} className={cn(field, "h-9", className)} {...props} />
+  ),
 );
 Input.displayName = "Input";
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttributes<HTMLTextAreaElement>>(
-  ({ className, ...props }, ref) => <textarea ref={ref} className={cn(field, "min-h-[80px] py-2", className)} {...props} />,
+  ({ className, dir, ...props }, ref) => <textarea ref={ref} dir={dir ?? "auto"} className={cn(field, "min-h-[80px] py-2", className)} {...props} />,
 );
 Textarea.displayName = "Textarea";
 

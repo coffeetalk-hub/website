@@ -3,6 +3,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/core/db";
 import { requireUser } from "@/core/auth/session";
+import { getT } from "@/core/i18n/server";
+import type { T } from "@/core/i18n";
 import { assertCan, assertOwns, type SessionUser } from "@/core/permissions";
 import { logAudit, diff } from "@/core/audit";
 import { formToObject, toActionError, zodErrors, type ActionState } from "@/core/forms";
@@ -19,23 +21,24 @@ async function checkCompany(user: SessionUser, companyId?: string) {
   return c.id;
 }
 
-async function validate(fd: FormData) {
+async function validate(fd: FormData, t: T) {
   const parsed = contactSchema.safeParse(formToObject(fd));
   const defs = await getFieldDefs("CONTACT");
-  const cf = parseCustomFields(defs, fd);
+  const cf = parseCustomFields(defs, fd, t);
   if (!parsed.success || Object.keys(cf.errors).length) {
-    const base = parsed.success ? {} : zodErrors(parsed.error).fieldErrors;
-    return { error: { error: "Please fix the highlighted fields.", fieldErrors: { ...base, ...cf.errors } } as ActionState };
+    const base = parsed.success ? {} : zodErrors(parsed.error, t).fieldErrors;
+    return { error: { error: t.errors.pleaseFix, fieldErrors: { ...base, ...cf.errors } } as ActionState };
   }
   return { data: parsed.data, defs, cf };
 }
 
 export async function createContact(_prev: ActionState, fd: FormData): Promise<ActionState> {
   const user = await requireUser();
+  const t = await getT();
   let id: string;
   try {
     assertCan(user, "contact", "create");
-    const v = await validate(fd);
+    const v = await validate(fd, t);
     if (v.error) return v.error;
     const { ownerId: requestedOwner, companyId, ...data } = v.data;
     const rec = await db.contact.create({
@@ -45,7 +48,7 @@ export async function createContact(_prev: ActionState, fd: FormData): Promise<A
     await logAudit(user, "Contact", rec.id, "CREATE", { name: `${rec.firstName} ${rec.lastName}` });
     id = rec.id;
   } catch (e) {
-    return toActionError(e);
+    return toActionError(e, t);
   }
   revalidatePath("/contacts");
   redirect(`/contacts/${id}`);
@@ -53,12 +56,13 @@ export async function createContact(_prev: ActionState, fd: FormData): Promise<A
 
 export async function updateContact(id: string, _prev: ActionState, fd: FormData): Promise<ActionState> {
   const user = await requireUser();
+  const t = await getT();
   try {
     const existing = await db.contact.findUnique({ where: { id } });
-    if (!existing) return { error: "Record not found." };
+    if (!existing) return { error: t.errors.notFound };
     assertOwns(user, "contact", existing);
     assertCan(user, "contact", "update");
-    const v = await validate(fd);
+    const v = await validate(fd, t);
     if (v.error) return v.error;
     const { ownerId: requestedOwner, companyId, ...rest } = v.data;
     const updated = await db.contact.update({
@@ -78,7 +82,7 @@ export async function updateContact(id: string, _prev: ActionState, fd: FormData
     const changes = { ...diff(existing, updated), ...customDiff };
     if (Object.keys(changes).length) await logAudit(user, "Contact", id, "UPDATE", changes);
   } catch (e) {
-    return toActionError(e);
+    return toActionError(e, t);
   }
   revalidatePath("/contacts");
   redirect(`/contacts/${id}`);
@@ -86,6 +90,7 @@ export async function updateContact(id: string, _prev: ActionState, fd: FormData
 
 export async function deleteContact(id: string) {
   const user = await requireUser();
+  const t = await getT();
   const existing = await db.contact.findUnique({ where: { id } });
   if (!existing) redirect("/contacts");
   assertOwns(user, "contact", existing);

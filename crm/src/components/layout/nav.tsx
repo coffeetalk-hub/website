@@ -3,9 +3,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { modules } from "@/modules/registry";
+import { useT } from "@/core/i18n/client";
 
 export function Nav({ keys, onNavigate }: { keys: string[]; onNavigate?: () => void }) {
   const pathname = usePathname();
+  const t = useT();
   return (
     <nav className="flex flex-col gap-1">
       {modules
@@ -23,7 +25,7 @@ export function Nav({ keys, onNavigate }: { keys: string[]; onNavigate?: () => v
               )}
             >
               <m.icon className="h-4 w-4" />
-              {m.label}
+              {t.nav[m.labelKey]}
             </Link>
           );
         })}

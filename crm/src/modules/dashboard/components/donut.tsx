@@ -1,18 +1,21 @@
+import { getT } from "@/core/i18n/server";
+
 const C = 2 * Math.PI * 40;
 
-export function OutcomeDonut({ won, open, lost }: { won: number; open: number; lost: number }) {
+export async function OutcomeDonut({ won, open, lost }: { won: number; open: number; lost: number }) {
+  const t = await getT();
   const total = won + open + lost || 1;
   const segs = [
-    { label: "Won", n: won, color: "hsl(var(--chart-1))" },
-    { label: "Open", n: open, color: "hsl(var(--chart-2))" },
-    { label: "Lost", n: lost, color: "hsl(var(--muted-foreground) / 0.35)" },
+    { label: t.dashboard.won, n: won, color: "hsl(var(--chart-1))" },
+    { label: t.dashboard.open, n: open, color: "hsl(var(--chart-2))" },
+    { label: t.dashboard.lost, n: lost, color: "hsl(var(--muted-foreground) / 0.35)" },
   ];
   let offset = 0;
   const closed = won + lost;
   return (
     <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-around">
       <div className="relative h-36 w-36">
-        <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90" role="img" aria-label="Deals by outcome">
+        <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90" role="img" aria-label={t.dashboard.outcomes}>
           <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(var(--secondary))" strokeWidth="16" />
           {segs.map((s) => {
             const len = (s.n / total) * C;
@@ -23,7 +26,7 @@ export function OutcomeDonut({ won, open, lost }: { won: number; open: number; l
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="text-2xl font-bold">{closed ? Math.round((won / closed) * 100) : 0}%</span>
-          <span className="text-[10px] uppercase tracking-wide text-muted-foreground">win rate</span>
+          <span className="text-[10px] uppercase tracking-wide text-muted-foreground">{t.dashboard.winRate}</span>
         </div>
       </div>
       <ul className="space-y-2 text-sm">

@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PAGE_SIZE } from "@/core/forms";
+import { getT } from "@/core/i18n/server";
 
-export function Pagination({ page, total, basePath, params }: { page: number; total: number; basePath: string; params: Record<string, string | undefined> }) {
+export async function Pagination({ page, total, basePath, params }: { page: number; total: number; basePath: string; params: Record<string, string | undefined> }) {
+  const t = await getT();
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const href = (p: number) => {
     const sp = new URLSearchParams();
@@ -13,17 +15,17 @@ export function Pagination({ page, total, basePath, params }: { page: number; to
   return (
     <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
       <span>
-        {total} total · page {Math.min(page, pages)} of {pages}
+        {t.tpl(t.common.pageOf, { total, page: Math.min(page, pages), pages })}
       </span>
       <div className="flex gap-2">
         {page > 1 && (
           <Button variant="outline" size="sm" asChild>
-            <Link href={href(page - 1)}>Previous</Link>
+            <Link href={href(page - 1)}>{t.common.previous}</Link>
           </Button>
         )}
         {page < pages && (
           <Button variant="outline" size="sm" asChild>
-            <Link href={href(page + 1)}>Next</Link>
+            <Link href={href(page + 1)}>{t.common.next}</Link>
           </Button>
         )}
       </div>

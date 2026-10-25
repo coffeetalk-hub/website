@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import Link from "next/link";
 import { Bell, LogOut, Search } from "lucide-react";
 import { db } from "@/core/db";
@@ -8,7 +9,7 @@ import { logoutAction } from "@/modules/users/auth-actions";
 import { Nav } from "@/components/layout/nav";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { t } from "@/core/i18n";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 function initials(name: string) {
   return name
@@ -20,6 +21,7 @@ function initials(name: string) {
 }
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  const t = await getT();
   const user = await requireUser();
   const keys = modulesFor(user).map((m) => m.key);
 
@@ -53,16 +55,17 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <Search className="pointer-events-none absolute start-4 top-3 h-4 w-4 text-muted-foreground" />
             <input
               name="q"
-              placeholder="Search contacts, companies, deals…"
-              aria-label="Search"
+              placeholder={t.common.searchGlobal}
+              aria-label={t.common.search}
               className="h-10 w-full rounded-full border-0 bg-card ps-10 pe-4 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
           </form>
           <div className="ms-auto flex items-center gap-2 sm:gap-3">
+            <LanguageSwitcher />
             <ThemeToggle />
             <Link
               href="/tasks?view=today"
-              aria-label={`${pending} tasks due or overdue`}
+              aria-label={t.tpl(t.tasks.bell, { n: pending })}
               className="relative flex h-10 w-10 items-center justify-center rounded-full bg-card shadow-sm hover:bg-accent"
             >
               <Bell className="h-4 w-4" />

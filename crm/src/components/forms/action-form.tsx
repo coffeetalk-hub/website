@@ -1,10 +1,10 @@
 "use client";
+import { useT } from "@/core/i18n/client";
 import { createContext, startTransition, useActionState, useContext } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import type { ActionState } from "@/core/forms";
-import { t } from "@/core/i18n";
 
 const ErrorsContext = createContext<Record<string, string>>({});
 
@@ -15,7 +15,7 @@ const ErrorsContext = createContext<Record<string, string>>({});
 export function ActionForm({
   action,
   children,
-  submitLabel = t.common.save,
+  submitLabel,
   cancelHref,
 }: {
   action: (prev: ActionState, fd: FormData) => Promise<ActionState>;
@@ -23,10 +23,12 @@ export function ActionForm({
   submitLabel?: string;
   cancelHref?: string;
 }) {
+  const t = useT();
   const [state, run, pending] = useActionState(action, {} as ActionState);
   return (
     <ErrorsContext.Provider value={state.fieldErrors ?? {}}>
       <form
+        noValidate
         className="space-y-4"
         onSubmit={(e) => {
           e.preventDefault();
@@ -38,7 +40,7 @@ export function ActionForm({
         {state.error && <p className="text-sm text-destructive">{state.error}</p>}
         <div className="flex gap-2">
           <Button type="submit" disabled={pending}>
-            {submitLabel}
+            {submitLabel ?? t.common.save}
           </Button>
           {cancelHref && (
             <Button variant="outline" asChild>

@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { requireUser } from "@/core/auth/session";
@@ -11,11 +12,11 @@ import { Pagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
-import { t } from "@/core/i18n";
 
 type SP = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function CompaniesPage({ searchParams }: { searchParams: SP }) {
+  const t = await getT();
   const user = await requireUser();
   assertCan(user, "company");
   const sp = await searchParams;

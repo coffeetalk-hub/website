@@ -1,13 +1,13 @@
+import { getT } from "@/core/i18n/server";
 import { ActionForm, Field } from "@/components/forms/action-form";
 import { Input, Select } from "@/components/ui/input";
 import { CustomFieldInputs } from "@/components/custom-fields";
 import type { CustomValues, FieldDef } from "@/core/custom-fields";
 import type { ActionState } from "@/core/forms";
-import { t } from "@/core/i18n";
 
 type Initial = { name?: string; industry?: string | null; website?: string | null; phone?: string | null; address?: string | null; ownerId?: string };
 
-export function CompanyForm({
+export async function CompanyForm({
   action,
   initial = {},
   owners,
@@ -22,6 +22,7 @@ export function CompanyForm({
   customValues?: CustomValues;
   cancelHref: string;
 }) {
+  const t = await getT();
   return (
     <ActionForm action={action} cancelHref={cancelHref}>
       <div className="grid gap-4 sm:grid-cols-2">

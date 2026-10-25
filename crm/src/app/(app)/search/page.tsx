@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import Link from "next/link";
 import { requireUser } from "@/core/auth/session";
 import { strParam } from "@/core/forms";
@@ -5,9 +6,9 @@ import { globalSearch } from "@/modules/search/queries";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { formatMoney } from "@/lib/utils";
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const t = await getT();
   const user = await requireUser();
   const q = strParam((await searchParams).q);
   const r = q ? await globalSearch(user, q) : { contacts: [], companies: [], deals: [] };
@@ -15,14 +16,14 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
 
   return (
     <>
-      <PageHeader title={q ? `Results for “${q}”` : "Search"} />
-      {!q && <p className="text-muted-foreground">Type in the search box above.</p>}
-      {q && empty && <p className="text-muted-foreground">Nothing found.</p>}
+      <PageHeader title={q ? t.tpl(t.search.resultsFor, { q }) : t.search.title} />
+      {!q && <p className="text-muted-foreground">{t.search.hint}</p>}
+      {q && empty && <p className="text-muted-foreground">{t.search.nothing}</p>}
       <div className="grid gap-4 lg:grid-cols-3">
         {r.contacts.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Contacts</CardTitle>
+              <CardTitle>{t.nav.contacts}</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="divide-y text-sm">
@@ -41,7 +42,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         {r.companies.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Companies</CardTitle>
+              <CardTitle>{t.nav.companies}</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="divide-y text-sm">
@@ -60,7 +61,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         {r.deals.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Deals</CardTitle>
+              <CardTitle>{t.nav.deals}</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="divide-y text-sm">
@@ -71,7 +72,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                     </Link>
                     <span className="flex items-center gap-2">
                       <Badge>{d.stage.name}</Badge>
-                      {formatMoney(d.value)}
+                      {t.money(d.value)}
                     </span>
                   </li>
                 ))}

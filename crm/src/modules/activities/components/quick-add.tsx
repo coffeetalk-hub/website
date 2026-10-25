@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import { createActivity } from "../actions";
 import { ActivityForm } from "./activity-form";
 import { listAssignableUsers } from "@/modules/users/queries";
@@ -14,11 +15,12 @@ export async function QuickAddActivity({
   returnTo: string;
   links: { contactId?: string; companyId?: string; dealId?: string };
 }) {
+  const t = await getT();
   if (!can(user, "activity", "create")) return null;
   const assignees = await listAssignableUsers(user);
   return (
     <details className="mb-4 rounded-md border p-3">
-      <summary className="cursor-pointer text-sm font-medium">+ Log activity or task</summary>
+      <summary className="cursor-pointer text-sm font-medium">{t.tasks.logActivity}</summary>
       <div className="mt-3">
         <ActivityForm compact action={createActivity} assignees={assignees} links={links} returnTo={returnTo} initial={{ assigneeId: user.id }} />
       </div>

@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import Link from "next/link";
 import { AlarmClock, CalendarCheck, Handshake, Wallet, type LucideIcon } from "lucide-react";
 import { requireUser } from "@/core/auth/session";
@@ -7,11 +8,8 @@ import { OutcomeDonut } from "@/modules/dashboard/components/donut";
 import { MiniCalendar } from "@/modules/dashboard/components/mini-calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { formatDateTime, formatMoney } from "@/lib/utils";
-import { t } from "@/core/i18n";
 
 const ENTITY_ROUTE: Record<string, string> = { Contact: "/contacts", Company: "/companies", Deal: "/deals" };
-const VERBS: Record<string, string> = { CREATE: "created", UPDATE: "updated", DELETE: "deleted", IMPORT: "imported", MOVE: "moved" };
 
 function Kpi({ icon: Icon, label, value, hint, href, tone }: { icon: LucideIcon; label: string; value: string; hint: string; href: string; tone: "navy" | "coral" }) {
   return (
@@ -31,6 +29,7 @@ function Kpi({ icon: Icon, label, value, hint, href, tone }: { icon: LucideIcon;
 }
 
 export default async function DashboardPage() {
+  const t = await getT();
   const user = await requireUser();
   const d = await getDashboard(user);
   const topMax = Math.max(1, ...d.topReps.map((r) => r.value));
@@ -39,21 +38,21 @@ export default async function DashboardPage() {
   return (
     <>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-primary dark:text-foreground">Welcome {user.name.split(" ")[0]}!</h1>
-        <p className="text-sm text-muted-foreground">Here is the overview of your business</p>
+        <h1 className="text-2xl font-bold tracking-tight text-primary dark:text-foreground">{t.tpl(t.dashboard.welcome, { name: user.name.split(" ")[0] })}</h1>
+        <p className="text-sm text-muted-foreground">{t.dashboard.subtitle}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-        <Kpi icon={Handshake} tone="navy" label={t.dashboard.openDeals} value={String(d.openDeals)} hint={`of ${d.totalDeals} deals in total`} href="/deals" />
-        <Kpi icon={Wallet} tone="coral" label={t.dashboard.pipelineValue} value={formatMoney(d.pipelineValue)} hint={`Won so far: ${formatMoney(d.wonValue)}`} href="/deals" />
-        <Kpi icon={CalendarCheck} tone="navy" label={t.dashboard.tasksDueToday} value={String(d.dueToday.length)} hint="Open tasks scheduled today" href="/tasks?view=today" />
-        <Kpi icon={AlarmClock} tone="coral" label={t.dashboard.overdue} value={String(d.overdueCount)} hint="Past their due date" href="/tasks?view=overdue" />
+        <Kpi icon={Handshake} tone="navy" label={t.dashboard.openDeals} value={String(d.openDeals)} hint={t.tpl(t.dashboard.ofTotal, { n: d.totalDeals })} href="/deals" />
+        <Kpi icon={Wallet} tone="coral" label={t.dashboard.pipelineValue} value={t.money(d.pipelineValue)} hint={t.tpl(t.dashboard.wonSoFar, { amount: t.money(d.wonValue) })} href="/deals" />
+        <Kpi icon={CalendarCheck} tone="navy" label={t.dashboard.tasksDueToday} value={String(d.dueToday.length)} hint={t.dashboard.dueTodayHint} href="/tasks?view=today" />
+        <Kpi icon={AlarmClock} tone="coral" label={t.dashboard.overdue} value={String(d.overdueCount)} hint={t.dashboard.overdueHint} href="/tasks?view=overdue" />
       </div>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-3">
+      <div className="mt-4 grid gap-4 lg:grid-cols-3 [&>*]:min-w-0">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle className="text-base">Revenue & forecast</CardTitle>
+            <CardTitle className="text-base">{t.dashboard.revenueForecast}</CardTitle>
           </CardHeader>
           <CardContent>
             <RevenueChart months={d.months} />
@@ -62,23 +61,23 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Top sales reps</CardTitle>
+            <CardTitle className="text-base">{t.dashboard.topReps}</CardTitle>
           </CardHeader>
           <CardContent>
             {d.topReps.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No won deals yet.</p>
+              <p className="text-sm text-muted-foreground">{t.dashboard.noWon}</p>
             ) : (
               <ul className="space-y-4">
                 {d.topReps.map((r) => (
                   <li key={r.name}>
                     <div className="flex justify-between text-sm">
                       <span className="font-medium">{r.name}</span>
-                      <span className="text-muted-foreground">{r.count} won</span>
+                      <span className="text-muted-foreground">{t.tpl(t.dashboard.wonCount, { n: r.count })}</span>
                     </div>
                     <div className="mt-1.5 h-2 rounded-full bg-secondary">
                       <div className="h-2 rounded-full bg-coral" style={{ width: `${(r.value / topMax) * 100}%` }} />
                     </div>
-                    <div className="mt-1 text-xs text-muted-foreground">{formatMoney(r.value)}</div>
+                    <div className="mt-1 text-xs text-muted-foreground">{t.money(r.value)}</div>
                   </li>
                 ))}
               </ul>
@@ -88,7 +87,7 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Companies by industry</CardTitle>
+            <CardTitle className="text-base">{t.dashboard.byIndustry}</CardTitle>
           </CardHeader>
           <CardContent>
             {d.industries.length === 0 ? (
@@ -96,9 +95,9 @@ export default async function DashboardPage() {
             ) : (
               <ul className="space-y-3">
                 {d.industries.map((i) => (
-                  <li key={i.name}>
+                  <li key={i.name ?? "other"}>
                     <div className="flex justify-between text-sm">
-                      <span>{i.name}</span>
+                      <span>{i.name ?? t.dashboard.otherIndustry}</span>
                       <span className="font-semibold">{i.count}</span>
                     </div>
                     <div className="mt-1 h-2 rounded-full bg-secondary">
@@ -113,7 +112,7 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Deal outcomes</CardTitle>
+            <CardTitle className="text-base">{t.dashboard.outcomes}</CardTitle>
           </CardHeader>
           <CardContent>
             <OutcomeDonut {...d.outcome} />
@@ -122,7 +121,7 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Calendar</CardTitle>
+            <CardTitle className="text-base">{t.dashboard.calendar}</CardTitle>
           </CardHeader>
           <CardContent>
             <MiniCalendar taskDays={d.taskDays} />
@@ -135,7 +134,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             {d.dueToday.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Nothing due today.</p>
+              <p className="text-sm text-muted-foreground">{t.dashboard.nothingToday}</p>
             ) : (
               <ul className="divide-y text-sm">
                 {d.dueToday.map((a) => (
@@ -169,11 +168,22 @@ export default async function DashboardPage() {
                   const label = (l.changes as { name?: string; title?: string; subject?: string } | null) ?? {};
                   const name = label.name ?? label.title ?? label.subject;
                   const route = ENTITY_ROUTE[l.entity];
-                  const text = `${l.entity.toLowerCase()}${name ? ` “${name}”` : ""}`;
+                  const noun = (t.entities as Record<string, string>)[l.entity.toLowerCase()] ?? l.entity.toLowerCase();
+                  const text = (
+                    <>
+                      {noun}
+                      {name && (
+                        <>
+                          {" "}
+                          <bdi>“{name}”</bdi>
+                        </>
+                      )}
+                    </>
+                  );
                   return (
                     <li key={l.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
                       <span>
-                        <span className="font-medium">{l.user?.name ?? "System"}</span> {VERBS[l.action] ?? l.action.toLowerCase()}{" "}
+                        <bdi className="font-medium">{l.user?.name ?? t.audit.system}</bdi> {(t.verbs as Record<string, string>)[l.action] ?? l.action.toLowerCase()}{" "}
                         {route && l.action !== "DELETE" ? (
                           <Link href={`${route}/${l.recordId}`} className="hover:underline">
                             {text}
@@ -182,7 +192,7 @@ export default async function DashboardPage() {
                           text
                         )}
                       </span>
-                      <span className="text-xs text-muted-foreground">{formatDateTime(l.createdAt)}</span>
+                      <span className="text-xs text-muted-foreground">{t.dateTime(l.createdAt)}</span>
                     </li>
                   );
                 })}

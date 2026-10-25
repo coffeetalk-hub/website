@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { requireUser } from "@/core/auth/session";
@@ -14,12 +15,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { t } from "@/core/i18n";
 
 type SP = Promise<Record<string, string | string[] | undefined>>;
-const viewLabels: Record<View, string> = { open: "Open", today: "Due today", overdue: "Overdue", done: "Completed", all: "All" };
 
 export default async function TasksPage({ searchParams }: { searchParams: SP }) {
+  const t = await getT();
   const user = await requireUser();
   assertCan(user, "activity");
   const sp = await searchParams;
@@ -50,7 +50,7 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
             href={`/tasks?view=${v}`}
             className={cn("rounded-full px-3 py-1 text-sm", v === view ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-accent")}
           >
-            {viewLabels[v]}
+            {t.tasks.views[v]}
           </Link>
         ))}
       </div>
@@ -63,7 +63,7 @@ export default async function TasksPage({ searchParams }: { searchParams: SP }) 
               <TH>{t.tasks.subject}</TH>
               <TH>{t.tasks.type}</TH>
               <TH>{t.tasks.due}</TH>
-              <TH className="hidden md:table-cell">Related to</TH>
+              <TH className="hidden md:table-cell">{t.tasks.relatedTo}</TH>
               <TH className="hidden sm:table-cell">{t.tasks.assignee}</TH>
             </TR>
           </THead>

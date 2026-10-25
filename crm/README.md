@@ -61,7 +61,14 @@ src/components/           UI primitives (ui/), layout, shared forms
 ## Design for change
 
 - **Custom fields are data, not columns.** `CustomFieldDef` (what fields exist) + `CustomFieldValue` (JSON value per record). `core/custom-fields` parses, validates and saves them; forms/detail pages render them automatically. Add one in **Settings → Custom fields**, no code.
-- **All text lives in `src/core/i18n/en.ts`.** To add Arabic: add `ar.ts` with the same shape, register it in `core/i18n/index.ts`, add `"ar"` to `Locale`, read the locale from a cookie in `app/layout.tsx` (it already sets `lang` and `dir`). Layout uses logical classes (`ms-`, `ps-`, `text-start`) so RTL flips cleanly.
+- **Arabic + RTL are built in.** Switch language with the button in the header (or on the login page); the choice is stored in a cookie (`crm_locale`). The page `lang`/`dir` follow it, the sidebar and all layouts mirror, and Arabic uses Noto Sans Arabic (bundled at build time by `next/font`, so the first `npm run build` needs internet access).
+  - All text lives in `src/core/i18n/en.ts` and `ar.ts`. `ar.ts` is typed against `en.ts`, so a missing key is a compile error.
+  - Server code: `const t = await getT()` (from `@/core/i18n/server`). Client components: `const t = useT()` (from `@/core/i18n/client`). Placeholders: `t.tpl(t.dashboard.welcome, { name })`.
+  - `t.money()`, `t.date()`, `t.dateTime()` format for the current language (Gregorian dates and Latin digits in Arabic, so phone numbers and SAR amounts stay unambiguous).
+  - Validation messages in Zod schemas are written as `"err:<key>"` and translated where they are shown (`zodErrors(error, t)`).
+  - Layout uses logical Tailwind classes (`ms-`, `ps-`, `text-start`, `rounded-e-`); emails/phones/URLs/numbers inputs are forced LTR, free text uses `dir="auto"`; the revenue chart's time axis stays left-to-right.
+  - **To add another language** (e.g. Urdu): copy `ar.ts` to `ur.ts`, translate, add it to `LOCALES`/`dictionaries`/`INTL_TAG` (and `RTL_LOCALES` if right-to-left) in `core/i18n/index.ts`, and add its name to `LOCALE_NAMES`.
+  - Data typed by users (stage names, custom-field labels, company names, notes) is stored as entered and is never translated. The demo seed data is in English.
 - **Audit log.** Every create/update/delete/move/import/export calls `logAudit()` (`core/audit`). Updates store a per-field `{from,to}` diff. Shown as "Change history" on records.
 - **Colours** are CSS variables in `src/app/globals.css`; **money format** is in `src/lib/utils.ts`.
 - **Database**: SQLite for dev. For PostgreSQL change `provider` in `prisma/schema.prisma`, set `DATABASE_URL`, then `npx prisma migrate dev`. Roles/types are plain strings validated by Zod (no DB enums) so they can grow without migrations.
@@ -79,7 +86,7 @@ Example: a "Products" module.
    - `components/product-form.tsx`: use `ActionForm` + `Field` (`components/forms/action-form.tsx`).
 4. **Routes**: `src/app/(app)/products/{page,new/page,[id]/page,[id]/edit/page}.tsx`. Copy the companies routes.
 5. **Navigation**: add an entry to `src/modules/registry.ts` (label from `i18n/en.ts`, icon, `resource: "product"`).
-6. **Text**: add labels under a `products` key in `src/core/i18n/en.ts`.
+6. **Text**: add a `products` section to **both** `src/core/i18n/en.ts` and `ar.ts`, and use it via `getT()` / `useT()`. Never hard-code UI text in components.
 7. **Custom fields (optional)**: add `"PRODUCT"` to `ENTITIES` in `core/custom-fields`, call `getFieldDefs/parseCustomFields/saveFieldValues` in the actions and render `<CustomFieldInputs>` in the form.
 8. **Seed (optional)**: add rows to `prisma/seed.ts`.
 

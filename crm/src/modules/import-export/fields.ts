@@ -1,4 +1,5 @@
 import type { FieldDef } from "@/core/custom-fields";
+import type { T } from "@/core/i18n";
 
 export type CsvEntity = "CONTACT" | "COMPANY";
 export type CsvField = { key: string; label: string; aliases: string[]; required?: boolean };
@@ -25,6 +26,9 @@ export const BASE_FIELDS: Record<CsvEntity, CsvField[]> = {
   ],
 };
 
-export function fieldsFor(entity: CsvEntity, custom: FieldDef[]): CsvField[] {
-  return [...BASE_FIELDS[entity], ...custom.map((d) => ({ key: `cf:${d.key}`, label: d.label, aliases: [d.key], required: d.required }))];
+/** Labels are translated; the English label stays as an alias so English CSVs still auto-map in any UI language. */
+export function fieldsFor(entity: CsvEntity, custom: FieldDef[], t: T): CsvField[] {
+  const labels = t.importExport.fieldLabels as Record<string, string>;
+  const base = BASE_FIELDS[entity].map((f) => ({ ...f, label: labels[f.key] ?? f.label, aliases: [f.label, ...f.aliases] }));
+  return [...base, ...custom.map((d) => ({ key: `cf:${d.key}`, label: d.label, aliases: [d.key], required: d.required }))];
 }

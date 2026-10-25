@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import { Download } from "lucide-react";
 import { requireAccess } from "@/core/auth/session";
 import { can } from "@/core/permissions";
@@ -7,14 +8,14 @@ import { Importer } from "@/modules/import-export/components/importer";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { t } from "@/core/i18n";
 
 export default async function ImportExportPage() {
+  const t = await getT();
   const user = await requireAccess("import");
   const [contactDefs, companyDefs] = await Promise.all([getFieldDefs("CONTACT"), getFieldDefs("COMPANY")]);
   const links = [
-    { label: "Contacts", href: "/api/export/contacts" },
-    { label: "Companies", href: "/api/export/companies" },
+    { label: t.nav.contacts, href: "/api/export/contacts" },
+    { label: t.nav.companies, href: "/api/export/companies" },
   ];
   return (
     <>
@@ -23,8 +24,8 @@ export default async function ImportExportPage() {
         {can(user, "export") && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Export to CSV</CardTitle>
-              <p className="text-sm text-muted-foreground">Includes custom fields. Reps export only their own records.</p>
+              <CardTitle className="text-base">{t.importExport.exportTitle}</CardTitle>
+              <p className="text-sm text-muted-foreground">{t.importExport.exportHelp}</p>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-2">
               {links.map((l) => (
@@ -37,18 +38,18 @@ export default async function ImportExportPage() {
               ))}
               <Button variant="ghost" asChild>
                 <a href="/api/export/contacts?template=1" download>
-                  Contacts template
+                  {t.importExport.contactsTemplate}
                 </a>
               </Button>
               <Button variant="ghost" asChild>
                 <a href="/api/export/companies?template=1" download>
-                  Companies template
+                  {t.importExport.companiesTemplate}
                 </a>
               </Button>
             </CardContent>
           </Card>
         )}
-        <Importer fieldsByEntity={{ CONTACT: fieldsFor("CONTACT", contactDefs), COMPANY: fieldsFor("COMPANY", companyDefs) }} />
+        <Importer fieldsByEntity={{ CONTACT: fieldsFor("CONTACT", contactDefs, t), COMPANY: fieldsFor("COMPANY", companyDefs, t) }} />
       </div>
     </>
   );

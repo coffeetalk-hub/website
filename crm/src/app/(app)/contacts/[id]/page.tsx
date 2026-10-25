@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Pencil } from "lucide-react";
@@ -16,10 +17,9 @@ import { DeleteButton } from "@/components/forms/delete-button";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { formatMoney } from "@/lib/utils";
-import { t } from "@/core/i18n";
 
 export default async function ContactDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const t = await getT();
   const { id } = await params;
   const user = await requireUser();
   const contact = await getContact(user, id);
@@ -94,7 +94,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
                       </Link>
                       <span className="flex items-center gap-2">
                         <Badge>{d.stage.name}</Badge>
-                        {formatMoney(d.value, d.currency)}
+                        {t.money(d.value, d.currency)}
                       </span>
                     </li>
                   ))}

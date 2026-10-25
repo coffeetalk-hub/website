@@ -1,5 +1,6 @@
 import { db } from "@/core/db";
 import { diff } from "@/core/audit";
+import type { T } from "@/core/i18n";
 
 export const ENTITIES = ["CONTACT", "COMPANY", "DEAL"] as const;
 export type Entity = (typeof ENTITIES)[number];
@@ -56,7 +57,7 @@ export async function getFieldValues(entity: Entity, recordId: string): Promise<
 export const customFieldInputName = (key: string) => `cf_${key}`;
 
 /** Reads `cf_<key>` entries from a form and validates them against the definitions. */
-export function parseCustomFields(defs: FieldDef[], fd: FormData) {
+export function parseCustomFields(defs: FieldDef[], fd: FormData, t: T) {
   const values: CustomValues = {};
   const errors: Record<string, string> = {};
   for (const d of defs) {
@@ -64,18 +65,18 @@ export function parseCustomFields(defs: FieldDef[], fd: FormData) {
     const raw = String(fd.get(name) ?? "").trim();
     if (!raw) {
       values[d.key] = null;
-      if (d.required) errors[name] = `${d.label} is required`;
+      if (d.required) errors[name] = t.tpl(t.errors.fieldRequired, { label: d.label });
       continue;
     }
     if (d.type === "NUMBER") {
       const n = Number(raw);
-      if (!Number.isFinite(n)) errors[name] = `${d.label} must be a number`;
+      if (!Number.isFinite(n)) errors[name] = t.tpl(t.errors.fieldNumber, { label: d.label });
       else values[d.key] = n;
     } else if (d.type === "DATE") {
-      if (Number.isNaN(Date.parse(raw))) errors[name] = `${d.label} must be a valid date`;
+      if (Number.isNaN(Date.parse(raw))) errors[name] = t.tpl(t.errors.fieldDate, { label: d.label });
       else values[d.key] = raw.slice(0, 10);
     } else if (d.type === "DROPDOWN") {
-      if (!d.options.includes(raw)) errors[name] = `${d.label}: invalid option`;
+      if (!d.options.includes(raw)) errors[name] = t.tpl(t.errors.fieldOption, { label: d.label });
       else values[d.key] = raw;
     } else {
       values[d.key] = raw.slice(0, 2000);

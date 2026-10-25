@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import { requireUser } from "@/core/auth/session";
 import { assertCan } from "@/core/permissions";
 import { strParam } from "@/core/forms";
@@ -6,9 +7,9 @@ import { ActivityForm } from "@/modules/activities/components/activity-form";
 import { listAssignableUsers } from "@/modules/users/queries";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
-import { t } from "@/core/i18n";
 
 export default async function NewActivityPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const t = await getT();
   const user = await requireUser();
   assertCan(user, "activity", "create");
   const sp = await searchParams;

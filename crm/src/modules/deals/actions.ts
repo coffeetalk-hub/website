@@ -3,6 +3,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/core/db";
 import { requireUser } from "@/core/auth/session";
+import { getT } from "@/core/i18n/server";
+import type { T } from "@/core/i18n";
 import { assertCan, assertOwns, scope, type SessionUser } from "@/core/permissions";
 import { logAudit, diff } from "@/core/audit";
 import { formToObject, toActionError, zodErrors, type ActionState } from "@/core/forms";
@@ -31,16 +33,16 @@ async function checkLinks(user: SessionUser, companyId?: string, contactId?: str
   return { companyId: cId, contactId: kId };
 }
 
-async function validate(fd: FormData) {
+async function validate(fd: FormData, t: T) {
   const parsed = dealSchema.safeParse(formToObject(fd));
   const defs = await getFieldDefs("DEAL");
-  const cf = parseCustomFields(defs, fd);
+  const cf = parseCustomFields(defs, fd, t);
   if (!parsed.success || Object.keys(cf.errors).length) {
-    const base = parsed.success ? {} : zodErrors(parsed.error).fieldErrors;
-    return { error: { error: "Please fix the highlighted fields.", fieldErrors: { ...base, ...cf.errors } } as ActionState };
+    const base = parsed.success ? {} : zodErrors(parsed.error, t).fieldErrors;
+    return { error: { error: t.errors.pleaseFix, fieldErrors: { ...base, ...cf.errors } } as ActionState };
   }
   const stage = await db.stage.findUnique({ where: { id: parsed.data.stageId } });
-  if (!stage) return { error: { error: "Please fix the highlighted fields.", fieldErrors: { stageId: "Unknown stage" } } as ActionState };
+  if (!stage) return { error: { error: t.errors.pleaseFix, fieldErrors: { stageId: t.errors.unknownStage } } as ActionState };
   return { data: parsed.data, defs, cf };
 }
 
@@ -51,10 +53,11 @@ async function nextPosition(stageId: string) {
 
 export async function createDeal(_prev: ActionState, fd: FormData): Promise<ActionState> {
   const user = await requireUser();
+  const t = await getT();
   let id: string;
   try {
     assertCan(user, "deal", "create");
-    const v = await validate(fd);
+    const v = await validate(fd, t);
     if (v.error) return v.error;
     const { ownerId: requestedOwner, companyId, contactId, expectedCloseDate, ...data } = v.data;
     const rec = await db.deal.create({
@@ -70,7 +73,7 @@ export async function createDeal(_prev: ActionState, fd: FormData): Promise<Acti
     await logAudit(user, "Deal", rec.id, "CREATE", { title: rec.title, value: rec.value });
     id = rec.id;
   } catch (e) {
-    return toActionError(e);
+    return toActionError(e, t);
   }
   revalidatePath("/deals");
   redirect(`/deals/${id}`);
@@ -78,12 +81,13 @@ export async function createDeal(_prev: ActionState, fd: FormData): Promise<Acti
 
 export async function updateDeal(id: string, _prev: ActionState, fd: FormData): Promise<ActionState> {
   const user = await requireUser();
+  const t = await getT();
   try {
     const existing = await db.deal.findUnique({ where: { id } });
-    if (!existing) return { error: "Record not found." };
+    if (!existing) return { error: t.errors.notFound };
     assertOwns(user, "deal", existing);
     assertCan(user, "deal", "update");
-    const v = await validate(fd);
+    const v = await validate(fd, t);
     if (v.error) return v.error;
     const { ownerId: requestedOwner, companyId, contactId, expectedCloseDate, ...data } = v.data;
     const updated = await db.deal.update({
@@ -101,7 +105,7 @@ export async function updateDeal(id: string, _prev: ActionState, fd: FormData): 
     delete (changes as Record<string, unknown>).position;
     if (Object.keys(changes).length) await logAudit(user, "Deal", id, "UPDATE", changes);
   } catch (e) {
-    return toActionError(e);
+    return toActionError(e, t);
   }
   revalidatePath("/deals");
   redirect(`/deals/${id}`);
@@ -109,6 +113,7 @@ export async function updateDeal(id: string, _prev: ActionState, fd: FormData): 
 
 export async function deleteDeal(id: string) {
   const user = await requireUser();
+  const t = await getT();
   const existing = await db.deal.findUnique({ where: { id } });
   if (!existing) redirect("/deals");
   assertOwns(user, "deal", existing);
@@ -123,16 +128,17 @@ export async function deleteDeal(id: string) {
 /** Drag-and-drop: put a deal into `stageId` at `index` within that column. */
 export async function moveDeal(dealId: string, stageId: string, index: number): Promise<{ error?: string }> {
   const user = await requireUser();
+  const t = await getT();
   const deal = await db.deal.findUnique({ where: { id: dealId }, include: { stage: true } });
-  if (!deal) return { error: "Deal not found." };
+  if (!deal) return { error: t.errors.dealNotFound };
   try {
     assertOwns(user, "deal", deal);
     assertCan(user, "deal", "update");
   } catch {
-    return { error: "You do not have permission to move this deal." };
+    return { error: t.errors.noPermissionMove };
   }
   const stage = await db.stage.findUnique({ where: { id: stageId } });
-  if (!stage) return { error: "Unknown stage." };
+  if (!stage) return { error: t.errors.unknownStage };
 
   await db.$transaction(async (tx) => {
     const others = await tx.deal.findMany({

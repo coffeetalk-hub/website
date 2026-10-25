@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { requireUser } from "@/core/auth/session";
@@ -9,12 +10,11 @@ import { listAssignableUsers } from "@/modules/users/queries";
 import { PageHeader } from "@/components/page-header";
 import { ListFilters } from "@/components/list-filters";
 import { Button } from "@/components/ui/button";
-import { formatMoney } from "@/lib/utils";
-import { t } from "@/core/i18n";
 
 type SP = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function DealsPage({ searchParams }: { searchParams: SP }) {
+  const t = await getT();
   const user = await requireUser();
   assertCan(user, "deal");
   const sp = await searchParams;
@@ -28,7 +28,7 @@ export default async function DealsPage({ searchParams }: { searchParams: SP }) 
   return (
     <>
       <PageHeader title={t.deals.title}>
-        <span className="hidden text-sm text-muted-foreground sm:inline">Open pipeline: {formatMoney(pipeline)}</span>
+        <span className="hidden text-sm text-muted-foreground sm:inline">{t.tpl(t.deals.openPipeline, { amount: t.money(pipeline) })}</span>
         <Button asChild>
           <Link href="/deals/new">
             <Plus className="h-4 w-4" />

@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { requireUser } from "@/core/auth/session";
@@ -13,11 +14,11 @@ import { Pagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
-import { t } from "@/core/i18n";
 
 type SP = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function ContactsPage({ searchParams }: { searchParams: SP }) {
+  const t = await getT();
   const user = await requireUser();
   assertCan(user, "contact");
   const sp = await searchParams;
@@ -34,7 +35,7 @@ export default async function ContactsPage({ searchParams }: { searchParams: SP 
 
   const selects: FilterSelect[] = [
     { name: "companyId", label: t.contacts.company, value: companyId, options: companies.map((c) => ({ value: c.id, label: c.name })) },
-    { name: "source", label: t.contacts.source, value: source, options: SOURCES.map((s) => ({ value: s, label: s })) },
+    { name: "source", label: t.contacts.source, value: source, options: SOURCES.map((s) => ({ value: s, label: t.common.sources[s as keyof typeof t.common.sources] ?? s })) },
   ];
   if (isPrivileged(user)) selects.push({ name: "ownerId", label: t.common.owner, value: ownerId, options: owners.map((o) => ({ value: o.id, label: o.name })) });
 

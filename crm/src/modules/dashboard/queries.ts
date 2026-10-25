@@ -47,7 +47,7 @@ export async function getDashboard(user: SessionUser) {
   const first = new Date(now.getFullYear(), now.getMonth() - MONTHS_BACK, 1);
   const months = Array.from({ length: MONTHS_BACK + MONTHS_AHEAD + 1 }, (_, i) => {
     const d = new Date(first.getFullYear(), first.getMonth() + i, 1);
-    return { key: `${d.getFullYear()}-${d.getMonth()}`, label: d.toLocaleString("en-GB", { month: "short" }), won: 0, open: 0, current: i === MONTHS_BACK };
+    return { key: `${d.getFullYear()}-${d.getMonth()}`, date: d, won: 0, open: 0, current: i === MONTHS_BACK };
   });
   const idx = new Map(months.map((m, i) => [m.key, i]));
   for (const d of deals) {
@@ -76,7 +76,7 @@ export async function getDashboard(user: SessionUser) {
     months,
     topReps: [...reps.values()].sort((a, b) => b.value - a.value).slice(0, 5),
     industries: industries
-      .map((i) => ({ name: i.industry ?? "Other", count: i._count._all }))
+      .map((i) => ({ name: i.industry, count: i._count._all }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 5),
     dueToday,

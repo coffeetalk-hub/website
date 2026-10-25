@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/core/auth/session";
 import { getFieldDefs, getFieldValues } from "@/core/custom-fields";
@@ -8,9 +9,9 @@ import { listCompanyOptions } from "@/modules/companies/queries";
 import { listAssignableUsers } from "@/modules/users/queries";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
-import { t } from "@/core/i18n";
 
 export default async function EditContactPage({ params }: { params: Promise<{ id: string }> }) {
+  const t = await getT();
   const { id } = await params;
   const user = await requireUser();
   const contact = await getContact(user, id);

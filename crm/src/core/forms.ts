@@ -1,6 +1,6 @@
 import type { ZodError } from "zod";
 import { ForbiddenError } from "@/core/permissions";
-import { t } from "@/core/i18n";
+import { tr, type T } from "@/core/i18n";
 
 export type ActionState = { error?: string; fieldErrors?: Record<string, string> };
 
@@ -13,18 +13,18 @@ export function formToObject(fd: FormData) {
   return o;
 }
 
-export function zodErrors(err: ZodError): ActionState {
+export function zodErrors(err: ZodError, t: T): ActionState {
   const fieldErrors: Record<string, string> = {};
   for (const issue of err.issues) {
     const k = String(issue.path[0] ?? "");
     // A blank required field arrives as `undefined` (see formToObject) → invalid_type.
-    if (!fieldErrors[k]) fieldErrors[k] = issue.code === "invalid_type" ? "This field is required" : issue.message;
+    if (!fieldErrors[k]) fieldErrors[k] = issue.code === "invalid_type" ? t.errors.required : tr(t, issue.message);
   }
-  return { error: "Please fix the highlighted fields.", fieldErrors };
+  return { error: t.errors.pleaseFix, fieldErrors };
 }
 
 /** Converts permission failures into a form error; rethrows everything else (incl. redirects). */
-export function toActionError(e: unknown): ActionState {
+export function toActionError(e: unknown, t: T): ActionState {
   if (e instanceof ForbiddenError) return { error: t.common.forbidden };
   throw e;
 }

@@ -15,5 +15,5 @@ export const TH = ({ className, ...p }: React.ThHTMLAttributes<HTMLTableCellElem
   <th className={cn("h-10 px-3 text-start align-middle text-xs font-medium uppercase tracking-wide text-muted-foreground", className)} {...p} />
 );
 export const TD = ({ className, ...p }: React.TdHTMLAttributes<HTMLTableCellElement>) => (
-  <td className={cn("px-3 py-2.5 align-middle", className)} {...p} />
+  <td dir="auto" className={cn("px-3 py-2.5 align-middle", className)} {...p} />
 );

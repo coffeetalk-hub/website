@@ -1,10 +1,10 @@
+import { getT } from "@/core/i18n/server";
 import Link from "next/link";
 import { Check, Circle } from "lucide-react";
 import { toggleActivityDone } from "../actions";
 import { TR, TD } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { cn, formatDateTime } from "@/lib/utils";
-import { t } from "@/core/i18n";
+import { cn } from "@/lib/utils";
 
 type Row = {
   id: string;
@@ -18,7 +18,8 @@ type Row = {
   deal: { id: string; title: string } | null;
 };
 
-export function TaskRow({ a }: { a: Row }) {
+export async function TaskRow({ a }: { a: Row }) {
+  const t = await getT();
   const overdue = !a.completedAt && a.dueAt && a.dueAt < new Date();
   const related = a.deal
     ? { href: `/deals/${a.deal.id}`, label: a.deal.title }
@@ -44,7 +45,7 @@ export function TaskRow({ a }: { a: Row }) {
       <TD>
         <Badge>{t.tasks.types[a.type as keyof typeof t.tasks.types] ?? a.type}</Badge>
       </TD>
-      <TD className={cn("whitespace-nowrap", overdue && "text-destructive")}>{formatDateTime(a.dueAt)}</TD>
+      <TD className={cn("whitespace-nowrap", overdue && "text-destructive")}>{t.dateTime(a.dueAt)}</TD>
       <TD className="hidden md:table-cell">
         {related ? (
           <Link href={related.href} className="hover:underline">

@@ -1,10 +1,10 @@
+import { getT } from "@/core/i18n/server";
 import { ActionForm, Field } from "@/components/forms/action-form";
 import { Input, Select } from "@/components/ui/input";
 import { ROLES } from "@/core/permissions";
 import type { ActionState } from "@/core/forms";
-import { t } from "@/core/i18n";
 
-export function UserForm({
+export async function UserForm({
   action,
   initial,
   editing,
@@ -13,6 +13,7 @@ export function UserForm({
   initial?: { name: string; email: string; role: string; active: boolean };
   editing?: boolean;
 }) {
+  const t = await getT();
   return (
     <ActionForm action={action} cancelHref="/users">
       <div className="grid gap-4 sm:grid-cols-2">
@@ -31,13 +32,13 @@ export function UserForm({
             ))}
           </Select>
         </Field>
-        <Field name="password" label={editing ? "New password (leave blank to keep)" : t.auth.password} required={!editing}>
+        <Field name="password" label={editing ? t.users.newPassword : t.auth.password} required={!editing}>
           <Input id="password" name="password" type="password" autoComplete="new-password" />
         </Field>
         {editing && (
           <label className="flex items-center gap-2 text-sm sm:col-span-2">
             <input type="checkbox" name="active" defaultChecked={initial?.active} className="h-4 w-4 accent-[hsl(var(--coral))]" />
-            {t.users.active} (can sign in)
+            {t.users.canSignIn}
           </label>
         )}
       </div>

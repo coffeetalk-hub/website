@@ -1,3 +1,4 @@
+import { getT } from "@/core/i18n/server";
 import { notFound } from "next/navigation";
 import { db } from "@/core/db";
 import { requireAccess } from "@/core/auth/session";
@@ -6,9 +7,9 @@ import { UserForm } from "@/modules/users/components/user-form";
 import { AuditHistory } from "@/core/audit/history";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
-import { t } from "@/core/i18n";
 
 export default async function EditUserPage({ params }: { params: Promise<{ id: string }> }) {
+  const t = await getT();
   await requireAccess("user", "manage");
   const { id } = await params;
   const user = await db.user.findUnique({ where: { id } });

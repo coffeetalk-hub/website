@@ -1,7 +1,7 @@
+import { getT } from "@/core/i18n/server";
 import { Input, Select } from "@/components/ui/input";
 import { Field } from "@/components/forms/action-form";
 import { customFieldInputName, type CustomValues, type FieldDef } from "@/core/custom-fields";
-import { formatDate } from "@/lib/utils";
 
 /** Renders inputs for every custom field definition of an entity (server component). */
 export function CustomFieldInputs({ defs, values = {} }: { defs: FieldDef[]; values?: CustomValues }) {
@@ -38,7 +38,8 @@ export function CustomFieldInputs({ defs, values = {} }: { defs: FieldDef[]; val
   );
 }
 
-export function CustomFieldsView({ defs, values }: { defs: FieldDef[]; values: CustomValues }) {
+export async function CustomFieldsView({ defs, values }: { defs: FieldDef[]; values: CustomValues }) {
+  const t = await getT();
   if (!defs.length) return null;
   return (
     <>
@@ -46,7 +47,7 @@ export function CustomFieldsView({ defs, values }: { defs: FieldDef[]; values: C
         const v = values[d.key];
         return (
           <DetailItem key={d.id} label={d.label}>
-            {v == null ? "—" : d.type === "DATE" ? formatDate(String(v)) : String(v)}
+            {v == null ? "—" : d.type === "DATE" ? t.date(String(v)) : String(v)}
           </DetailItem>
         );
       })}
@@ -58,7 +59,7 @@ export function DetailItem({ label, children }: { label: string; children: React
   return (
     <div>
       <dt className="text-xs uppercase tracking-wide text-muted-foreground">{label}</dt>
-      <dd className="mt-0.5 text-sm">{children}</dd>
+      <dd dir="auto" className="mt-0.5 text-sm">{children}</dd>
     </div>
   );
 }

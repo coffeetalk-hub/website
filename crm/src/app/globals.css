@@ -62,5 +62,8 @@
     --chart-2: 7 90% 66%;
   }
   * { @apply border-border; }
+  /* Arabic: letters must join, so no letter-spacing / uppercase transforms. */
+  [dir="rtl"] * { letter-spacing: 0 !important; text-transform: none !important; }
+  [dir="rtl"] body { font-family: var(--font-arabic), "Noto Sans Arabic", "Segoe UI", Tahoma, system-ui, sans-serif; }
   body { @apply bg-background text-foreground antialiased; }
 }

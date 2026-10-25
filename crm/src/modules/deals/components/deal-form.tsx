@@ -1,9 +1,9 @@
+import { getT } from "@/core/i18n/server";
 import { ActionForm, Field } from "@/components/forms/action-form";
 import { Input, Select } from "@/components/ui/input";
 import { CustomFieldInputs } from "@/components/custom-fields";
 import type { CustomValues, FieldDef } from "@/core/custom-fields";
 import type { ActionState } from "@/core/forms";
-import { t } from "@/core/i18n";
 
 type Initial = {
   title?: string;
@@ -15,7 +15,7 @@ type Initial = {
   ownerId?: string;
 };
 
-export function DealForm({
+export async function DealForm({
   action,
   initial = {},
   stages,
@@ -36,15 +36,16 @@ export function DealForm({
   customValues?: CustomValues;
   cancelHref: string;
 }) {
+  const t = await getT();
   return (
     <ActionForm action={action} cancelHref={cancelHref}>
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
-          <Field name="title" label="Title" required>
+          <Field name="title" label={t.deals.dealTitle} required>
             <Input id="title" name="title" defaultValue={initial.title ?? ""} />
           </Field>
         </div>
-        <Field name="value" label={`${t.deals.value} (SAR)`} required>
+        <Field name="value" label={t.deals.valueSar} required>
           <Input id="value" name="value" type="number" min="0" step="any" defaultValue={initial.value ?? ""} />
         </Field>
         <Field name="stageId" label={t.deals.stage} required>

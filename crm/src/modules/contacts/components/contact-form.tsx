@@ -1,9 +1,9 @@
+import { getT } from "@/core/i18n/server";
 import { ActionForm, Field } from "@/components/forms/action-form";
 import { Input, Select } from "@/components/ui/input";
 import { CustomFieldInputs } from "@/components/custom-fields";
 import type { CustomValues, FieldDef } from "@/core/custom-fields";
 import type { ActionState } from "@/core/forms";
-import { t } from "@/core/i18n";
 import { SOURCES } from "../schema";
 
 type Initial = {
@@ -17,7 +17,7 @@ type Initial = {
   ownerId?: string;
 };
 
-export function ContactForm({
+export async function ContactForm({
   action,
   initial = {},
   owners,
@@ -34,6 +34,7 @@ export function ContactForm({
   customValues?: CustomValues;
   cancelHref: string;
 }) {
+  const t = await getT();
   return (
     <ActionForm action={action} cancelHref={cancelHref}>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -67,7 +68,7 @@ export function ContactForm({
             <option value="">{t.common.none}</option>
             {SOURCES.map((s) => (
               <option key={s} value={s}>
-                {s}
+                {t.common.sources[s as keyof typeof t.common.sources] ?? s}
               </option>
             ))}
           </Select>

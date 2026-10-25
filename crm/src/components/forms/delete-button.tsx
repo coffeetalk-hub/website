@@ -1,10 +1,11 @@
 "use client";
+import { useT } from "@/core/i18n/client";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { t } from "@/core/i18n";
 
 /** `action` is a server action already bound to the record id. */
-export function DeleteButton({ action, label = t.common.delete }: { action: () => Promise<void>; label?: string }) {
+export function DeleteButton({ action, label }: { action: () => Promise<void>; label?: string }) {
+  const t = useT();
   return (
     <form
       action={action}
@@ -14,7 +15,7 @@ export function DeleteButton({ action, label = t.common.delete }: { action: () =
     >
       <Button variant="outline" size="sm" className="text-destructive">
         <Trash2 className="h-4 w-4" />
-        {label}
+        {label ?? t.common.delete}
       </Button>
     </form>
   );

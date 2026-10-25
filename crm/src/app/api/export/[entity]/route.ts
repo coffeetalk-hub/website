@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/core/auth/session";
 import { can, scope } from "@/core/permissions";
 import { getFieldDefs, getFieldValuesMany } from "@/core/custom-fields";
 import { logAudit } from "@/core/audit";
+import { getT } from "@/core/i18n/server";
 import { fieldsFor, type CsvEntity } from "@/modules/import-export/fields";
 
 // Permission is checked here (not just by hiding the button): reps export only their own records.
@@ -16,8 +17,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ entity: 
   const entity: CsvEntity | null = slug === "contacts" ? "CONTACT" : slug === "companies" ? "COMPANY" : null;
   if (!entity) return new Response("Not found", { status: 404 });
 
+  const t = await getT();
   const defs = await getFieldDefs(entity);
-  const fields = fieldsFor(entity, defs);
+  const fields = fieldsFor(entity, defs, t);
   const header = fields.map((f) => f.label);
   const template = new URL(req.url).searchParams.has("template");
 

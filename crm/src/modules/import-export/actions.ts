@@ -2,6 +2,8 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/core/db";
 import { requireUser } from "@/core/auth/session";
+import { getT } from "@/core/i18n/server";
+import { tr, type T } from "@/core/i18n";
 import { assertCan, isPrivileged, scope, type SessionUser } from "@/core/permissions";
 import { getFieldDefs, parseCustomFields, saveFieldValues, type FieldDef } from "@/core/custom-fields";
 import { companySchema } from "@/modules/companies/schema";
@@ -27,20 +29,21 @@ async function ownerResolver(user: SessionUser) {
   return (email?: string) => (email && byEmail.get(email.toLowerCase())) || user.id;
 }
 
-const issue = (e: { issues: { code: string; path: PropertyKey[]; message: string }[] }) =>
-  e.issues.map((i) => `${String(i.path[0] ?? "")}: ${i.code === "invalid_type" ? "is required" : i.message}`).join("; ");
+const issue = (e: { issues: { code: string; path: PropertyKey[]; message: string }[] }, t: T) =>
+  e.issues.map((i) => `${String(i.path[0] ?? "")}: ${i.code === "invalid_type" ? t.errors.importWord : tr(t, i.message)}`).join("; ");
 
 export async function importRows(entity: CsvEntity, input: Record<string, string>[]): Promise<ImportResult> {
   const user = await requireUser();
+  const t = await getT();
   const result: ImportResult = { created: 0, skipped: 0, errors: [] };
   try {
     assertCan(user, "import");
     assertCan(user, entity === "CONTACT" ? "contact" : "company", "create");
   } catch {
-    return { ...result, fatal: "You do not have permission to import." };
+    return { ...result, fatal: t.importExport.noPermission };
   }
-  if (!Array.isArray(input) || input.length === 0) return { ...result, fatal: "The file has no rows." };
-  if (input.length > MAX_ROWS) return { ...result, fatal: `Too many rows (max ${MAX_ROWS} per import).` };
+  if (!Array.isArray(input) || input.length === 0) return { ...result, fatal: t.importExport.noRows };
+  if (input.length > MAX_ROWS) return { ...result, fatal: t.tpl(t.importExport.tooMany, { max: MAX_ROWS }) };
 
   const defs = await getFieldDefs(entity);
   const ownerOf = await ownerResolver(user);
@@ -55,14 +58,14 @@ export async function importRows(entity: CsvEntity, input: Record<string, string
       const row = clean(raw);
       const line = i + 2; // header is line 1
       const parsed = companySchema.omit({ ownerId: true }).safeParse(row);
-      const cf = parseCustomFields(defs, customForm(defs, row));
+      const cf = parseCustomFields(defs, customForm(defs, row), t);
       if (!parsed.success || Object.keys(cf.errors).length) {
-        result.errors.push({ row: line, message: [parsed.success ? "" : issue(parsed.error), ...Object.values(cf.errors)].filter(Boolean).join("; ") });
+        result.errors.push({ row: line, message: [parsed.success ? "" : issue(parsed.error, t), ...Object.values(cf.errors)].filter(Boolean).join("; ") });
         continue;
       }
       if (companyByName.has(parsed.data.name.toLowerCase())) {
         result.skipped++;
-        result.errors.push({ row: line, message: `Skipped: company “${parsed.data.name}” already exists` });
+        result.errors.push({ row: line, message: t.tpl(t.importExport.skippedCompany, { name: parsed.data.name }) });
         continue;
       }
       const rec = await db.company.create({ data: { ...parsed.data, ownerId: ownerOf(row.owner) } });
@@ -78,15 +81,15 @@ export async function importRows(entity: CsvEntity, input: Record<string, string
       const row = clean(raw);
       const line = i + 2;
       const parsed = contactSchema.omit({ ownerId: true, companyId: true }).safeParse(row);
-      const cf = parseCustomFields(defs, customForm(defs, row));
+      const cf = parseCustomFields(defs, customForm(defs, row), t);
       if (!parsed.success || Object.keys(cf.errors).length) {
-        result.errors.push({ row: line, message: [parsed.success ? "" : issue(parsed.error), ...Object.values(cf.errors)].filter(Boolean).join("; ") });
+        result.errors.push({ row: line, message: [parsed.success ? "" : issue(parsed.error, t), ...Object.values(cf.errors)].filter(Boolean).join("; ") });
         continue;
       }
       const email = parsed.data.email?.toLowerCase();
       if (email && emails.has(email)) {
         result.skipped++;
-        result.errors.push({ row: line, message: `Skipped: ${parsed.data.email} already exists` });
+        result.errors.push({ row: line, message: t.tpl(t.importExport.skippedEmail, { email: parsed.data.email ?? "" }) });
         continue;
       }
       let companyId: string | null = null;

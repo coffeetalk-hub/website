@@ -4,11 +4,11 @@ export const ACTIVITY_TYPES = ["CALL", "MEETING", "NOTE", "FOLLOW_UP"] as const;
 
 export const activitySchema = z.object({
   type: z.enum(ACTIVITY_TYPES),
-  subject: z.string().min(1, "Subject is required").max(200),
+  subject: z.string().min(1, "err:subjectRequired").max(200),
   body: z.string().max(5000).optional(),
   dueAt: z
     .string()
-    .refine((v) => !Number.isNaN(Date.parse(v)), "Enter a valid date")
+    .refine((v) => !Number.isNaN(Date.parse(v)), "err:invalidDate")
     .optional(),
   assigneeId: z.string().optional(),
   contactId: z.string().optional(),
