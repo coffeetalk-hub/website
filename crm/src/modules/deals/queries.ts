@@ -30,3 +30,6 @@ export async function getDeal(user: SessionUser, id: string) {
   if (!d || !canAccess(user, "deal", d)) return null;
   return d;
 }
+
+/** Deals the user may link to (for selects). */
+export const listDealOptions = (user: SessionUser) => db.deal.findMany({ where: scope(user, "deal"), select: { id: true, title: true }, orderBy: { createdAt: "desc" } });

@@ -26,8 +26,10 @@ type Helpers = {
   locale: Locale;
   dir: "ltr" | "rtl";
   tpl: typeof tpl;
-  /** SAR amount, locale-aware. */
+  /** SAR amount, locale-aware (whole riyals). */
   money: (value: number, currency?: string) => string;
+  /** SAR amount with halalas (quotes and invoices). */
+  money2: (value: number) => string;
   date: (d: Date | string | null | undefined) => string;
   dateTime: (d: Date | string | null | undefined) => string;
   monthShort: (d: Date) => string;
@@ -51,6 +53,7 @@ export function makeT(locale: Locale): T {
     dir: getDirection(locale),
     tpl,
     money: (value, currency = "SAR") => new Intl.NumberFormat(tag, { style: "currency", currency, maximumFractionDigits: 0 }).format(value),
+    money2: (value) => new Intl.NumberFormat(tag, { style: "currency", currency: "SAR", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value),
     date: (d) => (d ? new Intl.DateTimeFormat(tag, { dateStyle: "medium" }).format(new Date(d)) : dash),
     dateTime: (d) => (d ? new Intl.DateTimeFormat(tag, { dateStyle: "medium", timeStyle: "short" }).format(new Date(d)) : dash),
     monthShort: (d) => new Intl.DateTimeFormat(tag, { month: "short" }).format(d),

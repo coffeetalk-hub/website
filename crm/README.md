@@ -48,9 +48,21 @@ npm run test:e2e:ui    # interactive runner
 | Tasks | `/tasks` | calls, meetings, notes, follow-ups; due dates; assignee; quick-add on record pages |
 | Users | `/users` | Admin only |
 | Settings | `/settings` | Admin only: pipeline stages, custom fields |
+| Products | `/products` | Price catalogue (managers/admins edit; reps read) |
+| Quotes | `/quotes` | Line items with live VAT totals, status flow (draft → sent → accepted/rejected), print/PDF, "Create quote" from a deal, create an invoice from an accepted quote |
+| Invoices | `/invoices` | Draft → issued → paid/cancelled; gap-free numbers assigned at issue; issued invoices are locked; bilingual print sheet with ZATCA QR |
 | Reports | `/reports` | Sales (won revenue, win rate, by rep, by lead source), Pipeline (by stage, weighted forecast by close month, largest open deals), Activity (calls/meetings/tasks per rep); date range + owner filters; CSV export per tab |
 | Import/Export | `/import-export` | CSV with column mapping + preview; export includes custom fields |
 | Search | `/search` | global search box in the header |
+
+## Quotes, invoices and Saudi e-invoicing
+
+- Set the seller details in **Settings → Company profile**: English/Arabic name, **15-digit VAT number**, CR number, address, bank details, default VAT (15%), quote validity and payment terms. Invoices cannot be issued until a valid VAT number and a name are set.
+- **VAT maths** is done per line and rounded to halalas (`src/modules/billing/totals.ts`); discounts are per line; totals show a VAT breakdown by rate.
+- **Numbering:** quotes get `Q-<year>-0001` when created. Invoices get `INV-<year>-0001` **only when issued**, so the tax-invoice sequence has no gaps even if drafts are deleted. Issued invoices can't be edited or deleted; they can be marked paid or cancelled.
+- **Printing:** the *Print / Save as PDF* button opens a clean, bilingual (English / Arabic) sheet; use the browser's print dialog to save a PDF. There is no server-side PDF generator.
+- **ZATCA Phase 1:** issued invoices carry the QR code (base64 TLV: seller name, VAT number, timestamp, total, VAT amount). **Phase 2 is not implemented** (UBL XML, cryptographic stamp, hash chain, clearance/reporting through ZATCA's API). That needs your ZATCA onboarding (CSID) and certificate, so it can't be done without your credentials. Until then, check with your accountant whether Phase 1 is enough for your invoice type.
+- Permissions: reps create and edit their own quotes; invoices are read-only for reps (managers/admins issue them).
 
 ## Report definitions
 

@@ -1,10 +1,10 @@
 import { getT } from "@/core/i18n/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Pencil } from "lucide-react";
+import { FileText, Pencil } from "lucide-react";
 import { db } from "@/core/db";
 import { requireUser } from "@/core/auth/session";
-import { scope } from "@/core/permissions";
+import { can, scope } from "@/core/permissions";
 import { getFieldDefs, getFieldValues } from "@/core/custom-fields";
 import { getDeal } from "@/modules/deals/queries";
 import { deleteDeal } from "@/modules/deals/actions";
@@ -43,6 +43,14 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
             {t.common.edit}
           </Link>
         </Button>
+        {can(user, "quote", "create") && (
+          <Button variant="outline" size="sm" asChild>
+            <Link href={`/quotes/new?dealId=${id}`}>
+              <FileText className="h-4 w-4" />
+              {t.quotes.fromDeal}
+            </Link>
+          </Button>
+        )}
         <DeleteButton action={deleteDeal.bind(null, id)} />
       </PageHeader>
       <div className="grid gap-4 lg:grid-cols-3">

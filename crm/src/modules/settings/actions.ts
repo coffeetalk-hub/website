@@ -10,6 +10,7 @@ import { assertCan } from "@/core/permissions";
 import { logAudit, diff } from "@/core/audit";
 import { formToObject } from "@/core/forms";
 import { ENTITIES, FIELD_TYPES } from "@/core/custom-fields";
+import { setSetting } from "@/core/settings";
 
 /** Every settings action: server-side Admin check first. */
 async function admin() {
@@ -159,4 +160,33 @@ export async function deleteField(id: string) {
   await db.customFieldDef.delete({ where: { id } }); // values cascade
   await logAudit(user, "CustomField", id, "DELETE", { entity: f.entity, label: f.label });
   done("ok", t.tpl(t.settings.msg.fieldDeleted, { label: f.label }));
+}
+
+// ───────────── company profile (seller details for quotes/invoices) ─────────────
+const profileSchema = z.object({
+  nameEn: z.string().max(200).optional(),
+  nameAr: z.string().max(200).optional(),
+  vatNumber: z.string().regex(/^\d{15}$/, "err:invalidVatNumber").optional(),
+  crNumber: z.string().max(40).optional(),
+  address: z.string().max(500).optional(),
+  phone: z.string().max(50).optional(),
+  email: z.string().max(200).optional(),
+  bankDetails: z.string().max(500).optional(),
+  defaultVatRate: z.coerce.number().min(0).max(100),
+  quoteValidityDays: z.coerce.number().int().min(1).max(365),
+  paymentTermsDays: z.coerce.number().int().min(0).max(365),
+  footerNote: z.string().max(300).optional(),
+});
+
+export async function saveCompanyProfile(fd: FormData) {
+  const { user, t } = await admin();
+  const p = profileSchema.safeParse(formToObject(fd));
+  if (!p.success) done("error", tr(t, p.error.issues[0].message));
+  const v = p.data;
+  await setSetting("company", {
+    nameEn: v.nameEn ?? "", nameAr: v.nameAr ?? "", vatNumber: v.vatNumber ?? "", crNumber: v.crNumber ?? "", address: v.address ?? "", phone: v.phone ?? "", email: v.email ?? "",
+    bankDetails: v.bankDetails ?? "", defaultVatRate: v.defaultVatRate, quoteValidityDays: v.quoteValidityDays, paymentTermsDays: v.paymentTermsDays, footerNote: v.footerNote ?? "",
+  });
+  await logAudit(user, "System", "company-profile", "UPDATE", { companyProfile: "saved" });
+  done("ok", t.companyProfile.saved);
 }

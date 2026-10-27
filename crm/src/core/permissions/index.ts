@@ -14,7 +14,10 @@ export type Resource =
   | "settings"
   | "import"
   | "export"
-  | "report";
+  | "report"
+  | "product"
+  | "quote"
+  | "invoice";
 export type Action = "read" | "create" | "update" | "delete" | "manage";
 
 /**
@@ -24,10 +27,13 @@ export type Action = "read" | "create" | "update" | "delete" | "manage";
  */
 type Grant = "own" | "all" | false;
 const matrix: Record<Role, Record<Resource, Grant>> = {
-  ADMIN: { contact: "all", company: "all", deal: "all", activity: "all", user: "all", settings: "all", import: "all", export: "all", report: "all" },
-  MANAGER: { contact: "all", company: "all", deal: "all", activity: "all", user: false, settings: false, import: "all", export: "all", report: "all" },
-  REP: { contact: "own", company: "own", deal: "own", activity: "own", user: false, settings: false, import: "own", export: "own", report: "own" },
+  ADMIN: { contact: "all", company: "all", deal: "all", activity: "all", user: "all", settings: "all", import: "all", export: "all", report: "all", product: "all", quote: "all", invoice: "all" },
+  MANAGER: { contact: "all", company: "all", deal: "all", activity: "all", user: false, settings: false, import: "all", export: "all", report: "all", product: "all", quote: "all", invoice: "all" },
+  REP: { contact: "own", company: "own", deal: "own", activity: "own", user: false, settings: false, import: "own", export: "own", report: "own", product: "all", quote: "own", invoice: "own" },
 };
+
+/** Resources a role can see but not change (the grant above still applies for reading). */
+const READ_ONLY: Partial<Record<Role, Resource[]>> = { REP: ["product", "invoice"] };
 
 export class ForbiddenError extends Error {
   constructor(message = "Forbidden") {
@@ -41,7 +47,8 @@ export function grantFor(user: SessionUser, resource: Resource): Grant {
 }
 
 /** Can the user perform this kind of operation on the resource at all? */
-export function can(user: SessionUser, resource: Resource, _action: Action = "read"): boolean {
+export function can(user: SessionUser, resource: Resource, action: Action = "read"): boolean {
+  if (action !== "read" && READ_ONLY[user.role]?.includes(resource)) return false;
   return grantFor(user, resource) !== false;
 }
 

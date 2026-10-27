@@ -32,6 +32,8 @@ model User {
   activities Activity[] @relation("ActivityAssignee")
   created    Activity[] @relation("ActivityCreator")
   auditLogs  AuditLog[]
+  quotes     Quote[]    @relation("QuoteOwner")
+  invoices   Invoice[]  @relation("InvoiceOwner")
 }
 
 // Sign-in attempts: drives rate limiting / lockout and the "recent sign-ins" list. Keyed by the
@@ -63,6 +65,8 @@ model Company {
   contacts   Contact[]
   deals      Deal[]
   activities Activity[]
+  quotes     Quote[]
+  invoices   Invoice[]
 
   @@index([ownerId])
   @@index([name])
@@ -86,6 +90,8 @@ model Contact {
 
   deals      Deal[]
   activities Activity[]
+  quotes     Quote[]
+  invoices   Invoice[]
 
   @@index([ownerId])
   @@index([companyId])
@@ -121,6 +127,8 @@ model Deal {
   updatedAt         DateTime  @updatedAt
 
   activities Activity[]
+  quotes     Quote[]
+  invoices   Invoice[]
 
   @@index([ownerId])
   @@index([stageId])
@@ -194,4 +202,117 @@ model AuditLog {
 
   @@index([entity, recordId])
   @@index([createdAt])
+}
+
+// ───────────── settings & numbering (shared) ─────────────
+// Generic key/value store: company profile, integrations, etc. Secrets are encrypted before they are stored.
+model Setting {
+  key   String @id
+  value Json
+}
+
+model Counter {
+  key   String @id // e.g. "quote:2026"
+  value Int    @default(0)
+}
+
+// ───────────── products / quotes / invoices ─────────────
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  sku         String?
+  description String?
+  unitPrice   Float    @default(0)
+  vatRate     Float    @default(15) // percent
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([name])
+}
+
+model Quote {
+  id         String      @id @default(cuid())
+  number     String      @unique // Q-2026-0001
+  status     String      @default("DRAFT") // DRAFT | SENT | ACCEPTED | REJECTED
+  issueDate  DateTime    @default(now())
+  validUntil DateTime?
+  companyId  String?
+  company    Company?    @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  contactId  String?
+  contact    Contact?    @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  dealId     String?
+  deal       Deal?       @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  ownerId    String
+  owner      User        @relation("QuoteOwner", fields: [ownerId], references: [id])
+  notes      String?
+  terms      String?
+  lines      QuoteLine[]
+  invoices   Invoice[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([ownerId])
+  @@index([status])
+}
+
+model QuoteLine {
+  id          String  @id @default(cuid())
+  quoteId     String
+  quote       Quote   @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  position    Int     @default(0)
+  productId   String?
+  description String
+  qty         Float   @default(1)
+  unitPrice   Float   @default(0)
+  discountPct Float   @default(0)
+  vatRate     Float   @default(15)
+
+  @@index([quoteId])
+}
+
+model Invoice {
+  id           String        @id @default(cuid())
+  number       String        @unique // INV-2026-0001
+  uuid         String        @unique @default(uuid()) // ZATCA invoice UUID
+  status       String        @default("DRAFT") // DRAFT | ISSUED | PAID | CANCELLED
+  issueDate    DateTime      @default(now())
+  issuedAt     DateTime? // set when the invoice is issued (locks it)
+  dueDate      DateTime?
+  paidAt       DateTime?
+  quoteId      String?
+  quote        Quote?        @relation(fields: [quoteId], references: [id], onDelete: SetNull)
+  dealId       String?
+  deal         Deal?         @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  companyId    String?
+  company      Company?      @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  contactId    String?
+  contact      Contact?      @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  ownerId      String
+  owner        User          @relation("InvoiceOwner", fields: [ownerId], references: [id])
+  // Buyer details are copied onto the invoice so later edits to the company don't change issued invoices.
+  buyerName    String
+  buyerVat     String?
+  buyerAddress String?
+  notes        String?
+  lines        InvoiceLine[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([ownerId])
+  @@index([status])
+}
+
+model InvoiceLine {
+  id          String  @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  position    Int     @default(0)
+  description String
+  qty         Float   @default(1)
+  unitPrice   Float   @default(0)
+  discountPct Float   @default(0)
+  vatRate     Float   @default(15)
+
+  @@index([invoiceId])
 }

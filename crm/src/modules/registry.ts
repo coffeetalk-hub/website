@@ -1,4 +1,4 @@
-import { BarChart3, LayoutDashboard, Users, Building2, Handshake, CheckSquare, UserCog, Settings, ArrowLeftRight, type LucideIcon } from "lucide-react";
+import { BarChart3, FileText, LayoutDashboard, Package, Receipt, Users, Building2, Handshake, CheckSquare, UserCog, Settings, ArrowLeftRight, type LucideIcon } from "lucide-react";
 import type { Dictionary } from "@/core/i18n/en";
 import type { Resource, SessionUser } from "@/core/permissions";
 import { can } from "@/core/permissions";
@@ -23,6 +23,9 @@ export const modules: ModuleManifest[] = [
   { key: "companies", labelKey: "companies", href: "/companies", icon: Building2, resource: "company" },
   { key: "deals", labelKey: "deals", href: "/deals", icon: Handshake, resource: "deal" },
   { key: "tasks", labelKey: "tasks", href: "/tasks", icon: CheckSquare, resource: "activity" },
+  { key: "quotes", labelKey: "quotes", href: "/quotes", icon: FileText, resource: "quote" },
+  { key: "invoices", labelKey: "invoices", href: "/invoices", icon: Receipt, resource: "invoice" },
+  { key: "products", labelKey: "products", href: "/products", icon: Package, resource: "product" },
   { key: "reports", labelKey: "reports", href: "/reports", icon: BarChart3, resource: "report" },
   { key: "import-export", labelKey: "importExport", href: "/import-export", icon: ArrowLeftRight, resource: "import" },
   { key: "users", labelKey: "users", href: "/users", icon: UserCog, resource: "user" },

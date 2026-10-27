@@ -4,7 +4,8 @@ import { db } from "@/core/db";
 import { requireAccess } from "@/core/auth/session";
 import { strParam } from "@/core/forms";
 import { ENTITIES, FIELD_TYPES, getFieldDefs } from "@/core/custom-fields";
-import { createField, createStage, deleteField, deleteStage, moveField, moveStage, updateField, updateStage } from "@/modules/settings/actions";
+import { getCompanyProfile } from "@/modules/billing/profile";
+import { saveCompanyProfile, createField, createStage, deleteField, deleteStage, moveField, moveStage, updateField, updateStage } from "@/modules/settings/actions";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Input, Select, Textarea } from "@/components/ui/input";
@@ -25,6 +26,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
   const sp = await searchParams;
   const ok = strParam(sp.ok);
   const error = strParam(sp.error);
+  const profile = await getCompanyProfile();
   const [stages, ...fieldSets] = await Promise.all([
     db.stage.findMany({ orderBy: { position: "asc" }, include: { _count: { select: { deals: true } } } }),
     ...ENTITIES.map((e) => getFieldDefs(e)),
@@ -35,6 +37,33 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
       <PageHeader title={t.settings.title} />
       {ok && <p className="mb-4 rounded-xl bg-secondary p-3 text-sm">{ok}</p>}
       {error && <p className="mb-4 rounded-xl bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
+
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="text-base">{t.companyProfile.title}</CardTitle>
+          <p className="text-sm text-muted-foreground">{t.companyProfile.help}</p>
+        </CardHeader>
+        <CardContent>
+          <form action={saveCompanyProfile} className="grid gap-3 sm:grid-cols-2">
+            <label className="space-y-1 text-sm">{t.companyProfile.nameEn}<Input name="nameEn" defaultValue={profile.nameEn} /></label>
+            <label className="space-y-1 text-sm">{t.companyProfile.nameAr}<Input name="nameAr" dir="rtl" defaultValue={profile.nameAr} /></label>
+            <label className="space-y-1 text-sm">{t.companyProfile.vatNumber}<Input name="vatNumber" dir="ltr" inputMode="numeric" defaultValue={profile.vatNumber} /></label>
+            <label className="space-y-1 text-sm">{t.companyProfile.crNumber}<Input name="crNumber" dir="ltr" defaultValue={profile.crNumber} /></label>
+            <label className="space-y-1 text-sm">{t.companyProfile.phone}<Input name="phone" dir="ltr" defaultValue={profile.phone} /></label>
+            <label className="space-y-1 text-sm">{t.companyProfile.email}<Input name="email" dir="ltr" defaultValue={profile.email} /></label>
+            <label className="space-y-1 text-sm sm:col-span-2">{t.companyProfile.address}<Textarea name="address" rows={2} defaultValue={profile.address} /></label>
+            <label className="space-y-1 text-sm sm:col-span-2">{t.companyProfile.bankDetails}<Textarea name="bankDetails" dir="ltr" rows={2} defaultValue={profile.bankDetails} /></label>
+            <label className="space-y-1 text-sm">{t.companyProfile.defaultVatRate}<Input name="defaultVatRate" type="number" min={0} max={100} step="0.01" defaultValue={profile.defaultVatRate} /></label>
+            <label className="space-y-1 text-sm">{t.companyProfile.quoteValidityDays}<Input name="quoteValidityDays" type="number" min={1} max={365} defaultValue={profile.quoteValidityDays} /></label>
+            <label className="space-y-1 text-sm">{t.companyProfile.paymentTermsDays}<Input name="paymentTermsDays" type="number" min={0} max={365} defaultValue={profile.paymentTermsDays} /></label>
+            <label className="space-y-1 text-sm">{t.companyProfile.footerNote}<Input name="footerNote" defaultValue={profile.footerNote} /></label>
+            <div className="sm:col-span-2">
+              <Button size="sm">{t.common.save}</Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
 
       <Card className="mb-6">
         <CardHeader>

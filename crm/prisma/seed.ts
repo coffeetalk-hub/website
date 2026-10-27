@@ -17,6 +17,13 @@ const daysFromNow = (d: number, hour = 10) => {
 
 async function main() {
   await db.$transaction([
+    db.invoiceLine.deleteMany(),
+    db.invoice.deleteMany(),
+    db.quoteLine.deleteMany(),
+    db.quote.deleteMany(),
+    db.product.deleteMany(),
+    db.counter.deleteMany(),
+    db.setting.deleteMany(),
     db.loginAttempt.deleteMany(),
     db.auditLog.deleteMany(),
     db.customFieldValue.deleteMany(),
@@ -179,6 +186,96 @@ async function main() {
       },
     });
   }
+
+
+  // ── billing demo data: seller profile, product catalogue, quotes and invoices ──
+  const yr = new Date().getFullYear();
+  await db.setting.create({
+    data: {
+      key: "company",
+      value: {
+        nameEn: "Demo Trading Co.",
+        nameAr: "شركة العرض التجارية",
+        vatNumber: "300000000000003", // demo value, replace with your real 15-digit VAT number
+        crNumber: "1010000000",
+        address: "King Fahd Road, Riyadh 12211, Saudi Arabia",
+        phone: "+966 11 400 0000",
+        email: "billing@demo-trading.sa",
+        bankDetails: "Demo Bank\nIBAN: SA0380000000608010167519",
+        defaultVatRate: 15,
+        quoteValidityDays: 30,
+        paymentTermsDays: 30,
+        footerNote: "Thank you for your business",
+      },
+    },
+  });
+  const productDefs = [
+    ["Implementation service (per day)", "SRV-IMP", 3500],
+    ["Annual support plan", "SUP-ANN", 12000],
+    ["Software licence (per user)", "LIC-USR", 900],
+    ["Training session", "TRN-001", 2500],
+    ["IoT sensor kit", "HW-IOT", 1800],
+    ["Consulting (per hour)", "SRV-CON", 450],
+  ] as const;
+  const products = [];
+  for (const [name, sku, unitPrice] of productDefs) products.push(await db.product.create({ data: { name, sku, unitPrice, vatRate: 15 } }));
+
+  const quoteStatuses = ["DRAFT", "SENT", "ACCEPTED", "ACCEPTED", "REJECTED", "SENT", "ACCEPTED", "DRAFT"];
+  const quotes = [];
+  for (const [i, status] of quoteStatuses.entries()) {
+    const deal = deals[i * 2 % deals.length];
+    const picks = [products[i % products.length], products[(i + 2) % products.length]];
+    const issue = daysFromNow(-20 + i * 2);
+    quotes.push(
+      await db.quote.create({
+        data: {
+          number: `Q-${yr}-${String(i + 1).padStart(4, "0")}`,
+          status,
+          issueDate: issue,
+          validUntil: new Date(issue.getTime() + 30 * 86400000),
+          companyId: deal.companyId,
+          contactId: deal.contactId,
+          dealId: deal.id,
+          ownerId: deal.ownerId,
+          terms: "Prices are in SAR and exclude VAT. Payment within 30 days of invoice.",
+          lines: { create: picks.map((p, j) => ({ productId: p.id, description: p.name, qty: j === 0 ? 2 : 1, unitPrice: p.unitPrice, discountPct: j === 0 && i % 3 === 0 ? 10 : 0, vatRate: 15, position: j })) },
+        },
+      }),
+    );
+  }
+  await db.counter.create({ data: { key: `quote:${yr}`, value: quotes.length } });
+
+  // invoices from accepted quotes: one paid, one issued, one draft
+  const accepted = quotes.filter((q) => q.status === "ACCEPTED");
+  const invStatuses = ["PAID", "ISSUED", "DRAFT"];
+  let invoiceNo = 0;
+  for (const [i, q] of accepted.entries()) {
+    const status = invStatuses[i] ?? "DRAFT";
+    const qLines = await db.quoteLine.findMany({ where: { quoteId: q.id }, orderBy: { position: "asc" } });
+    const company = q.companyId ? await db.company.findUnique({ where: { id: q.companyId } }) : null;
+    const issued = status !== "DRAFT";
+    if (issued) invoiceNo++;
+    await db.invoice.create({
+      data: {
+        number: issued ? `INV-${yr}-${String(invoiceNo).padStart(4, "0")}` : `DRAFT-DEMO${i}`,
+        status,
+        issueDate: daysFromNow(-10 + i),
+        issuedAt: issued ? daysFromNow(-10 + i, 12) : null,
+        dueDate: daysFromNow(20 + i),
+        paidAt: status === "PAID" ? daysFromNow(-2) : null,
+        quoteId: q.id,
+        dealId: q.dealId,
+        companyId: q.companyId,
+        contactId: q.contactId,
+        ownerId: q.ownerId,
+        buyerName: company?.name ?? "Customer",
+        buyerVat: i === 0 ? "310000000000003" : null,
+        buyerAddress: company?.address ?? null,
+        lines: { create: qLines.map((l, j) => ({ description: l.description, qty: l.qty, unitPrice: l.unitPrice, discountPct: l.discountPct, vatRate: l.vatRate, position: j })) },
+      },
+    });
+  }
+  await db.counter.create({ data: { key: `invoice:${yr}`, value: invoiceNo } });
 
   // Demo audit trail so "recent activity" is not empty.
   for (const [i, c] of companies.entries()) {

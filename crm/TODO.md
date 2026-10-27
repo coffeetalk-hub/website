@@ -18,7 +18,8 @@
 - [ ] WhatsApp integration (Business API: message log on timeline, templates)
 - [x] Reports: sales / pipeline / activity with date ranges and CSV export (done)
 - [ ] Reports v2: saved & scheduled reports, rep targets/quotas, charts for pipeline & activity, drill-down from a number to its deals, comparison with the previous period
-- [ ] Quotes / invoices (products catalogue, PDF, ZATCA e-invoicing for KSA)
+- [x] Quotes / invoices with products catalogue, VAT, print sheet and ZATCA Phase 1 QR (done)
+- [ ] ZATCA Phase 2 (XML, signing, clearance/reporting): needs onboarding credentials; credit/debit notes; server-side PDF; recurring invoices; payment links; per-line product units
 - [ ] Public REST API + API keys / webhooks
 - [ ] Notifications (email / push for due tasks), task reminders
 - [ ] Files / attachments on records
