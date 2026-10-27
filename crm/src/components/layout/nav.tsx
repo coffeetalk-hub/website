@@ -1,0 +1,34 @@
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { modules } from "@/modules/registry";
+import { useT } from "@/core/i18n/client";
+
+export function Nav({ keys, onNavigate }: { keys: string[]; onNavigate?: () => void }) {
+  const pathname = usePathname();
+  const t = useT();
+  return (
+    <nav className="flex flex-col gap-1">
+      {modules
+        .filter((m) => keys.includes(m.key))
+        .map((m) => {
+          const active = pathname === m.href || pathname.startsWith(m.href + "/");
+          return (
+            <Link
+              key={m.key}
+              href={m.href}
+              onClick={onNavigate}
+              className={cn(
+                "flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors",
+                active ? "bg-coral text-white shadow-md" : "text-sidebar-muted hover:bg-white/10 hover:text-sidebar-foreground",
+              )}
+            >
+              <m.icon className="h-4 w-4" />
+              {t.nav[m.labelKey]}
+            </Link>
+          );
+        })}
+    </nav>
+  );
+}

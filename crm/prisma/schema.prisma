@@ -1,0 +1,390 @@
+// CRM data model. Sections are grouped by module.
+// SQLite for local dev; to switch to PostgreSQL change `provider` and DATABASE_URL.
+// Enumerated values (role, activity type, ...) are plain strings validated by Zod
+// (see src/modules/*/schema.ts) so they can grow without migrations.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ───────────── users module ─────────────
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("REP") // ADMIN | MANAGER | REP
+  active       Boolean  @default(true)
+  // Security: force a new password at next sign-in; bump sessionVersion to sign the user out everywhere.
+  mustChangePassword Boolean @default(false)
+  sessionVersion     Int     @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  contacts   Contact[]  @relation("ContactOwner")
+  companies  Company[]  @relation("CompanyOwner")
+  deals      Deal[]     @relation("DealOwner")
+  activities Activity[] @relation("ActivityAssignee")
+  created    Activity[] @relation("ActivityCreator")
+  auditLogs  AuditLog[]
+  quotes     Quote[]    @relation("QuoteOwner")
+  invoices   Invoice[]  @relation("InvoiceOwner")
+  apiKeys    ApiKey[]
+  mailboxes  Mailbox[]
+}
+
+// Sign-in attempts: drives rate limiting / lockout and the "recent sign-ins" list. Keyed by the
+// submitted email (even if no such user) so lockouts do not reveal which accounts exist.
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  ip        String?
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
+}
+
+// ───────────── companies module ─────────────
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  industry  String?
+  website   String?
+  phone     String?
+  address   String?
+  ownerId   String
+  owner     User     @relation("CompanyOwner", fields: [ownerId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contacts   Contact[]
+  deals      Deal[]
+  activities Activity[]
+  quotes     Quote[]
+  invoices   Invoice[]
+
+  @@index([ownerId])
+  @@index([name])
+}
+
+// ───────────── contacts module ─────────────
+model Contact {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String?
+  phone     String?
+  jobTitle  String?
+  source    String?
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  ownerId   String
+  owner     User     @relation("ContactOwner", fields: [ownerId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deals      Deal[]
+  activities Activity[]
+  quotes     Quote[]
+  invoices   Invoice[]
+
+  @@index([ownerId])
+  @@index([companyId])
+  @@index([lastName, firstName])
+}
+
+// ───────────── deals module ─────────────
+model Stage {
+  id          String  @id @default(cuid())
+  name        String
+  position    Int
+  probability Int     @default(0) // 0-100
+  kind        String  @default("OPEN") // OPEN | WON | LOST
+  deals       Deal[]
+}
+
+model Deal {
+  id                String    @id @default(cuid())
+  title             String
+  value             Float     @default(0)
+  currency          String    @default("SAR")
+  stageId           String
+  stage             Stage     @relation(fields: [stageId], references: [id])
+  position          Int       @default(0) // order inside a pipeline column
+  expectedCloseDate DateTime?
+  companyId         String?
+  company           Company?  @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  contactId         String?
+  contact           Contact?  @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  ownerId           String
+  owner             User      @relation("DealOwner", fields: [ownerId], references: [id])
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  activities Activity[]
+  quotes     Quote[]
+  invoices   Invoice[]
+
+  @@index([ownerId])
+  @@index([stageId])
+}
+
+// ───────────── activities module ─────────────
+model Activity {
+  id          String    @id @default(cuid())
+  type        String // CALL | MEETING | NOTE | FOLLOW_UP
+  subject     String
+  body        String?
+  dueAt       DateTime?
+  completedAt DateTime?
+  assigneeId  String
+  assignee    User      @relation("ActivityAssignee", fields: [assigneeId], references: [id])
+  creatorId   String
+  creator     User      @relation("ActivityCreator", fields: [creatorId], references: [id])
+  contactId   String?
+  contact     Contact?  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  companyId   String?
+  company     Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  dealId      String?
+  deal        Deal?     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  // Channel details for EMAIL / WHATSAPP entries: {channel, direction: in|out, to/from, status...}
+  meta        Json?
+  // Provider message id (e.g. "email:<message-id>", "wa:<wamid>"): makes inbound webhooks idempotent.
+  externalId  String?   @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([assigneeId, dueAt])
+  @@index([contactId])
+  @@index([companyId])
+  @@index([dealId])
+}
+
+// ───────────── custom fields (data-driven, shared by contacts/companies/deals) ─────────────
+model CustomFieldDef {
+  id       String  @id @default(cuid())
+  entity   String // CONTACT | COMPANY | DEAL
+  key      String
+  label    String
+  type     String // TEXT | NUMBER | DATE | DROPDOWN
+  options  Json? // string[] for DROPDOWN
+  required Boolean @default(false)
+  position Int     @default(0)
+
+  values CustomFieldValue[]
+
+  @@unique([entity, key])
+}
+
+model CustomFieldValue {
+  id       String         @id @default(cuid())
+  fieldId  String
+  field    CustomFieldDef @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  entity   String
+  recordId String
+  value    Json
+
+  @@unique([fieldId, recordId])
+  @@index([entity, recordId])
+}
+
+// ───────────── audit log ─────────────
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  entity    String
+  recordId  String
+  action    String // CREATE | UPDATE | DELETE | IMPORT | MOVE
+  changes   Json?
+  createdAt DateTime @default(now())
+
+  @@index([entity, recordId])
+  @@index([createdAt])
+}
+
+// ───────────── settings & numbering (shared) ─────────────
+// Generic key/value store: company profile, integrations, etc. Secrets are encrypted before they are stored.
+model Setting {
+  key   String @id
+  value Json
+}
+
+model Counter {
+  key   String @id // e.g. "quote:2026"
+  value Int    @default(0)
+}
+
+// ───────────── products / quotes / invoices ─────────────
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  sku         String?
+  description String?
+  unitPrice   Float    @default(0)
+  vatRate     Float    @default(15) // percent
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([name])
+}
+
+model Quote {
+  id         String      @id @default(cuid())
+  number     String      @unique // Q-2026-0001
+  status     String      @default("DRAFT") // DRAFT | SENT | ACCEPTED | REJECTED
+  issueDate  DateTime    @default(now())
+  validUntil DateTime?
+  companyId  String?
+  company    Company?    @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  contactId  String?
+  contact    Contact?    @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  dealId     String?
+  deal       Deal?       @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  ownerId    String
+  owner      User        @relation("QuoteOwner", fields: [ownerId], references: [id])
+  notes      String?
+  terms      String?
+  lines      QuoteLine[]
+  invoices   Invoice[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([ownerId])
+  @@index([status])
+}
+
+model QuoteLine {
+  id          String  @id @default(cuid())
+  quoteId     String
+  quote       Quote   @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  position    Int     @default(0)
+  productId   String?
+  description String
+  qty         Float   @default(1)
+  unitPrice   Float   @default(0)
+  discountPct Float   @default(0)
+  vatRate     Float   @default(15)
+
+  @@index([quoteId])
+}
+
+model Invoice {
+  id           String        @id @default(cuid())
+  number       String        @unique // INV-2026-0001
+  uuid         String        @unique @default(uuid()) // ZATCA invoice UUID
+  status       String        @default("DRAFT") // DRAFT | ISSUED | PAID | CANCELLED
+  issueDate    DateTime      @default(now())
+  issuedAt     DateTime? // set when the invoice is issued (locks it)
+  dueDate      DateTime?
+  paidAt       DateTime?
+  quoteId      String?
+  quote        Quote?        @relation(fields: [quoteId], references: [id], onDelete: SetNull)
+  dealId       String?
+  deal         Deal?         @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  companyId    String?
+  company      Company?      @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  contactId    String?
+  contact      Contact?      @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  ownerId      String
+  owner        User          @relation("InvoiceOwner", fields: [ownerId], references: [id])
+  // Buyer details are copied onto the invoice so later edits to the company don't change issued invoices.
+  buyerName    String
+  buyerVat     String?
+  buyerAddress String?
+  notes        String?
+  lines        InvoiceLine[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([ownerId])
+  @@index([status])
+}
+
+model InvoiceLine {
+  id          String  @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  position    Int     @default(0)
+  description String
+  qty         Float   @default(1)
+  unitPrice   Float   @default(0)
+  discountPct Float   @default(0)
+  vatRate     Float   @default(15)
+
+  @@index([invoiceId])
+}
+
+// ───────────── public API ─────────────
+// An API key acts as a user: it inherits that user's role and record scope. Only a SHA-256 hash is stored.
+model ApiKey {
+  id         String    @id @default(cuid())
+  name       String
+  prefix     String // first characters, shown in the UI to identify the key
+  hash       String    @unique
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scope      String    @default("READ") // READ | WRITE
+  lastUsedAt DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model Webhook {
+  id         String            @id @default(cuid())
+  url        String
+  secret     String // encrypted (core/crypto) — used to sign deliveries
+  events     String            @default("*") // comma-separated, or "*"
+  active     Boolean           @default(true)
+  createdAt  DateTime          @default(now())
+  deliveries WebhookDelivery[]
+}
+
+model WebhookDelivery {
+  id            String   @id @default(cuid())
+  webhookId     String
+  webhook       Webhook  @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  event         String
+  status        String   @default("PENDING") // PENDING | SUCCESS | FAILED
+  attempts      Int      @default(0)
+  responseCode  Int?
+  error         String?
+  createdAt     DateTime @default(now())
+  lastAttemptAt DateTime?
+
+  @@index([webhookId, createdAt])
+}
+
+// ───────────── mailbox sync (IMAP) ─────────────
+// A connected mailbox is polled for new mail; messages to/from known contacts land on their timelines.
+// ownerId = set → only that user's contacts are matched (a rep's own mailbox); null → shared mailbox, all contacts.
+model Mailbox {
+  id           String    @id @default(cuid())
+  name         String
+  host         String
+  port         Int       @default(993)
+  encryption   String    @default("TLS") // TLS | STARTTLS | NONE
+  username     String
+  password     String // encrypted (core/crypto)
+  folders      String    @default("INBOX,[sent]") // comma-separated; [sent] = the folder flagged \Sent
+  ownerId      String?
+  owner        User?     @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  enabled      Boolean   @default(true)
+  lookbackDays Int       @default(30) // how far back the very first sync reaches
+  lastSyncAt   DateTime?
+  lastError    String?
+  lastResult   String?
+  syncingSince DateTime? // cross-process lock (expires after 10 minutes)
+  state        Json? // { "<folder>": { uidValidity, lastUid } }
+  createdAt    DateTime  @default(now())
+}

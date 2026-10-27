@@ -1,0 +1,7 @@
+First Name,Surname,E-mail,Mobile,Title,Organization,Tier
+Nasser,Al-Test,nasser@newco.sa,+966500000001,CTO,NewCo Ltd,Gold
+Hind,Al-Test,hind@newco.sa,+966500000002,CFO,NewCo Ltd,
+Bad,,bad@x.sa,,,,
+Dup,Person,abdullah.alanazi@redseahospitality.sa,,,Red Sea Hospitality,
+Notanemail,Person,not-an-email,,,,
+=cmd|calc,Inject,inj@x.sa,,,,
