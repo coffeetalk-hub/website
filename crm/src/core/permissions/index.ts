@@ -13,7 +13,8 @@ export type Resource =
   | "user"
   | "settings"
   | "import"
-  | "export";
+  | "export"
+  | "report";
 export type Action = "read" | "create" | "update" | "delete" | "manage";
 
 /**
@@ -23,9 +24,9 @@ export type Action = "read" | "create" | "update" | "delete" | "manage";
  */
 type Grant = "own" | "all" | false;
 const matrix: Record<Role, Record<Resource, Grant>> = {
-  ADMIN: { contact: "all", company: "all", deal: "all", activity: "all", user: "all", settings: "all", import: "all", export: "all" },
-  MANAGER: { contact: "all", company: "all", deal: "all", activity: "all", user: false, settings: false, import: "all", export: "all" },
-  REP: { contact: "own", company: "own", deal: "own", activity: "own", user: false, settings: false, import: "own", export: "own" },
+  ADMIN: { contact: "all", company: "all", deal: "all", activity: "all", user: "all", settings: "all", import: "all", export: "all", report: "all" },
+  MANAGER: { contact: "all", company: "all", deal: "all", activity: "all", user: false, settings: false, import: "all", export: "all", report: "all" },
+  REP: { contact: "own", company: "own", deal: "own", activity: "own", user: false, settings: false, import: "own", export: "own", report: "own" },
 };
 
 export class ForbiddenError extends Error {

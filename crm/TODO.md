@@ -8,6 +8,7 @@
 - **Data retention**: deletes are hard deletes (audit entry stays). Do you want soft delete / recycle bin?
 - **Duplicate handling** on import: currently skips existing email (contacts) / name (companies). Merge instead?
 - **Lost-reason / won-reason** on deals: not captured yet.
+- **Closed date**: reports use the *expected* close date for won/lost deals. Add a `closedAt` (set when a deal enters a Won/Lost stage) for exact revenue timing?
 
 ## Planned features (not started)
 - [x] Arabic translation + RTL layout (done; see README → Design for change)
@@ -15,7 +16,8 @@
 - [ ] Translate the demo seed data / default stage names, or ship an Arabic seed variant
 - [ ] Email integration (send/log email from contact page, IMAP/Gmail sync)
 - [ ] WhatsApp integration (Business API: message log on timeline, templates)
-- [ ] Reports (saved reports, date ranges, export), forecasting by owner
+- [x] Reports: sales / pipeline / activity with date ranges and CSV export (done)
+- [ ] Reports v2: saved & scheduled reports, rep targets/quotas, charts for pipeline & activity, drill-down from a number to its deals, comparison with the previous period
 - [ ] Quotes / invoices (products catalogue, PDF, ZATCA e-invoicing for KSA)
 - [ ] Public REST API + API keys / webhooks
 - [ ] Notifications (email / push for due tasks), task reminders

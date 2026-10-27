@@ -36,8 +36,16 @@ Other scripts: `npm run build`, `npm start`, `npm run typecheck`, `npm run lint`
 | Tasks | `/tasks` | calls, meetings, notes, follow-ups; due dates; assignee; quick-add on record pages |
 | Users | `/users` | Admin only |
 | Settings | `/settings` | Admin only: pipeline stages, custom fields |
+| Reports | `/reports` | Sales (won revenue, win rate, by rep, by lead source), Pipeline (by stage, weighted forecast by close month, largest open deals), Activity (calls/meetings/tasks per rep); date range + owner filters; CSV export per tab |
 | Import/Export | `/import-export` | CSV with column mapping + preview; export includes custom fields |
 | Search | `/search` | global search box in the header |
+
+## Report definitions
+
+- **Sales**: deals are counted by their *expected close date* falling in the chosen period; **won/lost** is the deal's *current stage kind*. (There is no separate "closed on" date yet; see `TODO.md`.) Win rate = won ÷ (won + lost). Average deal = won revenue ÷ won deals.
+- **Pipeline**: a snapshot of *open* deals right now (the date range does not apply). Weighted = value × stage probability. Forecast groups open deals by expected close month (overdue / next 12 months / later / no date).
+- **Activity**: activities counted by *created* date, completed tasks by *completed* date, overdue = open tasks whose due date has passed (now).
+- Reps see only their own numbers; managers/admins can filter by owner. The CSV export applies the same filters and permissions.
 
 ## Roles & permissions
 

@@ -165,8 +165,10 @@ export default async function DashboardPage() {
             ) : (
               <ul className="divide-y text-sm">
                 {d.recent.map((l) => {
-                  const label = (l.changes as { name?: string; title?: string; subject?: string } | null) ?? {};
-                  const name = label.name ?? label.title ?? label.subject;
+                  // `changes` holds the plain value on create/delete, or a {from, to} pair on update.
+                  const label = (l.changes as Record<string, unknown> | null) ?? {};
+                  const text_ = (v: unknown) => (typeof v === "string" ? v : v && typeof v === "object" && typeof (v as { to?: unknown }).to === "string" ? (v as { to: string }).to : undefined);
+                  const name = text_(label.name) ?? text_(label.title) ?? text_(label.subject);
                   const route = ENTITY_ROUTE[l.entity];
                   const noun = (t.entities as Record<string, string>)[l.entity.toLowerCase()] ?? l.entity.toLowerCase();
                   const text = (
