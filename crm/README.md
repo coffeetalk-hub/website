@@ -25,6 +25,16 @@ Demo logins (password `password123`):
 
 Other scripts: `npm run build`, `npm start`, `npm run typecheck`, `npm run lint`, `npm run db:seed` (re-seed; wipes data), `npx prisma studio`.
 
+## Starting with your own data
+
+The demo data is only for trying things out. To wipe it and start empty (one admin + the default pipeline stages):
+
+```
+ADMIN_EMAIL=you@company.com ADMIN_PASSWORD='a long password' ADMIN_NAME='Your Name' npm run db:init
+```
+
+Then sign in, set your company profile (Settings), add your team (Users), and import contacts/companies from CSV (Import / Export). **This deletes everything in the database.**
+
 ## Tests
 
 End-to-end tests (Playwright) live in `e2e/` and cover sign-in and permissions, CRUD, the Kanban drag-and-drop, tasks and the dashboard (including a regression test for the edit-then-dashboard crash), users, settings and custom fields, CSV import/export, security (lockout, forced password change, session revocation), reports (figures are checked against the database), and Arabic/RTL.
