@@ -7,6 +7,8 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
+  // Node-only libraries that should not be bundled
+  serverExternalPackages: ["imapflow", "mailparser", "nodemailer"],
   poweredByHeader: false,
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];

@@ -7,6 +7,9 @@ import { checkWhatsApp, regenerateInboundToken, saveEmailConfig, saveWhatsAppCon
 import { getWhatsAppSettings } from "@/core/whatsapp";
 import { db } from "@/core/db";
 import { Select } from "@/components/ui/input";
+import { addMailbox, deleteMailbox, syncMailboxNow, toggleMailbox } from "@/modules/mailsync/actions";
+import { ENCRYPTIONS } from "@/core/mailsync";
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +24,7 @@ export default async function IntegrationsPage({ searchParams }: { searchParams:
   const error = strParam(sp.error);
   const email = await getEmailSettings();
   const wa = await getWhatsAppSettings();
+  const mailboxes = await db.mailbox.findMany({ include: { owner: { select: { name: true } } }, orderBy: { createdAt: "asc" } });
   const users = await db.user.findMany({ where: { active: true }, select: { id: true, name: true }, orderBy: { name: "asc" } });
   const base = process.env.NEXT_PUBLIC_APP_URL ?? "https://your-crm.example.com";
   const inboundToken = email.inboundToken ? decryptSecret(email.inboundToken) : null;
@@ -122,6 +126,89 @@ export default async function IntegrationsPage({ searchParams }: { searchParams:
               <dd>{wa.verifyToken ? <code dir="ltr" className="break-all rounded bg-secondary px-2 py-1 text-xs" data-testid="wa-verify">{wa.verifyToken}</code> : "—"}</dd>
             </div>
           </dl>
+        </CardContent>
+      </Card>
+
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle className="text-base">{t.integrations.mailbox.title}</CardTitle>
+          <p className="text-sm text-muted-foreground">{t.integrations.mailbox.help}</p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Table>
+            <THead>
+              <TR>
+                <TH>{t.integrations.mailbox.name}</TH>
+                <TH className="hidden sm:table-cell">{t.integrations.mailbox.owner}</TH>
+                <TH>{t.integrations.mailbox.lastSync}</TH>
+                <TH />
+              </TR>
+            </THead>
+            <TBody>
+              {mailboxes.map((m) => {
+                const r = m.lastResult ? (JSON.parse(m.lastResult) as { imported: number; scanned: number }) : null;
+                return (
+                  <TR key={m.id} data-testid="mailbox-row">
+                    <TD>
+                      <div className="font-medium">{m.name}</div>
+                      <div dir="ltr" className="text-xs text-muted-foreground">{m.username}@{m.host}</div>
+                      {!m.enabled && <div className="text-xs text-muted-foreground">{t.integrations.mailbox.paused}</div>}
+                    </TD>
+                    <TD className="hidden sm:table-cell">{m.owner?.name ?? t.integrations.mailbox.shared}</TD>
+                    <TD className="text-xs">
+                      {m.lastSyncAt ? t.dateTime(m.lastSyncAt) : t.integrations.mailbox.never}
+                      {m.lastError ? <div className="text-destructive" data-testid="mailbox-error">{m.lastError}</div> : r ? <div className="text-muted-foreground" data-testid="mailbox-result">{t.tpl(t.integrations.mailbox.lastResult, { imported: r.imported, scanned: r.scanned })}</div> : null}
+                    </TD>
+                    <TD>
+                      <div className="flex flex-wrap gap-1">
+                        <ActionButton action={syncMailboxNow.bind(null, m.id)}>{t.integrations.mailbox.syncNow}</ActionButton>
+                        <ActionButton action={toggleMailbox.bind(null, m.id)}>{m.enabled ? t.integrations.mailbox.disable : t.integrations.mailbox.enable}</ActionButton>
+                        <ActionButton action={deleteMailbox.bind(null, m.id)} confirmText={t.common.confirmDelete} className="text-destructive">{t.common.delete}</ActionButton>
+                      </div>
+                    </TD>
+                  </TR>
+                );
+              })}
+              {mailboxes.length === 0 && (
+                <TR>
+                  <TD colSpan={4} className="py-6 text-center text-muted-foreground">{t.integrations.mailbox.none}</TD>
+                </TR>
+              )}
+            </TBody>
+          </Table>
+          <form action={addMailbox} className="grid gap-3 border-t pt-4 sm:grid-cols-3" data-testid="mailbox-form">
+            <label className="space-y-1 text-sm">{t.integrations.mailbox.name}<Input name="name" required /></label>
+            <label className="space-y-1 text-sm">{t.integrations.mailbox.host}<Input name="host" dir="ltr" placeholder="imap.example.com" required /></label>
+            <label className="space-y-1 text-sm">{t.integrations.mailbox.port}<Input name="port" type="number" defaultValue={993} required /></label>
+            <label className="space-y-1 text-sm">
+              {t.integrations.mailbox.encryption}
+              <Select name="encryption" defaultValue="TLS">
+                {ENCRYPTIONS.map((e) => (
+                  <option key={e} value={e}>{t.integrations.mailbox.encryptions[e]}</option>
+                ))}
+              </Select>
+            </label>
+            <label className="space-y-1 text-sm">{t.integrations.mailbox.username}<Input name="username" dir="ltr" autoComplete="off" required /></label>
+            <label className="space-y-1 text-sm">{t.integrations.mailbox.password}<Input name="password" type="password" autoComplete="new-password" required /></label>
+            <label className="space-y-1 text-sm">{t.integrations.mailbox.folders}<Input name="folders" dir="ltr" defaultValue="INBOX,[sent]" /><span className="text-xs text-muted-foreground">{t.integrations.mailbox.foldersHelp}</span></label>
+            <label className="space-y-1 text-sm">
+              {t.integrations.mailbox.owner}
+              <Select name="ownerId" defaultValue="">
+                <option value="">{t.integrations.mailbox.shared}</option>
+                {users.map((u) => (
+                  <option key={u.id} value={u.id}>{u.name}</option>
+                ))}
+              </Select>
+            </label>
+            <label className="space-y-1 text-sm">{t.integrations.mailbox.lookback}<Input name="lookbackDays" type="number" min={1} max={365} defaultValue={30} /></label>
+            <label className="flex items-center gap-2 text-sm sm:col-span-3">
+              <input type="checkbox" name="enabled" defaultChecked className="h-4 w-4 accent-[hsl(var(--coral))]" />
+              {t.integrations.mailbox.autoSync}
+            </label>
+            <div className="sm:col-span-3">
+              <Button size="sm">{t.integrations.mailbox.add}</Button>
+            </div>
+          </form>
         </CardContent>
       </Card>
     </>

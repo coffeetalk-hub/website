@@ -17,6 +17,10 @@ const daysFromNow = (d: number, hour = 10) => {
 
 async function main() {
   await db.$transaction([
+    db.webhookDelivery.deleteMany(),
+    db.webhook.deleteMany(),
+    db.apiKey.deleteMany(),
+    db.mailbox.deleteMany(),
     db.invoiceLine.deleteMany(),
     db.invoice.deleteMany(),
     db.quoteLine.deleteMany(),

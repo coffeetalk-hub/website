@@ -12,5 +12,5 @@ export default defineConfig({
   use: { baseURL: "http://localhost:3100", viewport: { width: 1300, height: 900 }, trace: "retain-on-failure" },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"], viewport: { width: 1300, height: 900 } } }],
   // WEBHOOK_ALLOW_PRIVATE lets the webhook tests deliver to a receiver on localhost (blocked by default as an SSRF guard).
-  webServer: { command: "npx next start -p 3100", url: "http://localhost:3100/login", reuseExistingServer: true, timeout: 60_000, env: { WEBHOOK_ALLOW_PRIVATE: "1", WHATSAPP_API_BASE: "http://127.0.0.1:4010/v21.0" } },
+  webServer: { command: "npx next start -p 3100", url: "http://localhost:3100/login", reuseExistingServer: true, timeout: 60_000, env: { WEBHOOK_ALLOW_PRIVATE: "1", WHATSAPP_API_BASE: "http://127.0.0.1:4010/v21.0", MAIL_ALLOW_PRIVATE: "1", MAIL_SYNC_INTERVAL_SECONDS: "4" } },
 });

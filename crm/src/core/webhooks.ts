@@ -1,8 +1,7 @@
 import { createHmac, randomBytes } from "node:crypto";
-import dns from "node:dns/promises";
-import net from "node:net";
 import { db } from "@/core/db";
 import { decryptSecret } from "@/core/crypto";
+import { assertPublicHost } from "@/core/netguard";
 
 import { WEBHOOK_EVENTS } from "@/core/webhooks-events";
 export { WEBHOOK_EVENTS };
@@ -11,16 +10,6 @@ const PREFIX: Record<string, string> = { Contact: "contact", Company: "company",
 const VERB: Record<string, string> = { CREATE: "created", UPDATE: "updated", DELETE: "deleted", MOVE: "moved" };
 
 export const newWebhookSecret = () => "whsec_" + randomBytes(24).toString("base64url");
-
-// ── SSRF guard: webhooks may only call public http(s) hosts unless explicitly allowed (dev/tests) ──
-function isPrivateIp(ip: string) {
-  if (net.isIPv4(ip)) {
-    const [a, b] = ip.split(".").map(Number);
-    return a === 10 || a === 127 || a === 0 || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) || (a === 100 && b >= 64 && b <= 127);
-  }
-  const v = ip.toLowerCase();
-  return v === "::1" || v === "::" || v.startsWith("fc") || v.startsWith("fd") || v.startsWith("fe80") || v.startsWith("::ffff:127.") || v.startsWith("::ffff:10.") || v.startsWith("::ffff:192.168.");
-}
 
 export async function assertSafeWebhookUrl(raw: string) {
   let u: URL;
@@ -32,9 +21,7 @@ export async function assertSafeWebhookUrl(raw: string) {
   if (u.protocol !== "https:" && u.protocol !== "http:") throw new Error("Only http(s) URLs are allowed");
   if (process.env.WEBHOOK_ALLOW_PRIVATE === "1") return u;
   if (process.env.NODE_ENV === "production" && u.protocol !== "https:") throw new Error("Webhook URLs must use https");
-  const host = u.hostname.replace(/^\[|\]$/g, "");
-  const addrs = net.isIP(host) ? [{ address: host }] : await dns.lookup(host, { all: true });
-  if (addrs.some((a) => isPrivateIp(a.address))) throw new Error("Webhook URL points to a private or internal address");
+  await assertPublicHost(u.hostname, "WEBHOOK_ALLOW_PRIVATE");
   return u;
 }
 

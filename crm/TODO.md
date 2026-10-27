@@ -15,7 +15,8 @@
 - [ ] Native-speaker review of the Arabic wording (terminology such as pipeline/deal/stage) and of RTL polish on every screen
 - [ ] Translate the demo seed data / default stage names, or ship an Arabic seed variant
 - [x] Email: send/log from contact pages via SMTP, inbound webhook endpoint (done)
-- [ ] Email v2: IMAP/Gmail/Microsoft Graph sync, attachments, HTML + signatures, templates/merge fields, open tracking
+- [x] IMAP mailbox sync (read-only, shared or per-user owned)
+- [ ] Email v2: Gmail/Microsoft OAuth, per-user self-service mailboxes, IMAP IDLE, attachments storage, threading, HTML + signatures, templates/merge fields, open tracking, multi-node scheduler
 - [x] WhatsApp Cloud API: send text/template, inbound + delivery receipts, auto-create contacts (done, tested against a mock)
 - [ ] WhatsApp v2: media in/out, a shared inbox view, template manager (list/sync approved templates), multiple numbers, conversation assignment
 - [ ] Live verification of Email/WhatsApp with real accounts (only verified against local SMTP / mock Graph API so far)

@@ -292,7 +292,9 @@ test("webhooks: signed deliveries for subscribed events only, secret stored encr
     }
 
     // a disabled webhook receives nothing
-    const before = rx.hits.length;
+    // let in-flight deliveries from the steps above (the first hook receives every event) settle first
+    let before = -1;
+    while (before !== rx.hits.length) { before = rx.hits.length; await new Promise((r) => setTimeout(r, 1200)); }
     await db.webhook.update({ where: { id: row!.id }, data: { active: false } });
     const c3 = (await (await send(request, admin.key, "post", "/contacts", { firstName: "Quiet", lastName: "Hook" })).json()).data;
     await new Promise((r) => setTimeout(r, 1500));

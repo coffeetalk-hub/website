@@ -4,7 +4,7 @@ import { Phone, Users, StickyNote, CalendarClock, CheckCircle2, Mail, MessageCir
 
 const icons = { CALL: Phone, MEETING: Users, NOTE: StickyNote, FOLLOW_UP: CalendarClock, EMAIL: Mail, WHATSAPP: MessageCircle } as const;
 
-type Meta = { direction?: "in" | "out"; sent?: boolean; to?: string; from?: string; status?: string } | null;
+type Meta = { direction?: "in" | "out"; sent?: boolean; to?: string; from?: string; status?: string; attachments?: string[] } | null;
 
 export type TimelineItem = {
   id: string;
@@ -49,6 +49,7 @@ export async function Timeline({ items }: { items: TimelineItem[] }) {
                 <Link href={`/tasks/${a.id}/edit`} dir="auto" className="font-medium hover:underline">{a.subject}</Link>
                 {a.completedAt && <CheckCircle2 className="h-4 w-4 text-green-600" />}
               </div>
+              {meta?.attachments?.length ? <p dir="auto" className="mt-0.5 text-xs text-muted-foreground">📎 {meta.attachments.join(", ")}</p> : null}
               {a.body && <p dir="auto" className="mt-0.5 whitespace-pre-wrap text-sm text-muted-foreground">{a.body}</p>}
               <p className="mt-0.5 text-xs text-muted-foreground">
                 {t.tasks.types[a.type as keyof typeof t.tasks.types] ?? a.type} {channel && `(${channel})`} · {a.assignee.name} ·{" "}

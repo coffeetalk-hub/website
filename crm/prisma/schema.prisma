@@ -35,6 +35,7 @@ model User {
   quotes     Quote[]    @relation("QuoteOwner")
   invoices   Invoice[]  @relation("InvoiceOwner")
   apiKeys    ApiKey[]
+  mailboxes  Mailbox[]
 }
 
 // Sign-in attempts: drives rate limiting / lockout and the "recent sign-ins" list. Keyed by the
@@ -362,4 +363,28 @@ model WebhookDelivery {
   lastAttemptAt DateTime?
 
   @@index([webhookId, createdAt])
+}
+
+// ───────────── mailbox sync (IMAP) ─────────────
+// A connected mailbox is polled for new mail; messages to/from known contacts land on their timelines.
+// ownerId = set → only that user's contacts are matched (a rep's own mailbox); null → shared mailbox, all contacts.
+model Mailbox {
+  id           String    @id @default(cuid())
+  name         String
+  host         String
+  port         Int       @default(993)
+  encryption   String    @default("TLS") // TLS | STARTTLS | NONE
+  username     String
+  password     String // encrypted (core/crypto)
+  folders      String    @default("INBOX,[sent]") // comma-separated; [sent] = the folder flagged \Sent
+  ownerId      String?
+  owner        User?     @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  enabled      Boolean   @default(true)
+  lookbackDays Int       @default(30) // how far back the very first sync reaches
+  lastSyncAt   DateTime?
+  lastError    String?
+  lastResult   String?
+  syncingSince DateTime? // cross-process lock (expires after 10 minutes)
+  state        Json? // { "<folder>": { uidValidity, lastUid } }
+  createdAt    DateTime  @default(now())
 }

@@ -85,7 +85,7 @@ Both channels log to the **contact's timeline** (Contacts → open a contact →
 
 **Email (SMTP)**
 - *Sending:* enter your SMTP host/port/user/password and a From address (Gmail/Microsoft 365 app passwords, SES, Mailgun, … all work). Reps can email their own contacts; limit 30 emails per user per hour. A message is logged only if the SMTP server accepted it. "Only log in the timeline" records an email you sent elsewhere.
-- *Receiving:* the CRM does **not** poll mailboxes (no IMAP). Instead point your mail provider's inbound webhook, or a Zapier/Make/n8n step, at `POST /api/inbound/email` with `Authorization: Bearer <token>` (shown on the page; regenerate to rotate) and JSON `{ "from", "subject", "text" | "html", "messageId", "date" }`. Mail from addresses that match a contact (case-insensitive) is added to that contact's timeline; anything else is ignored. Repeated `messageId`s are ignored, so retries are safe.
+- *Receiving:* the CRM can also poll mailboxes over IMAP (see *Mailbox sync* below), or you can point your mail provider's inbound webhook, or a Zapier/Make/n8n step, at `POST /api/inbound/email` with `Authorization: Bearer <token>` (shown on the page; regenerate to rotate) and JSON `{ "from", "subject", "text" | "html", "messageId", "date" }`. Mail from addresses that match a contact (case-insensitive) is added to that contact's timeline; anything else is ignored. Repeated `messageId`s are ignored, so retries are safe.
 - Not included: attachments, HTML composing, open/click tracking, threading.
 
 **WhatsApp (Meta Cloud API)**
@@ -96,6 +96,19 @@ Both channels log to the **contact's timeline** (Contacts → open a contact →
 - `WHATSAPP_API_BASE` (env, default `https://graph.facebook.com/v21.0`) lets you pin another Graph API version or point at a mock.
 
 > **Verification status:** both integrations are covered by automated tests against a real local SMTP server and a local stand-in for Meta's Graph API. They have **not** been run against a live mail provider or a live WhatsApp Business account (that needs your credentials), so do a real send/receive check after configuring.
+
+## Mailbox sync (IMAP)
+
+Settings → Integrations → *Mailbox sync* (admin only) pulls mail from an IMAP mailbox into contact timelines.
+
+- Add host, port, encryption (TLS / STARTTLS), username and password (use an **app password**; Gmail/Microsoft OAuth is not supported). The connection is tested before saving; the password is stored encrypted.
+- *Folders*: comma list, default `INBOX,[sent]` (`[sent]` resolves via the `\Sent` special-use flag or common names). INBOX mail matches the **From** address; Sent mail matches **To/Cc**. One timeline entry per matched contact; unmatched mail is ignored.
+- *Lookback* applies to the first sync only; later runs are incremental per folder (UID + UIDVALIDITY), at most 200 messages per run.
+- A mailbox can be shared (matches every contact) or owned by one user (matches only that user's contacts).
+- Read-only: the CRM never sets flags, moves or deletes mail. Attachments are not stored, only their names. Duplicates are skipped across IMAP, SMTP send and the inbound webhook.
+- Runs every `MAIL_SYNC_INTERVAL_SECONDS` (default 300, `0` disables) plus a "Sync now" button. Single-node timer only.
+- `MAIL_ALLOW_PRIVATE=1` allows private/loopback hosts and unencrypted connections (dev/tests only).
+- Verified only against a local IMAP test server, not a live provider.
 
 ## Report definitions
 

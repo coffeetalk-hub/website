@@ -3,6 +3,7 @@ import { db } from "@/core/db";
 import { decryptSecret } from "@/core/crypto";
 import { getEmailSettings } from "@/core/email";
 import { logAudit } from "@/core/audit";
+import { stripHtml } from "@/core/text";
 
 // Incoming-email webhook. A mail provider / automation tool POSTs JSON here:
 //   { "from": "Ann <ann@x.com>", "subject": "...", "text": "...", "messageId": "<id>", "date": "ISO" }
@@ -11,7 +12,6 @@ const MAX_BODY = 20_000;
 const json = (b: unknown, status: number) => new Response(JSON.stringify(b), { status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } });
 
 const safeEqual = (a: string, b: string) => a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b));
-const stripHtml = (h: string) => h.replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>/gi, "").replace(/<br\s*\/?>|<\/p>/gi, "\n").replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim();
 
 export async function POST(req: Request) {
   const settings = await getEmailSettings();
