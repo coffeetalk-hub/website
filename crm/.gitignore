@@ -5,3 +5,5 @@ next-env.d.ts
 .env
 prisma/*.db
 prisma/*.db-journal
+test-results
+playwright-report

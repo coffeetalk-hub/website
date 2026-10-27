@@ -25,6 +25,18 @@ Demo logins (password `password123`):
 
 Other scripts: `npm run build`, `npm start`, `npm run typecheck`, `npm run lint`, `npm run db:seed` (re-seed; wipes data), `npx prisma studio`.
 
+## Tests
+
+End-to-end tests (Playwright) live in `e2e/` and cover sign-in and permissions, CRUD, the Kanban drag-and-drop, tasks and the dashboard (including a regression test for the edit-then-dashboard crash), users, settings and custom fields, CSV import/export, security (lockout, forced password change, session revocation), reports (figures are checked against the database), and Arabic/RTL.
+
+```bash
+npm run build          # tests run against the production build
+npm run test:e2e       # starts `next start` on :3100 if it isn't already running
+npm run test:e2e:ui    # interactive runner
+```
+
+**Warning:** each spec re-seeds the database (`npm run db:seed`), so run them against your dev database only, never real data. The first time on a new machine you may need `npx playwright install chromium`.
+
 ## What's in it
 
 | Module | Route | Notes |

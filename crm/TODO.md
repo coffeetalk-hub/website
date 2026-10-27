@@ -30,7 +30,8 @@
 - [ ] Two-factor auth (authenticator app), password reset by email (needs an email provider), Content-Security-Policy
 - [ ] Multi-tenant (add `organizationId` to every table + scope in `core/permissions`)
 - [ ] PostgreSQL (change provider in `prisma/schema.prisma`, `DATABASE_URL`, run `prisma migrate`)
-- [ ] Automated tests (Playwright smoke tests exist only as ad-hoc scripts)
+- [x] End-to-end test suite (`e2e/`, `npm run test:e2e`)
+- [ ] Run the e2e suite in CI (build, seed a throwaway DB, `npm run test:e2e`) and add unit tests for `core/permissions` and `core/forms`
 
 ## Known limitations
 - Browser-native pieces (date picker format, file chooser, required-field tooltips on Settings forms) follow the *browser* language, not the CRM language.
