@@ -51,6 +51,8 @@ npm run test:e2e:ui    # interactive runner
 | Products | `/products` | Price catalogue (managers/admins edit; reps read) |
 | Quotes | `/quotes` | Line items with live VAT totals, status flow (draft → sent → accepted/rejected), print/PDF, "Create quote" from a deal, create an invoice from an accepted quote |
 | Invoices | `/invoices` | Draft → issued → paid/cancelled; gap-free numbers assigned at issue; issued invoices are locked; bilingual print sheet with ZATCA QR |
+| Integrations | `/settings/integrations` | Admin: SMTP email and WhatsApp Business setup |
+| API & webhooks | `/settings/api` | Admin: API keys, webhooks, delivery log, quick-start |
 | Reports | `/reports` | Sales (won revenue, win rate, by rep, by lead source), Pipeline (by stage, weighted forecast by close month, largest open deals), Activity (calls/meetings/tasks per rep); date range + owner filters; CSV export per tab |
 | Import/Export | `/import-export` | CSV with column mapping + preview; export includes custom fields |
 | Search | `/search` | global search box in the header |
@@ -63,6 +65,37 @@ npm run test:e2e:ui    # interactive runner
 - **Printing:** the *Print / Save as PDF* button opens a clean, bilingual (English / Arabic) sheet; use the browser's print dialog to save a PDF. There is no server-side PDF generator.
 - **ZATCA Phase 1:** issued invoices carry the QR code (base64 TLV: seller name, VAT number, timestamp, total, VAT amount). **Phase 2 is not implemented** (UBL XML, cryptographic stamp, hash chain, clearance/reporting through ZATCA's API). That needs your ZATCA onboarding (CSID) and certificate, so it can't be done without your credentials. Until then, check with your accountant whether Phase 1 is enough for your invoice type.
 - Permissions: reps create and edit their own quotes; invoices are read-only for reps (managers/admins issue them).
+
+## Public API and webhooks
+
+- **REST API** under `/api/v1` (OpenAPI spec at `/api/v1/openapi.json`): contacts, companies, deals, tasks (create, read, update, delete), quotes and invoices (read-only), plus `/stages` and `/me`. JSON in/out, `page`/`limit` (max 100) pagination, `q` search, `updated_since`, field filters, custom fields under `custom`, errors as `{ "error": { "code", "message", "fields" } }`.
+- **Keys** are created by an admin in *Settings → API & webhooks*. A key **acts as a user**: it has that user's role and sees only that user's records (a rep's key can't read other reps' data), and a *Read only* key can't modify anything. Keys are shown once and stored only as a SHA-256 hash; revoke or disable the user to cut access immediately. Limit: 120 requests/minute per key (in-memory, single server).
+- **Webhooks:** the CRM POSTs a JSON event (`contact.created`, `deal.moved`, `invoice.issued`, … see the OpenAPI description) to your https URL. Each request is signed: header `X-CRM-Signature: t=<unix>,v1=<hex>` where `v1 = HMAC_SHA256(secret, "<t>.<raw body>")`; reject old timestamps. Failed deliveries are retried twice (2 s, 10 s) and logged. Secrets are stored encrypted. Events come from the audit log, so they fire for changes made in the app **and** through the API.
+- **Safety:** webhook URLs must be https and may not point at private/internal addresses (SSRF guard, redirects are not followed). For local development/tests set `WEBHOOK_ALLOW_PRIVATE=1`.
+
+```bash
+curl https://your-crm/api/v1/contacts?limit=5 -H "Authorization: Bearer crm_live_…"
+curl -X PATCH https://your-crm/api/v1/deals/<id> -H "Authorization: Bearer crm_live_…" \
+     -H "Content-Type: application/json" -d '{"stageId":"<id from /api/v1/stages>"}'
+```
+
+## Email and WhatsApp (Settings → Integrations)
+
+Both channels log to the **contact's timeline** (Contacts → open a contact → *Send email* / *Send WhatsApp message*). Secrets (SMTP password, WhatsApp token and app secret) are stored **encrypted** with a key derived from `SESSION_SECRET`: if you rotate that secret, re-enter them.
+
+**Email (SMTP)**
+- *Sending:* enter your SMTP host/port/user/password and a From address (Gmail/Microsoft 365 app passwords, SES, Mailgun, … all work). Reps can email their own contacts; limit 30 emails per user per hour. A message is logged only if the SMTP server accepted it. "Only log in the timeline" records an email you sent elsewhere.
+- *Receiving:* the CRM does **not** poll mailboxes (no IMAP). Instead point your mail provider's inbound webhook, or a Zapier/Make/n8n step, at `POST /api/inbound/email` with `Authorization: Bearer <token>` (shown on the page; regenerate to rotate) and JSON `{ "from", "subject", "text" | "html", "messageId", "date" }`. Mail from addresses that match a contact (case-insensitive) is added to that contact's timeline; anything else is ignored. Repeated `messageId`s are ignored, so retries are safe.
+- Not included: attachments, HTML composing, open/click tracking, threading.
+
+**WhatsApp (Meta Cloud API)**
+- Create a Meta developer app with the WhatsApp product, then enter the *Phone number ID*, a (permanent) *access token* and the *app secret*. In Meta → WhatsApp → Configuration set the callback URL and verify token shown on the page and subscribe to `messages`.
+- *Sending:* free text is only allowed within **24 hours of the customer's last message** (a WhatsApp rule); otherwise use an **approved template** (create and approve templates in Meta's dashboard, then enter its name, language and variables). Delivery receipts (sent → delivered → read, or failed) update the timeline entry.
+- *Receiving:* messages are matched to contacts by phone number (stored numbers are normalized with the *default country code*, so `0533548549`, `+966 53 354 8549` and `966533548549` match). Unknown numbers are ignored, or, if you enable it, create a new contact (source *WhatsApp*) owned by the chosen user. Webhook requests are rejected unless their `X-Hub-Signature-256` signature is valid.
+- Not included: sending/receiving media (incoming media shows as a placeholder like `[Image]`), interactive/list messages, multiple numbers.
+- `WHATSAPP_API_BASE` (env, default `https://graph.facebook.com/v21.0`) lets you pin another Graph API version or point at a mock.
+
+> **Verification status:** both integrations are covered by automated tests against a real local SMTP server and a local stand-in for Meta's Graph API. They have **not** been run against a live mail provider or a live WhatsApp Business account (that needs your credentials), so do a real send/receive check after configuring.
 
 ## Report definitions
 

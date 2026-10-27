@@ -10,6 +10,8 @@ import { getContact } from "@/modules/contacts/queries";
 import { deleteContact } from "@/modules/contacts/actions";
 import { Timeline } from "@/modules/activities/components/timeline";
 import { QuickAddActivity } from "@/modules/activities/components/quick-add";
+import { ComposeEmail } from "@/modules/email/components/compose-email";
+import { ComposeWhatsApp } from "@/modules/whatsapp/components/compose-whatsapp";
 import { AuditHistory } from "@/core/audit/history";
 import { PageHeader } from "@/components/page-header";
 import { CustomFieldsView, DetailItem } from "@/components/custom-fields";
@@ -70,6 +72,8 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
               <CardTitle>{t.contacts.timeline}</CardTitle>
             </CardHeader>
             <CardContent>
+              <ComposeEmail contactId={id} email={contact.email} />
+              <ComposeWhatsApp contactId={id} phone={contact.phone} />
               <QuickAddActivity user={user} returnTo={`/contacts/${id}`} links={{ contactId: id, companyId: contact.company?.id }} />
               <Timeline items={activities} />
             </CardContent>

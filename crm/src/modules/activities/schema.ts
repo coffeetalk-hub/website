@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ACTIVITY_TYPES = ["CALL", "MEETING", "NOTE", "FOLLOW_UP"] as const;
+export const ACTIVITY_TYPES = ["CALL", "MEETING", "NOTE", "FOLLOW_UP", "EMAIL", "WHATSAPP"] as const;
 
 export const activitySchema = z.object({
   type: z.enum(ACTIVITY_TYPES),

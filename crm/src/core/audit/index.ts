@@ -1,5 +1,6 @@
 import { db } from "@/core/db";
 import type { SessionUser } from "@/core/permissions";
+import { dispatchFromAudit } from "@/core/webhooks";
 
 export type AuditAction = "CREATE" | "UPDATE" | "DELETE" | "IMPORT" | "EXPORT" | "MOVE" | "LOGIN" | "PASSWORD";
 
@@ -33,4 +34,6 @@ export async function logAudit(
       changes: (changes ?? undefined) as never,
     },
   });
+  // Webhooks are driven by the audit trail, so every code path that is audited also notifies subscribers.
+  void dispatchFromAudit(entity, recordId, action, changes, user?.id ?? null).catch(() => {});
 }

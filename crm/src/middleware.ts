@@ -4,6 +4,9 @@ import { jwtVerify } from "jose";
 // Cheap gate: signature check only. Real authorization (active user, role,
 // ownership) happens server-side in every page/action via requireUser().
 export async function middleware(req: NextRequest) {
+  // Machine endpoints authenticate themselves (API key / webhook signature), not with the session cookie.
+  const path = req.nextUrl.pathname;
+  if (path.startsWith("/api/v1/") || path.startsWith("/api/webhooks/") || path.startsWith("/api/inbound/")) return NextResponse.next();
   const token = req.cookies.get("crm_session")?.value;
   const login = new URL("/login", req.url);
   let valid = false;

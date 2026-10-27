@@ -58,7 +58,7 @@ test("Arabic: every app screen has no untranslated UI text and no horizontal ove
   await p.click("button[aria-label=Language]");
   await expect.poll(() => html(p)).toBe("ar/rtl");
   // words that are record data, not UI text
-  const data = /^(Amal|Al-\w+|Mansour|Rakan|Reem|Lead|Qualified|Proposal|Negotiation|Won|Lost|Preferred|language|Birthday|Employees|Account|tier|Contract|term|months|Main|competitor|English|Arabic)$/i;
+  const data = /^(Amal|Al-\w+|Mansour|Rakan|Reem|Lead|Qualified|Proposal|Negotiation|Won|Lost|Preferred|language|Birthday|Employees|Account|tier|Contract|term|months|Main|competitor|English|Arabic|Webhooks?|WhatsApp|SMTP|OpenAPI)$/i; // plus technical terms kept in English
   for (const path of ["/dashboard", "/reports", "/reports?tab=pipeline", "/reports?tab=activity", "/users", "/settings", "/import-export", "/contacts/new", "/tasks/new", "/change-password"]) {
     await p.goto(path);
     const text = await p.locator("main").innerText();

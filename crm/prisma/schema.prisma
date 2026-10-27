@@ -34,6 +34,7 @@ model User {
   auditLogs  AuditLog[]
   quotes     Quote[]    @relation("QuoteOwner")
   invoices   Invoice[]  @relation("InvoiceOwner")
+  apiKeys    ApiKey[]
 }
 
 // Sign-in attempts: drives rate limiting / lockout and the "recent sign-ins" list. Keyed by the
@@ -152,6 +153,10 @@ model Activity {
   company     Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   dealId      String?
   deal        Deal?     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  // Channel details for EMAIL / WHATSAPP entries: {channel, direction: in|out, to/from, status...}
+  meta        Json?
+  // Provider message id (e.g. "email:<message-id>", "wa:<wamid>"): makes inbound webhooks idempotent.
+  externalId  String?   @unique
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -315,4 +320,46 @@ model InvoiceLine {
   vatRate     Float   @default(15)
 
   @@index([invoiceId])
+}
+
+// ───────────── public API ─────────────
+// An API key acts as a user: it inherits that user's role and record scope. Only a SHA-256 hash is stored.
+model ApiKey {
+  id         String    @id @default(cuid())
+  name       String
+  prefix     String // first characters, shown in the UI to identify the key
+  hash       String    @unique
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scope      String    @default("READ") // READ | WRITE
+  lastUsedAt DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model Webhook {
+  id         String            @id @default(cuid())
+  url        String
+  secret     String // encrypted (core/crypto) — used to sign deliveries
+  events     String            @default("*") // comma-separated, or "*"
+  active     Boolean           @default(true)
+  createdAt  DateTime          @default(now())
+  deliveries WebhookDelivery[]
+}
+
+model WebhookDelivery {
+  id            String   @id @default(cuid())
+  webhookId     String
+  webhook       Webhook  @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  event         String
+  status        String   @default("PENDING") // PENDING | SUCCESS | FAILED
+  attempts      Int      @default(0)
+  responseCode  Int?
+  error         String?
+  createdAt     DateTime @default(now())
+  lastAttemptAt DateTime?
+
+  @@index([webhookId, createdAt])
 }

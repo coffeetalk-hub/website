@@ -135,18 +135,20 @@ export async function getActivityReport(user: SessionUser, { range, ownerId }: F
     db.activity.findMany({ where: { ...base, completedAt: { gte: range.from, lte: range.to } }, select: { assignee: { select: { id: true, name: true } } } }),
     db.activity.findMany({ where: { ...base, completedAt: null, dueAt: { lt: startToday } }, select: { assignee: { select: { id: true, name: true } } } }),
   ]);
-  const rows = new Map<string, { name: string; CALL: number; MEETING: number; NOTE: number; FOLLOW_UP: number; completed: number; overdue: number }>();
-  const row = (u: { id: string; name: string }) => rows.get(u.id) ?? (rows.set(u.id, { name: u.name, CALL: 0, MEETING: 0, NOTE: 0, FOLLOW_UP: 0, completed: 0, overdue: 0 }), rows.get(u.id)!);
+  const rows = new Map<string, { name: string; CALL: number; MEETING: number; NOTE: number; FOLLOW_UP: number; EMAIL: number; WHATSAPP: number; completed: number; overdue: number }>();
+  const row = (u: { id: string; name: string }) => rows.get(u.id) ?? (rows.set(u.id, { name: u.name, CALL: 0, MEETING: 0, NOTE: 0, FOLLOW_UP: 0, EMAIL: 0, WHATSAPP: 0, completed: 0, overdue: 0 }), rows.get(u.id)!);
   for (const a of created) {
     const r = row(a.assignee);
     if (a.type === "CALL") r.CALL++;
     else if (a.type === "MEETING") r.MEETING++;
     else if (a.type === "NOTE") r.NOTE++;
     else if (a.type === "FOLLOW_UP") r.FOLLOW_UP++;
+    else if (a.type === "EMAIL") r.EMAIL++;
+    else if (a.type === "WHATSAPP") r.WHATSAPP++;
   }
   for (const a of completed) row(a.assignee).completed++;
   for (const a of overdue) row(a.assignee).overdue++;
-  const reps = [...rows.values()].map((r) => ({ ...r, total: r.CALL + r.MEETING + r.NOTE + r.FOLLOW_UP })).sort((a, b) => b.total - a.total);
-  const tot = (k: "CALL" | "MEETING" | "NOTE" | "FOLLOW_UP" | "completed" | "overdue" | "total") => reps.reduce((s, r) => s + r[k], 0);
-  return { reps, totals: { CALL: tot("CALL"), MEETING: tot("MEETING"), NOTE: tot("NOTE"), FOLLOW_UP: tot("FOLLOW_UP"), completed: tot("completed"), overdue: tot("overdue"), total: tot("total") } };
+  const reps = [...rows.values()].map((r) => ({ ...r, total: r.CALL + r.MEETING + r.NOTE + r.FOLLOW_UP + r.EMAIL + r.WHATSAPP })).sort((a, b) => b.total - a.total);
+  const tot = (k: "CALL" | "MEETING" | "NOTE" | "FOLLOW_UP" | "EMAIL" | "WHATSAPP" | "completed" | "overdue" | "total") => reps.reduce((s, r) => s + r[k], 0);
+  return { reps, totals: { CALL: tot("CALL"), MEETING: tot("MEETING"), NOTE: tot("NOTE"), FOLLOW_UP: tot("FOLLOW_UP"), EMAIL: tot("EMAIL"), WHATSAPP: tot("WHATSAPP"), completed: tot("completed"), overdue: tot("overdue"), total: tot("total") } };
 }

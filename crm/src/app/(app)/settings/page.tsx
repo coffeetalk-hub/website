@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getT } from "@/core/i18n/server";
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 import { db } from "@/core/db";
@@ -35,6 +36,14 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
   return (
     <>
       <PageHeader title={t.settings.title} />
+      <div className="mb-4 flex flex-wrap gap-2">
+        <Link href="/settings/api" className="inline-flex items-center gap-2 rounded-xl bg-card px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent">
+          {t.api.open}
+        </Link>
+        <Link href="/settings/integrations" className="inline-flex items-center gap-2 rounded-xl bg-card px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent">
+          {t.integrations.open}
+        </Link>
+      </div>
       {ok && <p className="mb-4 rounded-xl bg-secondary p-3 text-sm">{ok}</p>}
       {error && <p className="mb-4 rounded-xl bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
 

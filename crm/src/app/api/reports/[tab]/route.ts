@@ -35,8 +35,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ tab: str
     rows = d.byStage.map((s) => [s.name, s.probability, s.count, round(s.value), round(s.weighted), s.avgAgeDays]);
   } else if (tab === "activity") {
     const d = await getActivityReport(user, filters);
-    fields = [r.rep, r.calls, r.meetings, r.notes, r.followUps, r.total, r.completed, r.overdueTasks];
-    rows = d.reps.map((x) => [x.name, x.CALL, x.MEETING, x.NOTE, x.FOLLOW_UP, x.total, x.completed, x.overdue]);
+    fields = [r.rep, r.calls, r.meetings, r.notes, r.followUps, r.emails, r.whatsapps, r.total, r.completed, r.overdueTasks];
+    rows = d.reps.map((x) => [x.name, x.CALL, x.MEETING, x.NOTE, x.FOLLOW_UP, x.EMAIL, x.WHATSAPP, x.total, x.completed, x.overdue]);
   } else {
     return new Response("Not found", { status: 404 });
   }

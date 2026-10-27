@@ -29,6 +29,8 @@ export async function ActivityTab({ data }: { data: Awaited<ReturnType<typeof ge
                 <TH className={num}>{r.meetings}</TH>
                 <TH className={`${num} hidden sm:table-cell`}>{r.notes}</TH>
                 <TH className={`${num} hidden sm:table-cell`}>{r.followUps}</TH>
+                <TH className={`${num} hidden md:table-cell`}>{r.emails}</TH>
+                <TH className={`${num} hidden md:table-cell`}>{r.whatsapps}</TH>
                 <TH className={num}>{r.total}</TH>
                 <TH className={num}>{r.completed}</TH>
                 <TH className={num}>{r.overdueTasks}</TH>
@@ -42,6 +44,8 @@ export async function ActivityTab({ data }: { data: Awaited<ReturnType<typeof ge
                   <TD className={num}>{x.MEETING}</TD>
                   <TD className={`${num} hidden sm:table-cell`}>{x.NOTE}</TD>
                   <TD className={`${num} hidden sm:table-cell`}>{x.FOLLOW_UP}</TD>
+                  <TD className={`${num} hidden md:table-cell`}>{x.EMAIL}</TD>
+                  <TD className={`${num} hidden md:table-cell`}>{x.WHATSAPP}</TD>
                   <TD className={`${num} font-semibold`}>{x.total}</TD>
                   <TD className={num}>{x.completed}</TD>
                   <TD className={`${num} ${x.overdue ? "text-destructive" : ""}`}>{x.overdue}</TD>
@@ -49,7 +53,7 @@ export async function ActivityTab({ data }: { data: Awaited<ReturnType<typeof ge
               ))}
               {data.reps.length === 0 && (
                 <TR>
-                  <TD colSpan={8} className="py-6 text-center text-muted-foreground">
+                  <TD colSpan={10} className="py-6 text-center text-muted-foreground">
                     {r.noData}
                   </TD>
                 </TR>

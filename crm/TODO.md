@@ -14,13 +14,17 @@
 - [x] Arabic translation + RTL layout (done; see README → Design for change)
 - [ ] Native-speaker review of the Arabic wording (terminology such as pipeline/deal/stage) and of RTL polish on every screen
 - [ ] Translate the demo seed data / default stage names, or ship an Arabic seed variant
-- [ ] Email integration (send/log email from contact page, IMAP/Gmail sync)
-- [ ] WhatsApp integration (Business API: message log on timeline, templates)
+- [x] Email: send/log from contact pages via SMTP, inbound webhook endpoint (done)
+- [ ] Email v2: IMAP/Gmail/Microsoft Graph sync, attachments, HTML + signatures, templates/merge fields, open tracking
+- [x] WhatsApp Cloud API: send text/template, inbound + delivery receipts, auto-create contacts (done, tested against a mock)
+- [ ] WhatsApp v2: media in/out, a shared inbox view, template manager (list/sync approved templates), multiple numbers, conversation assignment
+- [ ] Live verification of Email/WhatsApp with real accounts (only verified against local SMTP / mock Graph API so far)
 - [x] Reports: sales / pipeline / activity with date ranges and CSV export (done)
 - [ ] Reports v2: saved & scheduled reports, rep targets/quotas, charts for pipeline & activity, drill-down from a number to its deals, comparison with the previous period
 - [x] Quotes / invoices with products catalogue, VAT, print sheet and ZATCA Phase 1 QR (done)
 - [ ] ZATCA Phase 2 (XML, signing, clearance/reporting): needs onboarding credentials; credit/debit notes; server-side PDF; recurring invoices; payment links; per-line product units
-- [ ] Public REST API + API keys / webhooks
+- [x] Public REST API v1, API keys and signed webhooks (done)
+- [ ] API v2 ideas: write access for quotes/invoices, bulk endpoints, idempotency keys, per-key rate limits in Redis, per-key resource scopes, webhook delivery redelivery button
 - [ ] Notifications (email / push for due tasks), task reminders
 - [ ] Files / attachments on records
 - [ ] Custom-field filters on list pages, custom fields on activities
