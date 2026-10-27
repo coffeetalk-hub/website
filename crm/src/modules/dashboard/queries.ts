@@ -29,7 +29,7 @@ export async function getDashboard(user: SessionUser) {
     db.activity.count({ where: { ...actScope, completedAt: null, dueAt: { lt: dayStart } } }),
     db.activity.findMany({ where: { ...actScope, completedAt: null, dueAt: { gte: monthStart, lt: monthEnd } }, select: { dueAt: true } }),
     db.auditLog.findMany({
-      where: { entity: { not: "System" }, ...(isPrivileged(user) ? {} : { userId: user.id }) },
+      where: { entity: { not: "System" }, action: { not: "LOGIN" }, ...(isPrivileged(user) ? {} : { userId: user.id }) },
       include: { user: { select: { name: true } } },
       orderBy: { createdAt: "desc" },
       take: 8,

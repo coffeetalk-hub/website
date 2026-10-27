@@ -14,8 +14,9 @@ function secret() {
   return new TextEncoder().encode(s);
 }
 
-export async function createSession(userId: string) {
-  const token = await new SignJWT({ uid: userId })
+/** `sv` is the user's sessionVersion: bumping it in the DB invalidates every existing cookie. */
+export async function createSession(userId: string, sessionVersion: number) {
+  const token = await new SignJWT({ uid: userId, sv: sessionVersion })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(`${MAX_AGE}s`)
@@ -40,17 +41,18 @@ export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
   try {
     const { payload } = await jwtVerify(token, secret());
     const user = await db.user.findUnique({ where: { id: String(payload.uid) } });
-    if (!user || !user.active) return null;
-    return { id: user.id, email: user.email, name: user.name, role: user.role as Role };
+    if (!user || !user.active || user.sessionVersion !== Number(payload.sv ?? 0)) return null;
+    return { id: user.id, email: user.email, name: user.name, role: user.role as Role, mustChangePassword: user.mustChangePassword };
   } catch {
     return null;
   }
 });
 
-/** Use at the top of every page and server action. */
+/** Use at the top of every page and server action. Users who must change their password can't use anything else. */
 export async function requireUser(): Promise<SessionUser> {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+  if (user.mustChangePassword) redirect("/change-password");
   return user;
 }
 

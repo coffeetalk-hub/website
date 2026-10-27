@@ -24,7 +24,8 @@
 - [ ] Bulk actions (reassign owner, bulk delete, bulk tag)
 - [ ] Tags / segments, lead scoring
 - [ ] Teams / territories (rep sees their team's records)
-- [ ] Two-factor auth, password reset by email, login rate limiting
+- [x] Login rate limiting, admin temporary passwords with forced change, session revocation (done)
+- [ ] Two-factor auth (authenticator app), password reset by email (needs an email provider), Content-Security-Policy
 - [ ] Multi-tenant (add `organizationId` to every table + scope in `core/permissions`)
 - [ ] PostgreSQL (change provider in `prisma/schema.prisma`, `DATABASE_URL`, run `prisma migrate`)
 - [ ] Automated tests (Playwright smoke tests exist only as ad-hoc scripts)
@@ -35,4 +36,4 @@
 - Money is SAR-only; the `Deal.currency` column exists but the UI does not expose it.
 - Pipeline column totals / dashboard sum raw values (fine while everything is SAR).
 - Kanban ordering for users who only see part of a column is per-visible-set.
-- Session cookie is a signed JWT (7 days); there is no server-side session revocation list (deactivating a user does take effect immediately because the user row is checked on every request).
+- Session cookie is a signed JWT (7 days). Revocation works through `User.sessionVersion` (password change, admin reset, sign out everywhere) and by deactivating the user; there is no per-device session list.

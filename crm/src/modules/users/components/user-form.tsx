@@ -1,6 +1,7 @@
 import { getT } from "@/core/i18n/server";
 import { ActionForm, Field } from "@/components/forms/action-form";
 import { Input, Select } from "@/components/ui/input";
+import { PasswordField } from "./password-field";
 import { ROLES } from "@/core/permissions";
 import type { ActionState } from "@/core/forms";
 
@@ -33,8 +34,12 @@ export async function UserForm({
           </Select>
         </Field>
         <Field name="password" label={editing ? t.users.newPassword : t.auth.password} required={!editing}>
-          <Input id="password" name="password" type="password" autoComplete="new-password" />
+          <PasswordField required={!editing} />
         </Field>
+        <label className="flex items-center gap-2 text-sm sm:col-span-2">
+          <input type="checkbox" name="mustChange" defaultChecked className="h-4 w-4 accent-[hsl(var(--coral))]" />
+          {t.auth.requireChange}
+        </label>
         {editing && (
           <label className="flex items-center gap-2 text-sm sm:col-span-2">
             <input type="checkbox" name="active" defaultChecked={initial?.active} className="h-4 w-4 accent-[hsl(var(--coral))]" />

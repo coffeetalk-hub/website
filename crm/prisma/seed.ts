@@ -17,6 +17,7 @@ const daysFromNow = (d: number, hour = 10) => {
 
 async function main() {
   await db.$transaction([
+    db.loginAttempt.deleteMany(),
     db.auditLog.deleteMany(),
     db.customFieldValue.deleteMany(),
     db.customFieldDef.deleteMany(),

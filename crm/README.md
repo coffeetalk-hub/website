@@ -92,9 +92,15 @@ Example: a "Products" module.
 
 ## Security notes
 
-- Passwords hashed with bcrypt; session = signed, httpOnly, sameSite=lax JWT cookie. Set a strong `SESSION_SECRET` in production and serve over HTTPS.
+- Passwords are hashed with bcrypt. The session is a signed, httpOnly, sameSite=lax JWT cookie. Set a strong `SESSION_SECRET` in production and serve over HTTPS.
+- **Sign-in throttling:** 5 failed attempts per email (or 25 per IP) in 15 minutes locks sign-in for the rest of the window, even with the right password. Unknown emails are throttled identically, so lockouts don't reveal which accounts exist. Attempts live in the `LoginAttempt` table (fine for one server; use Redis if you scale out). The IP comes from `x-forwarded-for`, so only trust it behind a proxy that sets that header.
+- **Temporary passwords:** admins can set or generate (**Generate** button, 14 random characters) a password for a user and tick *Require a new password at next sign-in*. That user can't open anything else until they choose their own at `/change-password`. Users can change their password any time by clicking their avatar.
+- **Session revocation:** every user has a `sessionVersion`. Changing a password, an admin reset, or **Sign out of all devices** (user edit page) bumps it, which invalidates all of that user's existing cookies. Deactivating a user also takes effect immediately.
+- **Password rules:** at least 8 characters, not a very common password, must not contain the email name. See `src/core/auth/password-policy.ts`.
+- Admins see each user's recent sign-ins (successes and failures, with IP) on the user's edit page; sign-ins and password changes are in the audit log.
+- Security headers (`X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`) are set in `next.config.mjs`. A Content-Security-Policy is not set yet.
 - CSV export escapes formula-leading characters (`= + - @`) to prevent spreadsheet injection.
 - Server actions validate all input with Zod and re-check permissions; links to other records (company/contact/deal) are checked for access too.
-- Not yet included: password reset, 2FA, login rate limiting (see `TODO.md`).
+- Not yet included: password reset by email (needs an email provider), two-factor authentication, CSP.
 
 See `TODO.md` for open questions and planned features.

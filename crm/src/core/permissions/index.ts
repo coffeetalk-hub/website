@@ -3,7 +3,7 @@ import type { Prisma } from "@prisma/client";
 export type Role = "ADMIN" | "MANAGER" | "REP";
 export const ROLES: Role[] = ["ADMIN", "MANAGER", "REP"];
 
-export type SessionUser = { id: string; email: string; name: string; role: Role };
+export type SessionUser = { id: string; email: string; name: string; role: Role; mustChangePassword: boolean };
 
 export type Resource =
   | "contact"

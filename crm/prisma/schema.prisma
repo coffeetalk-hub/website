@@ -20,6 +20,9 @@ model User {
   passwordHash String
   role         String   @default("REP") // ADMIN | MANAGER | REP
   active       Boolean  @default(true)
+  // Security: force a new password at next sign-in; bump sessionVersion to sign the user out everywhere.
+  mustChangePassword Boolean @default(false)
+  sessionVersion     Int     @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -29,6 +32,19 @@ model User {
   activities Activity[] @relation("ActivityAssignee")
   created    Activity[] @relation("ActivityCreator")
   auditLogs  AuditLog[]
+}
+
+// Sign-in attempts: drives rate limiting / lockout and the "recent sign-ins" list. Keyed by the
+// submitted email (even if no such user) so lockouts do not reveal which accounts exist.
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  ip        String?
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
 }
 
 // ───────────── companies module ─────────────
