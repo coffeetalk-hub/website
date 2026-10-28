@@ -1,0 +1,29 @@
+# Team CRM — Netlify settings. If this folder lives inside another repo,
+# set "Base directory" to `crm` in the Netlify site settings.
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # The Supabase URL and anon key are public by design (they end up in the browser bundle).
+  # Tell Netlify's secret scanner so the build is not blocked.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY"
+
+[dev]
+  command = "npm run dev"
+  targetPort = 5173
+
+# Single-page app: send every other path to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "same-origin"

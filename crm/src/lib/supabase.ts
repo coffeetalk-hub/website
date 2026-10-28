@@ -1,0 +1,9 @@
+import { createClient } from '@supabase/supabase-js'
+
+const url = import.meta.env.VITE_SUPABASE_URL as string | undefined
+const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
+
+export const supabaseConfigured = Boolean(url && key)
+
+// Placeholders keep the app from crashing so we can show a friendly setup message instead.
+export const supabase = createClient(url || 'http://localhost', key || 'missing-key')

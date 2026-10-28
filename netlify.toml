@@ -14,3 +14,17 @@
   for = "/images/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# The CRM app lives in /crm and is deployed as its own Netlify site (Base directory = crm).
+# Never serve its source files from the marketing site.
+[[redirects]]
+  from = "/crm"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/crm/*"
+  to = "/404.html"
+  status = 404
+  force = true
