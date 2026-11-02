@@ -280,7 +280,6 @@
     card.innerHTML =
       '<img src="' + p.image + '" alt="' + escapeHtml(p.alt || p.title) + '" loading="lazy" decoding="async" width="800" height="600">' +
       '<span class="work-card__type">' + escapeHtml(TYPE_LABELS[p.type] || p.type) + '</span>' +
-      (p.sample ? '<span class="work-card__sample">Sample</span>' : '') +
       '<span class="work-card__body">' +
         (partner ? '<span class="work-card__partner">' + escapeHtml(partner.name) + '</span>' : '') +
         '<h3>' + escapeHtml(p.title) + '</h3>' +
