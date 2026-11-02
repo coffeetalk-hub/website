@@ -405,3 +405,7 @@ a.logo-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); c
 .section--coral .pullquote em { text-decoration: underline; text-decoration-color: var(--navy-800); text-underline-offset: 6px; text-decoration-thickness: 3px; }
 .section--coral .pullquote cite { color: var(--navy-800); font-weight: 600; }
 .hero::after { background: linear-gradient(180deg, rgba(15,28,51,0.45) 0%, rgba(15,28,51,0.25) 40%, rgba(15,28,51,0.95) 100%); }
+
+.motto { margin: 1.75rem 0 0; padding-left: 1rem; border-left: 3px solid var(--coral-500); font-family: var(--font-head); font-weight: 600; font-size: 1.15rem; color: var(--navy-800); line-height: 1.4; }
+.motto span { display: block; margin-top: 0.4rem; font-family: var(--font-body); font-weight: 600; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--coral-700); }
+.lineage { justify-content: flex-start; margin-top: 1.75rem; }
