@@ -374,3 +374,5 @@ a.logo-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); c
 .marquee .logo-card img { filter: grayscale(1); opacity: 0.8; transition: filter .25s, opacity .25s; }
 .marquee .logo-card:hover img, .marquee .logo-card:focus-visible img, .marquee .logo-card.is-selected img { filter: none; opacity: 1; }
 .partners-simple { text-align: center; }
+
+.work-note[hidden] { display: none; }
