@@ -293,8 +293,7 @@ a.logo-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); c
 
 /* CTA ----------------------------------------------------------------------- */
 .cta { position: relative; overflow: hidden; isolation: isolate; color: var(--white); padding: clamp(4rem, 9vw, 7rem) 0; text-align: center; }
-.cta::before { content: ""; position: absolute; inset: 0; z-index: -2; background: url("../images/photos/compass-rope.jpg") center/cover no-repeat; }
-.cta::after { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(15,28,51,0.82); }
+.cta { background: var(--navy-800); border-top: 1px solid rgba(255,255,255,0.08); }
 .cta h2 { color: var(--white); font-size: clamp(2rem, 4.5vw, 3.4rem); margin-bottom: 0.5rem; }
 .cta p { color: rgba(255,255,255,0.82); font-size: 1.1rem; max-width: 56ch; margin: 0 auto 1.75rem; }
 
