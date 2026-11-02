@@ -371,3 +371,10 @@ a.logo-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); c
 .logo-grid li[hidden] { display: none; }
 .license-line { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: center; font-size: 0.85rem; color: var(--muted); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
 .license-line strong { color: var(--navy-800); }
+
+/* Partners slideshow */
+.marquee .marquee__group { list-style: none; margin: 0; padding: 0 1rem 0 0; }
+.marquee .logo-card { width: 170px; height: 100px; min-height: 0; flex: 0 0 auto; }
+.marquee .logo-card img { filter: grayscale(1); opacity: 0.8; transition: filter .25s, opacity .25s; }
+.marquee .logo-card:hover img, .marquee .logo-card:focus-visible img, .marquee .logo-card.is-selected img { filter: none; opacity: 1; }
+.partners-simple { text-align: center; }

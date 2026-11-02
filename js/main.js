@@ -368,10 +368,15 @@
   /* partners.html: single logo grid + partner panel ----------------------- */
   function initPartnerShowcase() {
     var grid = document.getElementById("partner-grid");
+    var marquee = document.getElementById("partner-marquee");
     var panel = document.getElementById("partner-panel");
     var filters = document.getElementById("partner-filters");
     var data = window.SAILORS_PARTNERS;
-    if (!grid || !data) return;
+    if (!data || (!grid && !marquee)) return;
+    if (!grid) {
+      grid = document.createElement("ul"); grid.className = "marquee__group"; grid.setAttribute("role", "list");
+      var track = marquee.querySelector(".marquee__track"); track.appendChild(grid);
+    }
     var projects = sortedProjects();
     var groups = { clients: data.clients || [], institutional: data.institutional || [], alliances: data.alliances || [] };
     var selected = "";
@@ -405,7 +410,7 @@
     function select(id) {
       selected = selected === id ? "" : id;
       var p = partnerById(selected);
-      grid.querySelectorAll(".logo-card--btn").forEach(function (b) { var on = b.getAttribute("data-partner") === selected; b.classList.toggle("is-selected", on); b.setAttribute("aria-pressed", on ? "true" : "false"); });
+      (marquee || grid).querySelectorAll(".logo-card--btn").forEach(function (b) { var on = b.getAttribute("data-partner") === selected; b.classList.toggle("is-selected", on); b.setAttribute("aria-pressed", on ? "true" : "false"); });
       if (!panel) return;
       if (!p) { panel.hidden = true; panel.innerHTML = ""; safeReplaceState(null, "", location.pathname); return; }
       var list = projectsFor(p.id);
@@ -424,6 +429,14 @@
       panel.querySelector(".partner-panel__close").focus({ preventScroll: true });
     }
     applyGroup("all");
+    if (marquee) {
+      marquee.style.setProperty("--marquee-duration", Math.max(40, grid.children.length * 1.6) + "s");
+      var clone = grid.cloneNode(true); clone.setAttribute("aria-hidden", "true");
+      clone.querySelectorAll("button").forEach(function (b) { b.tabIndex = -1; b.addEventListener("click", function () { select(b.getAttribute("data-partner")); }); });
+      marquee.querySelector(".marquee__track").appendChild(clone);
+      marquee.addEventListener("focusin", function () { marquee.classList.add("is-paused"); });
+      marquee.addEventListener("focusout", function () { marquee.classList.remove("is-paused"); });
+    }
     var param = new URLSearchParams(location.search).get("partner");
     if (param && partnerById(param)) select(param);
   }
