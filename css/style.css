@@ -3,7 +3,7 @@
    Navy foundation · white clarity · coral highlights. Plain CSS, mobile-first.
    ========================================================================== */
 :root {
-  --navy-900: #0F1C33; --navy-800: #182D4B; --navy-700: #24406A; --navy-600: #2F5488;
+  --navy-900: #0F1C33; --navy-800: #0F1C33; --navy-700: #24406A; --navy-600: #2F5488;
   --sea-500: #126A89; --sea-100: #E6F2F7;
   --coral-500: #F07C54; --coral-600: #D9653D; --coral-700: #B94E2A; --coral-100: #FDEDE6;
   --white: #FFFFFF; --off-white: #F6F7F9; --line: #DDE3EA; --ink: #1B2A3B; --muted: #5B6A7C;
