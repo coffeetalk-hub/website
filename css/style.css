@@ -409,3 +409,9 @@ a.logo-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); c
 .motto { margin: 1.75rem 0 0; padding-left: 1rem; border-left: 3px solid var(--coral-500); font-family: var(--font-head); font-weight: 600; font-size: 1.15rem; color: var(--navy-800); line-height: 1.4; }
 .motto span { display: block; margin-top: 0.4rem; font-family: var(--font-body); font-weight: 600; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--coral-700); }
 .lineage { justify-content: flex-start; margin-top: 1.75rem; }
+
+/* Partners: navy tiles on white */
+.marquee .logo-card { background: var(--navy-800); border-color: var(--navy-800); color: var(--white); }
+.marquee .logo-card img { filter: none; opacity: 1; background: var(--white); padding: 4px; border-radius: 4px; box-sizing: border-box; }
+.marquee .logo-card:hover, .marquee .logo-card:focus-visible, .marquee .logo-card.is-selected { border-color: var(--coral-500); }
+.marquee .logo-card .logo-card__mono { background: var(--white); color: var(--navy-800); }
