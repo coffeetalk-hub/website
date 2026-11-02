@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Partners & Clients | The Sailors ART</title>
-  <meta name="description" content="Our clients, institutional partners and global alliances — and the work we delivered together.">
+  <title>Partners | The Sailors ART</title>
+  <meta name="description" content="Clients, institutional partners and global alliances of The Sailors ART — and the work delivered together.">
   <link rel="canonical" href="https://www.thesailorsart.com/partners.html">
   <meta name="theme-color" content="#182D4B">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The Sailors ART">
-  <meta property="og:title" content="Partners & Clients | The Sailors ART">
-  <meta property="og:description" content="Our clients, institutional partners and global alliances — and the work we delivered together.">
+  <meta property="og:title" content="Partners | The Sailors ART">
+  <meta property="og:description" content="Clients, institutional partners and global alliances of The Sailors ART — and the work delivered together.">
   <meta property="og:url" content="https://www.thesailorsart.com/partners.html">
   <meta property="og:image" content="https://www.thesailorsart.com/images/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Partners & Clients | The Sailors ART">
-  <meta name="twitter:description" content="Our clients, institutional partners and global alliances — and the work we delivered together.">
+  <meta name="twitter:title" content="Partners | The Sailors ART">
+  <meta name="twitter:description" content="Clients, institutional partners and global alliances of The Sailors ART — and the work delivered together.">
   <meta name="twitter:image" content="https://www.thesailorsart.com/images/og-image.jpg">
   <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="images/favicon-192.png" sizes="192x192" type="image/png">
@@ -43,7 +43,7 @@
         <li><a href="services.html">Services</a></li>
         <li><a href="work.html">Our Work</a></li>
         <li><a href="partners.html">Partners</a></li>
-        <li><a href="contact.html">Contact</a></li>
+        <li><a href="contact.html" class="nav-cta">Let's Talk</a></li>
       </ul>
     </nav>
   </div>
@@ -53,35 +53,31 @@
   <div class="hero__media"><img src="images/photos/rope-coil.jpg" alt="Coiled rope on a deck" width="1600" height="900" fetchpriority="high"></div>
   <div class="container hero__content hero-stagger">
     <p class="breadcrumb"><a href="index.html">Home</a> / Partners</p>
-    <span class="hero__tag">Partners of success</span>
+    <span class="hero__tag">Partners</span>
     <h1>Together we sail.</h1>
-    <p>Clients, institutional partners and global alliances who sail with us — across Saudi Arabia, Bahrain and more than six countries.</p>
+    <p>Clients, institutions and global alliances across Saudi Arabia, Bahrain and more than six countries. Select a partner to see what we delivered together.</p>
   </div>
 </section>
 
-<section class="section section--navy" id="partners-intro" aria-labelledby="partners-intro-title">
+<section class="section" aria-labelledby="partners-title">
   <div class="container">
-    <div class="section-head section-head--center reveal"><span class="eyebrow">Partners &amp; collaborations</span><h2 id="partners-intro-title">Great events. Meaningful partnerships.</h2><p class="lead" style="margin-inline:auto">Behind every memorable experience is a great collaboration. Select a partner to see what we delivered together.</p></div>
+    <h2 id="partners-title" class="sr-only">Partner logos</h2>
+    <div class="filters" id="partner-filters" role="group" aria-label="Filter partners">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="clients" aria-pressed="false">Clients</button>
+      <button type="button" data-filter="institutional" aria-pressed="false">Institutional</button>
+      <button type="button" data-filter="alliances" aria-pressed="false">Global alliances</button>
+    </div>
+    <div class="partner-panel" id="partner-panel" role="region" aria-live="polite" aria-label="Partner details" hidden style="margin:0 0 1.5rem"></div>
+    <ul class="logo-grid" id="partner-grid" aria-label="Partners"></ul>
   </div>
-  <div class="marquee" id="partner-marquee" aria-label="Partner logos — select one to see our work together"><div class="marquee__track"></div></div>
-  <div class="container"><div class="partner-panel" id="partner-panel" role="region" aria-live="polite" aria-label="Partner details" hidden></div></div>
-</section>
-
-<section class="section" id="clients" aria-labelledby="clients-title">
-  <div class="container"><div class="section-head"><span class="eyebrow">Clients &amp; customers</span><h2 id="clients-title">Organizations we've delivered for.</h2></div><ul class="logo-grid" data-partners="clients" aria-label="Client logos"></ul></div>
-</section>
-<section class="section section--off" id="institutional" aria-labelledby="institutional-title">
-  <div class="container"><div class="section-head"><span class="eyebrow">Domestic collaboration &amp; strategic partnership</span><h2 id="institutional-title">Institutional partners.</h2></div><ul class="logo-grid" data-partners="institutional" aria-label="Institutional partner logos"></ul></div>
-</section>
-<section class="section" id="alliances" aria-labelledby="alliances-title">
-  <div class="container"><div class="section-head"><span class="eyebrow">Our global alliances</span><h2 id="alliances-title">Partners in 6+ countries.</h2></div><ul class="logo-grid" data-partners="alliances" aria-label="Global alliance logos"></ul></div>
 </section>
 <section class="cta" aria-labelledby="cta-title">
   <div class="container">
     <span class="eyebrow">Let's Sail Together</span>
     <h2 id="cta-title">Become a partner.</h2>
     <p>Artists, suppliers, venues, institutions and international agencies — let's explore how we can sail together.</p>
-    <a class="btn btn--coral" href="contact.html">Get in Touch <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    <a class="btn btn--coral" href="contact.html">Let's Talk <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
   </div>
 </section>
 </main>
@@ -105,7 +101,7 @@
           <li><a href="services.html">Services</a></li>
           <li><a href="work.html">Our Work</a></li>
           <li><a href="partners.html">Partners</a></li>
-          <li><a href="contact.html">Contact</a></li>
+          <li><a href="contact.html">Let's Talk</a></li>
         </ul></nav>
       <div><h3>Services</h3><ul>
           <li><a href="services.html#events">Business &amp; Entertainment Events</a></li>

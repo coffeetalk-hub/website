@@ -10,7 +10,8 @@ Content, imagery, logos and brand colours follow the *December 2025 company prof
 /about.html            Story, The Sailors Group, values + manifesto
 /services.html         One-stop process, three service groups, "Licensed & Certified" (CR, CoC)
 /work.html             Editorial portfolio with filters, partner filter (?partner=id) and project detail dialog
-/partners.html         Partner logo carousel + partner panel (projects delivered together), then logo grids
+/partners.html         One filtered logo grid (Clients / Institutional / Global alliances); a logo opens a panel
+                       listing verified projects. Logos appear only here.
 /contact.html          Netlify-ready contact form, address, social links
 /css/style.css         All styling (brand tokens at the top)
 /js/main.js            Nav toggle, stat counters, scroll reveal, partner grids, portfolio + lightbox, form
@@ -72,8 +73,7 @@ Open `data/partners.js`. There are three arrays: `clients`, `institutional` and 
 
 - `id` — unique, URL-safe; projects reference it via `partner`. `partners.html?partner=<id>` pre-selects it.
 - `logo` — PNG/JPG/SVG, roughly 400×200 max. Leave it as `""` to show an auto-generated monogram.
-- The carousel on `partners.html` shows every partner from all three groups. Clicking a logo filters the
-  collaborations portfolio to that partner's projects (or shows a "no published projects yet" note).
+- A partner listed in more than one group is shown once and answers every matching filter.
 - `url` and `note` are optional.
 - Names and logos were taken from the company profile. Three logos that could not be identified were left out.
   Only DAS Alumni+ Council has a published project; other partners show a "no published projects yet" note until

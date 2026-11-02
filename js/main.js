@@ -365,72 +365,67 @@
     });
   }
 
-  /* partners.html: logo marquee + partner panel ------------------------- */
+  /* partners.html: single logo grid + partner panel ----------------------- */
   function initPartnerShowcase() {
-    var marquee = document.getElementById("partner-marquee");
+    var grid = document.getElementById("partner-grid");
     var panel = document.getElementById("partner-panel");
-    if (!marquee || !window.SAILORS_PARTNERS) return;
-    var partners = allPartners();
+    var filters = document.getElementById("partner-filters");
+    var data = window.SAILORS_PARTNERS;
+    if (!grid || !data) return;
     var projects = sortedProjects();
-    var track = marquee.querySelector(".marquee__track");
+    var groups = { clients: data.clients || [], institutional: data.institutional || [], alliances: data.alliances || [] };
     var selected = "";
-    marquee.style.setProperty("--marquee-duration", Math.max(40, partners.length * 1.6) + "s");
-
     function projectsFor(id) { return projects.filter(function (p) { return p.partner === id && !p.sample; }); }
-    function logoButton(p, clone) {
-      var b = document.createElement(panel ? "button" : "a");
-      b.className = "marquee__logo";
-      if (panel) { b.type = "button"; } else { b.href = "partners.html?partner=" + encodeURIComponent(p.id); }
-      b.setAttribute("data-partner", p.id);
-      if (clone) { b.tabIndex = -1; b.setAttribute("aria-hidden", "true"); }
-      var n = projectsFor(p.id).length;
-      b.setAttribute("aria-label", p.name + (n ? " — " + n + " project" + (n > 1 ? "s" : "") : ""));
-      b.title = p.name;
-      b.innerHTML = p.logo
-        ? '<img src="' + p.logo + '" alt="" loading="lazy" decoding="async" width="120" height="48">'
-        : '<span class="logo-card__mono" aria-hidden="true">' + escapeHtml(initials(p.name)) + '</span><span class="marquee__name">' + escapeHtml(p.name) + '</span>';
-      if (panel) b.addEventListener("click", function () { select(p.id, true); });
-      return b;
-    }
-    [false, true].forEach(function (clone) {
-      var group = document.createElement("div"); group.className = "marquee__group";
-      partners.forEach(function (p) { group.appendChild(logoButton(p, clone)); });
-      track.appendChild(group);
-    });
-    marquee.addEventListener("focusin", function () { marquee.classList.add("is-paused"); });
-    marquee.addEventListener("focusout", function () { marquee.classList.remove("is-paused"); });
-    if (!panel) return;
 
-    function select(id, scroll) {
+    var seen = {};
+    Object.keys(groups).forEach(function (g) {
+      groups[g].forEach(function (p) {
+        var key = p.name.toLowerCase();
+        if (seen[key]) { seen[key].setAttribute("data-group", seen[key].getAttribute("data-group") + " " + g); return; } // one logo per organization
+        var li = document.createElement("li"); li.setAttribute("data-group", g); seen[key] = li;
+        var b = document.createElement("button"); b.type = "button"; b.className = "logo-card logo-card--btn";
+        b.setAttribute("data-partner", p.id); b.setAttribute("aria-pressed", "false");
+        var n = projectsFor(p.id).length;
+        b.setAttribute("aria-label", p.name + (n ? " — " + n + " project" + (n > 1 ? "s" : "") : ""));
+        b.innerHTML = (p.logo ? '<img src="' + p.logo + '" alt="" loading="lazy" decoding="async" width="110" height="44">' : '<span class="logo-card__mono" aria-hidden="true">' + escapeHtml(initials(p.name)) + '</span>') +
+          '<span class="logo-card__name">' + escapeHtml(p.name) + '</span>';
+        b.addEventListener("click", function () { select(p.id); });
+        li.appendChild(b); grid.appendChild(li);
+      });
+    });
+    function applyGroup(g) {
+      grid.querySelectorAll("li").forEach(function (li) { li.hidden = g !== "all" && li.getAttribute("data-group").split(" ").indexOf(g) === -1; });
+      if (filters) filters.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-filter") === g ? "true" : "false"); });
+    }
+    if (filters) filters.querySelectorAll("button").forEach(function (b) {
+      var g = b.getAttribute("data-filter"); var n = g === "all" ? grid.children.length : (groups[g] || []).length;
+      var c = document.createElement("span"); c.className = "count"; c.textContent = n; b.appendChild(c);
+      b.addEventListener("click", function () { applyGroup(g); });
+    });
+    function select(id) {
       selected = selected === id ? "" : id;
       var p = partnerById(selected);
-      marquee.querySelectorAll(".marquee__logo").forEach(function (b) {
-        var on = b.getAttribute("data-partner") === selected;
-        b.classList.toggle("is-selected", on);
-        if (!b.hasAttribute("aria-hidden")) b.setAttribute("aria-pressed", on ? "true" : "false");
-      });
+      grid.querySelectorAll(".logo-card--btn").forEach(function (b) { var on = b.getAttribute("data-partner") === selected; b.classList.toggle("is-selected", on); b.setAttribute("aria-pressed", on ? "true" : "false"); });
+      if (!panel) return;
       if (!p) { panel.hidden = true; panel.innerHTML = ""; safeReplaceState(null, "", location.pathname); return; }
       var list = projectsFor(p.id);
       var html = '<div class="partner-panel__head">' +
         (p.logo ? '<img class="partner-panel__logo" src="' + p.logo + '" alt="" width="120" height="48">' : '<span class="logo-card__mono" aria-hidden="true">' + escapeHtml(initials(p.name)) + '</span>') +
         '<div><h3>' + escapeHtml(p.name) + '</h3>' + (p.note ? '<p class="partner-panel__note">' + escapeHtml(p.note) + '</p>' : '') + '</div>' +
         '<button type="button" class="partner-panel__close" aria-label="Close partner details">&times;</button></div>';
-      if (list.length) {
-        html += '<p class="partner-panel__intro">Work delivered together:</p><ul class="partner-panel__list">' + list.map(function (pr) {
-          return '<li><a href="work.html#' + encodeURIComponent(pr.id) + '"><img src="' + pr.image + '" alt="" loading="lazy" width="160" height="120"><span><strong>' + escapeHtml(pr.title) + '</strong><small>' + escapeHtml(pr.city) + ' · ' + pr.year + '</small></span></a></li>';
-        }).join("") + '</ul>';
-      } else {
-        html += '<p class="partner-panel__intro">We haven\'t published a case study with ' + escapeHtml(p.name) + ' yet. Verified projects will appear here as they are added.</p>';
-      }
+      html += list.length
+        ? '<ul class="partner-panel__list">' + list.map(function (pr) { return '<li><a href="work.html#' + encodeURIComponent(pr.id) + '"><img src="' + pr.image + '" alt="" loading="lazy" width="160" height="120"><span><strong>' + escapeHtml(pr.title) + '</strong><small>' + escapeHtml(pr.city) + ' · ' + pr.year + '</small></span></a></li>'; }).join("") + '</ul>'
+        : '<p class="partner-panel__intro">No published case study with ' + escapeHtml(p.name) + ' yet.</p>';
       if (p.url) html += '<p class="partner-panel__link"><a href="' + p.url + '" target="_blank" rel="noopener">Visit ' + escapeHtml(p.name) + ' ↗</a></p>';
       panel.innerHTML = html; panel.hidden = false;
-      panel.querySelector(".partner-panel__close").addEventListener("click", function () { select(selected, false); });
+      panel.querySelector(".partner-panel__close").addEventListener("click", function () { select(selected); });
       safeReplaceState(null, "", "?partner=" + encodeURIComponent(p.id));
-      if (scroll) panel.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "nearest" });
+      panel.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "nearest" });
       panel.querySelector(".partner-panel__close").focus({ preventScroll: true });
     }
+    applyGroup("all");
     var param = new URLSearchParams(location.search).get("partner");
-    if (param && partnerById(param)) select(param, true);
+    if (param && partnerById(param)) select(param);
   }
 
   function escapeHtml(s) {
